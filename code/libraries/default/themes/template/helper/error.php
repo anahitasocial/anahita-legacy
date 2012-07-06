@@ -36,7 +36,7 @@ class LibThemesTemplateHelperError extends KTemplateHelperAbstract
      */
     public function render($error)
     {
-        $content = $this->loadError($error);
+        $content = (string)$this->loadError($error);
         
         $data    = $this->getTemplate()->getData();
         
