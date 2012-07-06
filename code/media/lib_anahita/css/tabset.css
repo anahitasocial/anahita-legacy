@@ -1,0 +1,31 @@
+.an-se-tabs-nav 
+{
+    height: 30px;
+    list-style: none;
+  	margin: 10px 0;
+}
+
+.an-se-tabs-nav li 
+{
+    float: left;
+    margin-right: 20px;
+}
+
+.an-se-tabs-nav li a 
+{
+    text-decoration: none;
+    font-size: 1em;
+    padding: 10px 0px;
+}
+
+.an-se-tabs-nav li.selected a {}
+
+.an-se-tabs-body 
+{
+    position: relative;
+    overflow: hidden;
+}
+ 
+.an-se-tabs-body li { display: none }
+
+.an-se-tabs-body li.active { display: block }

@@ -1,0 +1,355 @@
+body
+{
+    padding-top: 80px;
+    
+    &#tmpl-component
+    {
+        padding: 0;
+        
+        #rt-main
+        {
+            padding: 10px;
+            background-color: @white;
+            .border-radius(3px);
+            
+            .rt-container
+            {
+                width: 1060px;
+                
+                .rt-grid-8
+                {
+                    width: 670px;
+                }
+                
+                .rt-grid-4
+                {
+                    width: 350px;
+                }
+                
+                .rt-grid-2
+                {
+                    width: 190px;
+                }
+                
+                .rt-push-2
+                {
+                    left: 210px;
+                }
+            }
+        }
+    }
+}
+
+a:hover
+{
+    text-decoration: none;	
+}
+
+// BRAND
+.navbar
+{ 
+    .container
+    {
+        a.brand
+	    {
+	        padding-top: 15px;
+	        
+	        &.brand-logo
+	        {
+	           padding: 16px 15px 20px 65px;
+	           min-height: 20px;
+            }
+	    }
+	    
+	    ul.nav
+	    {
+		    >li
+		    {
+		       >a
+		       {
+		           padding: 20px 10px;
+		       }
+		    }
+        }
+        
+        span.viewer
+        {
+            float: right;
+            img.actor-avatar
+            {
+                margin: -15px 0;
+                .square(33px);
+            }
+        }
+    }
+}
+
+// NAVPILLS
+// Links rendered as pills
+.nav-pills > li > a {
+  .border-radius(3px);
+}
+
+// NOTIFICATION POPOVER
+.notifications-popover
+{ 
+    .popover-inner 
+    {
+        width: 320px; 
+    }
+    .popover-content
+    {
+        max-height: 350px;
+        overflow:hidden;    
+    }
+}
+
+// ROUNDED CORNERS
+#rt-main,
+#rt-showcase,
+#rt-feature,
+#rt-maintop,
+#rt-utility,
+#rt-mainbottom,
+#rt-bottom
+{
+    .rt-container
+    {
+        .border-radius(3px);
+    }
+}
+
+.purr-wrapper
+{
+   .alert {
+   		margin-bottom: 5px;
+   }
+   margin: 5px;
+}
+
+// MODULES
+.mixin-module-content
+{
+    margin: 5px;
+    
+    ul
+    {
+        margin: 0;
+        padding-left: 15px;
+        
+        &.nav
+        {
+            padding: 0;
+        }
+    }
+    
+    ol
+    {
+        margin: 0;
+        padding-left: 20px;
+    }
+    
+    h1,h2,h3,h4
+    {
+        margin: 10px 0;
+    }
+    
+    .alert
+    {
+        margin: 0;
+    }
+    
+    form
+    {
+        padding: 5px 0;
+        margin: 5px 0;
+        
+        .form-actions
+        {
+            padding: 10px;
+        }
+        
+        .an-privacy-select-box
+        {
+            margin: 5px 0;
+        }
+        
+        &.inline-edit;
+    }
+}
+
+
+//STANDARD MODULE
+.standard-module
+{ 
+    padding: 5px;
+    .border-radius(3px); 
+
+    h2.module-title
+    {
+        font-size: @baseFontSize + 3;
+        margin: 0 5px 10px 5px;
+        padding-bottom: 5px;
+    }
+    
+    .module-content
+    {
+        .mixin-module-content;
+    }
+}
+
+// SIMPLE MODULE
+.simple-module
+{
+    border: 0;
+    padding: 5px;
+    
+    ul, ol
+    {
+        padding-left: 15px;
+        margin: 5px;
+    }
+    
+    h2.module-title
+    {
+        font-size: @baseFontSize + 3;
+        margin: 0 5px 10px 5px;
+    }
+    
+    .module-content
+    {
+        .mixin-module-content;
+    }
+}
+
+// MODULE ICONS
+.download h2.module-title
+{
+    padding-left: 25px;
+    background:url("../images/icons/icon-download.png") no-repeat scroll 0 10px transparent;
+}
+
+.project h2.module-title
+{
+    padding-left: 25px;
+    background:url("../images/icons/icon-crank.png") no-repeat scroll 0 10px transparent;
+}
+
+.feed h2.module-title
+{
+    padding-left: 25px;
+    background:url("../images/icons/icon-rss.png") no-repeat scroll 0 10px transparent;
+}
+
+.promo-premium h2.module-title
+{
+    padding-left: 25px;
+    background:url("../images/icons/icon-star.png") no-repeat scroll 0 10px transparent;
+}
+
+.promo-basic h2.module-title
+{
+    padding-left: 25px;
+    background:url("../images/icons/icon-star-bw.png") no-repeat scroll 0 10px transparent;
+}
+
+// LOGIN MODULE
+.login-module
+{   
+    form
+    {
+        padding: 0;
+        margin: 0;
+        
+        .controls
+        {
+            input
+            {
+                width: 97%;
+            }
+        }
+    }
+    
+    .login-avatar
+    {
+        float: left;
+        
+        img.actor-avatar
+        {
+            .square(33px);
+            .border-radius(3px);
+        }
+    }
+    
+    .login-greeting
+    {
+        padding-left: 47px;
+    }
+}
+
+// SOCIALENGINE PROFILE INFO & STORY GADGETS
+#rt-mainbody  
+{ 
+    .an-gadget
+    {
+        border: 0; 
+        padding-left: 0px;
+        padding-right: 0px;
+        
+        .gadget-title
+        {
+            margin-left: 0;
+            margin-right: 0;
+        }
+        
+        .gadget-content
+        {
+            padding: 0 1px;
+            .gadget-entities
+            {
+                margin: 0;
+            }
+            
+            .alert-message
+            {
+                &.alert-block
+                {
+                    margin: 10px 0 0 0;
+                }
+            }
+        }
+    } 
+}
+
+// NAVIGATION MODULE
+#rt-sidebar-a,
+#rt-sidebar-b
+{
+    ul.menu
+    {
+        li
+        {
+            line-height: @baseLineHeight + 2;
+            
+            &.active
+            {
+                a
+                {
+                   text-decoration: underline;
+                }
+            }
+        }
+    }
+}
+
+#rt-header
+{
+    .standard-module
+    {
+        border: 0;
+        .alert
+        {
+            margin: 0;
+        }
+    }	
+}

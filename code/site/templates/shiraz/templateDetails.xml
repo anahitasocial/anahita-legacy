@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<install version="##BUILD_PLATFORM_VERSION##" type="template" method="upgrade">
+    <name>shiraz</name>
+    <version>##BUILD_VERSION##</version>
+    <creationDate>##BUILD_DATE##</creationDate>
+    <author>Anahita Social Networking Project</author>
+    <authorEmail>info@anahitapolis.com</authorEmail>
+    <authorUrl>http://www.anahitapolis.com</authorUrl>
+    <copyright>Copyright 2010 - rmdStudio Inc. and Peerglobe Technology Inc.</copyright>
+    <license>GPL3 - http://www.gnu.org/licenses/gpl-3.0.html</license>
+    <description>
+       <![CDATA[
+			<h3 class="template-title nudge">Shiraz for Anahita ™</h3>
+			
+			<p><img src="../templates/shiraz/images/anahita_logo.png" alt="Anahita Social Engine" class="template-thumb" /></p>
+			
+			<p>
+			<b>Shiraz [ʃiːˈrɒːz]</b> Named after the ancient city of poets, mathematicians, flowers, and wine 
+			in south of Persia which dates back to 4000 BCE.  
+			</p>
+			
+			<p>
+			This template is developed for the Anahita ™ Social Networking Platform and Framework and the Anahita ™  
+			Social Apps by <a href="http://www.anahitapolis.com" target="_blank">Anahitapolis.com</a>. 
+			It is available to you under the <a href="http://gplv3.fsf.org/" target="_blank">GPL3</a> license.
+			<p>
+			
+			<p>This template provides styling for the following social apps:</p>
+			<ol>
+				<li>Topics</li>
+				<li>Photos</li>
+				<li>Groups</li>
+				<li>Connect</li>
+				<li>Todos</li>
+				<li>Pages</li>
+			</ol>
+			
+			<p>The Anahita™ Shiraz template is developed using the Gantry Framework and Twitter Bootstrap 2.0</p>
+			]]>			
+            </description>
+        <exceptions>
+            <filename type="noreplace">params.ini</filename>
+        </exceptions>
+        <positions>
+            <position>analytics</position>
+            <position>header-a</position>
+            <position>header-b</position>
+            <position>header-c</position>
+            <position>header-d</position>
+            <position>header-e</position>
+            <position>header-f</position>
+            <position>showcase-a</position>
+            <position>showcase-b</position>
+            <position>showcase-c</position>
+            <position>showcase-d</position>
+            <position>showcase-e</position>
+            <position>showcase-f</position>
+            <position>feature-a</position>
+            <position>feature-b</position>
+            <position>feature-c</position>
+            <position>feature-d</position>
+            <position>feature-e</position>
+            <position>feature-f</position>
+            <position>utility-a</position>
+            <position>utility-b</position>
+            <position>utility-c</position>
+            <position>utility-d</position>
+            <position>utility-e</position>
+            <position>utility-f</position>
+            <position>maintop-a</position>
+            <position>maintop-b</position>
+            <position>maintop-c</position>
+            <position>maintop-d</position>
+            <position>maintop-e</position>
+            <position>maintop-f</position>
+            <position>navigation</position>
+            <position>viewer</position>
+            <position>sidebar-a</position>
+            <position>sidebar-b</position>
+            <position>content-top-a</position>
+            <position>content-top-b</position>
+            <position>content-top-c</position>
+            <position>content-bottom-a</position>
+            <position>content-bottom-b</position>
+            <position>content-bottom-c</position>
+            <position>mainbottom-a</position>
+            <position>mainbottom-b</position>
+            <position>mainbottom-c</position>
+            <position>mainbottom-d</position>
+            <position>mainbottom-e</position>
+            <position>mainbottom-f</position>
+            <position>bottom-a</position>
+            <position>bottom-b</position>
+            <position>bottom-c</position>
+            <position>bottom-d</position>
+            <position>bottom-e</position>
+            <position>bottom-f</position>
+            <position>footer-a</position>
+            <position>footer-b</position>
+            <position>footer-c</position>
+            <position>footer-d</position>
+            <position>footer-e</position>
+            <position>footer-f</position>
+            <position>copyright</position>
+            <position>debug</position>
+        </positions>
+        <administration>
+            <languages folder="admin">
+                <language tag="en-GB">en-GB.tpl_shiraz.ini</language>
+            </languages>
+        </administration>
+        <params addpath="/components/com_gantry/admin/elements">
+        <param name="" type="gantry" default="coresettings, presets, layouts" />
+        <param name="diagnostic" type="diagnostic" />
+        <param name="grid_system" type="hidden" default="12" />
+        <param name="template_prefix" type="hidden" default="gantry-" />
+        <param name="cookie_time" type="hidden" default="31536000" />
+        <param name="copy_lang_files_if_diff" type="hidden" default="1" />
+        <param name="direction" default="" type="hidden" setbyurl="true" setinsession="true" setbysession="true" setincookie="true" setbycookie="true" />
+        <param name="menuids" type="menuitemhead" default="1" label="" description="MENUITEMSIDS_DESC" />
+        <param name="coresettings" type="gspacer" default="" description="" label=" " glabel="SETTINGS" />
+        <param name="cssstyle" type="selectbox" default="style1" label="CSS_STYLE" description="CSS_STYLE_DESC" isbodyclass="true" setclassbytag="rt-top" setbyurl="true">
+            <option value="style1">Light</option>
+            <option value="style2">Dark</option>
+            <option value="style3">Custom</option>
+        </param>
+        <param name="settings" type="gspacer" default="" description="" label=" " glabel="FEATURES" />
+        <param name="styledeclaration-enabled" type="hidden" default="1" />
+		
+		<param name="brand" type="chain" label="BRAND" description="BRAND_DESC">
+		  <param name="logo" type="text" default="" label="LOGO_FILE" class="text" />
+		  <param name="name" type="text" default="" label="BRAND_NAME" class="text" />
+		</param>
+        
+        <param name="favicon" type="chain" label="FAVICON">
+          <param name="file" type="text" default="favicon.ico" label="FAVICON_FILE" class="text" />
+        </param>
+		
+        <param name="copyright" type="chain" label="COPYRIGHT" description="COPYRIGHT_DESC">
+            <param name="enabled" type="toggle" default="1" label="SHOW" />
+            <param name="position" type="position" default="copyright" label="POSITION" />
+			<param name="text" type="text" default="Copyright © 2012 Anahitapolis.com" label="" class="text-long" />
+        </param>
+        
+        <param name="systemmessages" type="chain" label="SYSMESSAGE" description="SYSMESSAGE_DESC">
+            <param name="enabled" type="toggle" default="1" label="SHOW" />
+            <param name="position" type="position" default="feature-a" label="POSITION" />
+        </param>
+        
+        <param name="analytics" type="chain" label="ANALYTICS" description="ANALYTICS_DESC">
+            <param name="enabled" type="toggle" default="0" label="ANALYTICS_ENABLE" />
+            <param name="code" type="text" default="" label="ANALYTICS_CODE" class="text-long" />
+        </param>
+        
+        <param name="layouts" type="gspacer" default="" description="" label="" glabel="LAYOUTS" />
+        <param name="headerPosition" type="positions" default="3,3,3,3" label="HEADER_POS" description="POS_DESC">
+            <schemas>1,2,3,4,5,6</schemas>
+            <words>2,3,4,5,6,7,8,9,10</words>
+        </param>
+        <param name="showcasePosition" type="positions" default="3,3,3,3" label="SHOWCASE_POS" description="POS_DESC">
+            <schemas>1,2,3,4,5,6</schemas>
+            <words>2,3,4,5,6,7,8,9,10</words>
+        </param>
+        <param name="featurePosition" type="positions" default="3,3,3,3" label="FEATURE_POS" description="POS_DESC">
+            <schemas>1,2,3,4,5,6</schemas>
+            <words>2,3,4,5,6,7,8,9,10</words>
+        </param>
+        <param name="utilityPosition" type="positions" default="3,3,3,3" label="UTILITY_POS" description="POS_DESC">
+            <schemas>1,2,3,4,5,6</schemas>
+            <words>2,3,4,5,6,7,8,9,10</words>
+        </param>
+        <param name="maintopPosition" type="positions" default="3,3,3,3" label="MAINTOP_POS" description="POS_DESC">
+            <schemas>1,2,3,4,5,6</schemas>
+            <words>2,3,4,5,6,7,8,9,10</words>
+        </param>
+        
+        <param name="mainbodyPosition" type="hidden" default="2,6,4" label="MAINBODY_POS" description="POS_DESC">
+        </param>
+        
+        <param name="mainbottomPosition" type="positions" default="3,3,3,3" label="MAINBOTTOM_POS" description="POS_DESC">
+            <schemas>1,2,3,4,5,6</schemas>
+            <words>2,3,4,5,6,7,8,9,10</words>
+        </param>
+        <param name="bottomPosition" type="positions" default="3,3,3,3" label="BOTTOM_POS" description="POS_DESC">
+            <schemas>1,2,3,4,5,6</schemas>
+            <words>2,3,4,5,6,7,8,9,10</words>
+        </param>
+        <param name="footerPosition" type="positions" default="3,3,3,3" label="FOOTER_POS" description="POS_DESC">
+            <schemas>1,2,3,4,5,6</schemas>
+            <words>2,3,4,5,6,7,8,9,10</words>
+        </param>
+        <param name="iphone-enabled" type="hidden" default="0" description="IPHONE_ENABLED_DESC" label="IPHONE_ENABLED" />
+        <param name="advancedsettings" type="gspacer" default="" description="" label=" " glabel="ADVANCED" />
+        <param name="header" type="chain" label="HEADER_POS" description="ADVANCED_DESC">
+            <param name="showall" type="toggle" default="0" label="FORCE_POS" />
+            <param name="showmax" type="showmax" default="6" label="POS_COUNT" />
+        </param>
+        <param name="showcase" type="chain" label="SHOWCASE_POS" description="ADVANCED_DESC">
+            <param name="showall" type="toggle" default="0" label="FORCE_POS" />
+            <param name="showmax" type="showmax" default="6" label="POS_COUNT" />
+        </param>
+        <param name="feature" type="chain" label="FEATURE_POS" description="ADVANCED_DESC">
+            <param name="showall" type="toggle" default="0" label="FORCE_POS" />
+            <param name="showmax" type="showmax" default="6" label="POS_COUNT" />
+        </param>
+        <param name="utility" type="chain" label="UTILITY_POS" description="ADVANCED_DESC">
+            <param name="showall" type="toggle" default="0" label="FORCE_POS" />
+            <param name="showmax" type="showmax" default="6" label="POS_COUNT" />
+        </param>
+        <param name="maintop" type="chain" label="MAINTOP_POS" description="ADVANCED_DESC">
+            <param name="showall" type="toggle" default="0" label="FORCE_POS" />
+            <param name="showmax" type="showmax" default="6" label="POS_COUNT" />
+        </param>
+        <param name="mainbottom" type="chain" label="MAINBOTTOM_POS" description="ADVANCED_DESC">
+            <param name="showall" type="toggle" default="0" label="FORCE_POS" />
+            <param name="showmax" type="showmax" default="6" label="POS_COUNT" />
+        </param>
+        <param name="bottom" type="chain" label="BOTTOM_POS" description="ADVANCED_DESC">
+            <param name="showall" type="toggle" default="0" label="FORCE_POS" />
+            <param name="showmax" type="showmax" default="6" label="POS_COUNT" />
+        </param>
+        <param name="footer" type="chain" label="FOOTER_POS" description="ADVANCED_DESC">
+            <param name="showall" type="toggle" default="0" label="FORCE_POS" />
+            <param name="showmax" type="showmax" default="6" label="POS_COUNT" />
+        </param>
+        <param name="component-enabled" type="toggle" default="1" label="COMPONENT" description="COMPONENT_DESC" />
+        <param name="rtl-enabled" type="toggle" default="1" label="RTL" description="RTL_DESC" setinmenuitem="false" />
+        <param name="pagesuffix-enabled" type="toggle" default="0" label="PAGESUFFIX" description="PAGESUFFIX_DESC" />
+        <param name="inactive" type="chain" label="INACTIVE" description="INACTIVE_DESC" setinmenuitem="false">
+            <param name="enabled" type="toggle" default="1" label="ENABLED" setinmenuitem="false" />
+            <param name="menuitem" type="menuitem" label="SELECT_MENU_ITEM" setinmenuitem="false" />
+        </param>
+        <param name="" type="finalize" />
+    </params>
+    <files>
+        <folder>admin</folder>
+        <folder>css</folder>
+        <folder>custom</folder>
+        <folder>elements</folder>
+        <folder>features</folder>
+        <folder>html</folder>
+        <folder>images</folder>
+        <folder>js</folder>
+        <folder>lib</folder>
+        <folder>media</folder>
+        <folder>params</folder>
+        <file>component.php</file>
+		<file>offline.php</file>
+        <file>debugbody.php</file>
+        <file>en-GB.tpl_shiraz.ini</file>
+        <file>gantry.config.php</file>
+        <file>htaccess.txt</file>
+        <file>index.php</file>
+        <file>params.ini.tmp</file>
+        <file>template_thumbnail.png</file>
+        <file>tests.php</file>
+        <file>CHANGELOG.php</file>
+    </files>
+</install>

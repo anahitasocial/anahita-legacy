@@ -1,0 +1,41 @@
+<?php
+// no direct access
+defined( '_JEXEC' ) or die( 'Restricted access' );
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->language; ?>" lang="<?php echo $this->language; ?>" dir="<?php echo $this->direction; ?>" >
+	<head>
+		<jdoc:include type="head" />
+
+		<link href="template/css/template.css" rel="stylesheet" type="text/css" />
+		<?php if($this->direction == 'rtl') : ?>
+		<link href="template/css/template_rtl.css" rel="stylesheet" type="text/css" />
+		<?php endif; ?>
+
+		<script type="text/javascript" src="../media/lib_anahita/js/min/mootools.js"></script>
+		<script type="text/javascript" src="includes/js/installation.js"></script>
+		<script type="text/javascript" src="template/js/validation.js"></script>
+
+		<script type="text/javascript">
+			Window.onDomReady = function(func) {
+				window.addEvent('domready', func);
+			}
+			window.addEvent('domready', function(){
+				new Accordion($$('h3.moofx-toggler'), $$('div.moofx-slider'), {onActive: function(toggler, i) { toggler.addClass('moofx-toggler-down'); },onBackground: function(toggler, i) { toggler.removeClass('moofx-toggler-down'); },duration: 300,opacity: false, alwaysHide:true, show: 1});
+			});
+  		</script>
+	</head>
+	<body>
+		<div id="header">
+			<div id="version"><?=Anahita::getVersion()?></div>
+		</div>
+		<div id="content-box">
+			<div id="content-pad">
+				<jdoc:include type="installation" />
+			</div>
+		</div>
+		<div id="copyright"><a href="http://www.anahitapolis.com" target="_blank">Anahita™</a>
+			<?php echo JText::_('ISFREESOFTWARE') ?>
+		</div>
+	</body>
+</html>

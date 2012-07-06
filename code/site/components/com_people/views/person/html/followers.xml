@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Followers">
+		<message>Logged-in User Followers Views</message>
+		<url>
+			<param  name="get" value="graph" />
+			<param  name="type" value="followers" />
+			<param  name="layout" value="" />
+		</url>
+	</layout>	
+</metadata>

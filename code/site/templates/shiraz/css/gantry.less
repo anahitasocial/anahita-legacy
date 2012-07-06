@@ -1,0 +1,138 @@
+html
+{   
+	margin-bottom: 1px;
+	height: 100%;
+	overflow-y: scroll;
+    letter-spacing: 0;
+}
+
+.rt-container
+{
+    margin: 0 auto;
+    padding: 0;
+    border: 0;
+    width: 960px;
+    
+	.rt-block 
+	{
+	    padding: 0; 
+	    margin: 0;
+	    border: 0;
+	    position: relative;
+	}
+}
+
+#rt-content-top,
+#rt-sidebar-a,
+#rt-sidebar-b,
+#rt-mainbody,
+#rt-content-bottom
+{
+    padding: 0;
+    border: 0;
+}
+
+#rt-content-top,
+#rt-content-bottom
+{
+    overflow: hidden;
+    
+    .rt-alpha
+    {
+       margin-left: 0;
+    }
+    
+    .rt-omega
+    {
+       margin-right: 0;
+    }
+}
+
+#rt-header,
+#rt-showcase,
+#rt-feature,
+#rt-maintop,
+#rt-main,
+#rt-content-top,
+#rt-mainbottom,
+#rt-footer,
+#rt-copyright
+{ 
+    margin-bottom: 20px; 
+}
+
+#rt-feature,
+#rt-maintop,
+#rt-main,
+#rt-mainbottom
+{
+    .rt-block
+    {
+        padding: 10px 0;
+    }   
+}
+
+#rt-bottom,
+#rt-footer
+{
+    .rt-container
+    {
+        padding: 20px 0;
+    }   
+}
+
+#rt-copyright
+{ 
+    text-align: center;
+    
+    .rt-block
+    {
+      margin-bottom: 10px;
+    }
+}
+
+* span, 
+* div, 
+* li, 
+* dd 
+{
+    &.clear
+    {
+        background: none;
+        border: 0;
+        clear: both;
+        display: block;
+        float: none;
+        font-size: 0;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        visibility: hidden;
+        width: 0;
+        height: 0;
+    }
+}
+
+#debug
+{ 
+	#rt-main 
+	{
+	  overflow:hidden;
+	  border-bottom: 4px solid #666; 
+	  margin-top:15px;
+	  position:relative
+	}
+	 
+    .status 
+    {
+        position: absolute;
+        background:#333;
+        opacity:.3;
+        padding:0px 15px;
+        z-index:10000;
+        color:#fff;
+        font-weight:bold;
+        font-size:150%;
+     }
+}

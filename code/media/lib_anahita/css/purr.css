@@ -1,0 +1,38 @@
+.purr-wrapper { margin: 0 0 }
+
+.purr-alert
+{
+	margin-bottom:10px;
+	padding: 10px;
+	font-size: 12px;
+	font-weight: bold;
+	width: 300px;
+}
+
+.purr-alert button
+{
+	font-size:10px;
+	margin:0 5px;
+}
+
+.purr-alert.error
+{
+	padding-left: 30px;
+	width:280px;
+}
+
+.purr-alert.success
+{
+	padding-left: 30px;
+	width: 280px;
+}
+
+.purr-alert.notice
+{
+	padding-left: 30px;
+	width: 280px;
+}
+
+.purr-element-alert{ width: 200px }
+
+.purr-button-wrapper{text-align:center }

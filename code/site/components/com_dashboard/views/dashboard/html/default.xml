@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Viewer's Dashboard">
+		<message>Display's the Viewer's dashboard that provides incoming story updates, information, and content from all the actor nodes that the Viewer is following.</message>
+	</layout>
+</metadata>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<params>
+		<!-- 
+		<param type="list" name="store" label="Store" size="60">
+			<option value="">Default</option>
+			<option value="embryo-releases">Embyo Packages</option>
+		</param>
+		 --> 
+		<param type="text" name="host" label="Bazaar Server" size="60" />
+	</params>
+</config>

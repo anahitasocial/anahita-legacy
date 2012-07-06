@@ -1,0 +1,72 @@
+.popover-inner
+{
+
+    .popover-title
+    {
+       font-size: @baseFontSize + 1;
+       padding: 10px; 
+    }
+
+	.popover-content
+	{
+	    .alert
+	    {
+	        margin: 5px 0 0 0;
+	    }
+	    
+	    .media-grid
+	    {           
+	        margin: -10px -15px -10px -10px;
+	        
+	        img
+	        {
+	            .square(29px);
+	            margin: 5px;
+	        }   
+	    }
+	    
+	    .popover-entities
+	    {
+	         margin: -5px;
+	        
+	        .popover-entity:first-child 
+	        { 
+	            border-top: 0;
+	        }
+	            
+	        .popover-entity:last-child 
+	        { 
+	            border-bottom: 0;
+	        }
+	        
+	        .popover-entity
+	        {
+	            font-size: @baseFontSize - 1;
+	            
+	            .entity-thumbnail
+	            {       
+	                img
+	                {
+	                    .square(26px);
+	                }
+	            }
+	            
+	            .entity-container
+	            {
+	                padding-left: 45px;
+	                
+	                .entity-description
+	                {
+	                    margin: 1px 0;
+	                }
+	                
+	                .entity-meta
+		            {
+		                margin-bottom: 5px;
+		                font-size: @baseFontSize - 2;
+		            }
+	            }
+	        }
+	    }	
+	}
+}
