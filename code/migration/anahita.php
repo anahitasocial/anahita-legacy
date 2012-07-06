@@ -261,11 +261,15 @@ follow.node_b_type NOT LIKE 'com:people.domain.entity.person' and s.id IS NULL a
       
     //now reset the subscription stats
     try {
-        $repos    = KService::get('repos://site/actors.actor');
-        $actorIds = array_unique($actorIds);
-        $actors = $repos->getQuery()->disableChain()->id($actorIds)->fetchSet()->toArray();
-        $repos->getBehavior('subscribable')->resetStats($actors);
-        $repos->getSpace()->commit();
+        global $kfactory_legacy;
+        if ( !$kfactory_legacy )
+        {
+            $repos    = KService::get('repos://site/actors.actor');
+            $actorIds = array_unique($actorIds);
+            $actors = $repos->getQuery()->disableChain()->id($actorIds)->fetchSet()->toArray();
+            $repos->getBehavior('subscribable')->resetStats($actors);
+            $repos->getSpace()->commit();
+        }
     }catch(Exception $e) {}
 }
 
