@@ -1,2 +1,5 @@
 <?php if (!defined('KOOWA')) die; ?>
-<p><?php echo $error->code ?> - <?php echo $error->message ?></p>
+
+<div class="alert alert-error">
+<?php print $error->code ?> - <?php print $error->message ?>
+</div>
