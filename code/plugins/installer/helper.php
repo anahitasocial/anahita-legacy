@@ -158,7 +158,7 @@ class PlgInstallerHelper
     {
         if ( is_callable("Anahita::initialize") && $adapter instanceof PlgInstallerSystem && version_compare(@$installer->getManifest()->document->version[0]->data(),'2','>='))
         {
-            KService::get('koowa:database.adapter.mysqli')->getCommandChain()->disable();
+            KFactory::get('lib.koowa.database')->getCommandChain()->disable();
             if ( !function_exists('dboutput') )
                 require_once JPATH_ROOT.'/cli/components/com_migrator/helper.php';
             require_once $installer->getPath('source').DS.'migration'.DS.'anahita.php';
