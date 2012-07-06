@@ -68,16 +68,8 @@
 		</div>
 		<div class="m">
 				<div class="far-right">
-					<jtmpl:tmpl name="buttons" type="condition" conditionvar="direction">
-						<jtmpl:sub condition="ltr">
-							<div class="button1-right"><div class="prev"><a onclick="submitForm( adminForm, 'preinstall' );" alt="<jtmpl:translate escape="yes">Previous</jtmpl:translate>"><jtmpl:translate escape="yes">Previous</jtmpl:translate></a></div></div>
-							<div class="button1-left"><div class="next"><a onclick="validateForm( adminForm, 'makedb' );" alt="<jtmpl:translate escape="yes">Next</jtmpl:translate>"><jtmpl:translate escape="yes">Next</jtmpl:translate></a></div></div>
-						</jtmpl:sub>
-						<jtmpl:sub condition="rtl">
-							<div class="button1-right"><div class="prev"><a onclick="validateForm( adminForm, 'makedb' );" alt="<jtmpl:translate escape="yes">Next</jtmpl:translate>"><jtmpl:translate escape="yes">Next</jtmpl:translate></a></div></div>
-							<div class="button1-left"><div class="next"><a onclick="submitForm( adminForm, 'preinstall' );" alt="<jtmpl:translate escape="yes">Previous</jtmpl:translate>"><jtmpl:translate escape="yes">Previous</jtmpl:translate></a></div></div>
-						</jtmpl:sub>
-					</jtmpl:tmpl>
+					<a class="btn" onclick="submitForm( adminForm, 'preinstall' );"><i class="icon-circle-arrow-left"></i> Previous</a>
+					<a class="btn btn-primary" onclick="validateForm( adminForm, 'makedb' );"><i class="icon-circle-arrow-right icon-white"></i> Next</a>
 				</div>
 				<span class="step"><jtmpl:translate>Database Configuration</jtmpl:translate></span>
 			</div>
@@ -112,126 +104,71 @@
 			</div>
 			</div>
 			<div class="m">
-							<h3 class="title-smenu" title="<jtmpl:translate>Basic</jtmpl:translate>"><jtmpl:translate>Basic Settings</jtmpl:translate></h3>
-							<div class="section-smenu">
-								<table class="content2">
-								<tr>
-									<td></td>
-									<td></td>
-									<td></td>
-								</tr>
-		
-								<tr>
-									<td colspan="2">
-										<label for="vars_dbhostname">
-											<span id="dbhostnamemsg"><jtmpl:translate>Host Name</jtmpl:translate></span>
-										</label>
-										<br />
-										<input id="vars_dbhostname" class="inputbox validate required none dbhostnamemsg" type="text" name="vars[DBhostname]" value="{VAR_DBHOSTNAME}" />
-									</td>
-									<td>
-										<em>
-										<jtmpl:translate key="tipHost">This is usually 'localhost'</jtmpl:translate>
-										</em>
-									</td>
-								</tr>
-								<tr>
-									<td colspan="2">
-										<label for="vars_dbusername">
-											<span id="dbusernamemsg"><jtmpl:translate>User Name</jtmpl:translate></span>
-										</label>
-										<br />
-										<input id="vars_dbusername" class="inputbox validate required none dbusernamemsg" type="text" name="vars[DBuserName]" value="{VAR_DBUSERNAME}" />
-									</td>
-									<td>
-										<em>
-										<jtmpl:translate key="tipUser">Either something as 'root' or a username given by the hoster</jtmpl:translate>
-										</em>
-									</td>
-								</tr>
-								<tr>
-									<td colspan="2">
-										<label for="vars_dbpassword">
-											<jtmpl:translate>Password</jtmpl:translate>
-										</label>
-										<br />
-										<input id="vars_dbpassword" class="inputbox" type="password" name="vars[DBpassword]" value="{VAR_DBPASSWORD}" />
-									</td>
-									<td>
-										<em>
-										<jtmpl:translate key="tipPassword">For site security using a password for the mysql account is mandatory</jtmpl:translate>
-										</em>
-									</td>
-								</tr>
-								<tr>
-									<td colspan="2">
-										<label for="vars_dbname">
-											<span id="dbnamemsg"><jtmpl:translate>Database Name</jtmpl:translate></span>
-										</label>
-										<br />
-										<input id="vars_dbname" class="inputbox validate required none dbnamemsg" type="text" name="vars[DBname]" value="{VAR_DBNAME}" />
-									</td>
-									<td>
-										<em>
-										<jtmpl:translate key="tipDatabase">Some hosts allow only a certain DB name per site. Use table prefix in this case for distinct Anahita™ sites.</jtmpl:translate>
-										</em>
-									</td>
-								</tr>
-								</table>
-								<br /><br />
-							</div>
-							<h3 class="title-smenu moofx-toggler" title="<jtmpl:translate>Advanced</jtmpl:translate>"><jtmpl:translate>Advanced settings</jtmpl:translate></h3>
-							<div class="section-smenu moofx-slider">
-								<table class="content2">
-								<tr>
-									<td></td>
-									<td></td>
-									<td></td>
-								</tr>
-								<tr>
-									<td>
-										<input id="vars_dbolddel" type="radio" name="vars[DBOld]" value="rm" />
-									</td>
-									<td>
-										<label for="vars_dbolddel">
-											<jtmpl:translate>Drop Existing Tables</jtmpl:translate>
-										</label>
-									</td>
-									<td></td>
-								</tr>
-								<tr>
-									<td>
-										<input id="vars_dboldbackup" type="radio" name="vars[DBOld]" value="bu"  checked="checked"/>
-									</td>
-
-									<td>
-										<label for="vars_dboldbackup">
-											<jtmpl:translate>Backup Old Tables</jtmpl:translate>
-										</label>
-									</td>
-
-									<td>
-										<em>
-										<jtmpl:translate key="tipBackup">Any existing backup tables from former Anahita™ installations will be replaced</jtmpl:translate>
-										</em>
-									</td>
-								</tr>
-								<tr>
-									<td colspan="2">
-										<label for="vars_dbprefix">
-											<jtmpl:translate>Table Prefix</jtmpl:translate>
-										</label>
-										<br />
-										<input id="vars_dbprefix" class="inputbox" type="text" name="vars[DBPrefix]" value="{VAR_DBPREFIX}" />
-									</td>
-									<td>
-										<em>
-										<jtmpl:translate key="tipPrefix">Dont use 'old_' since this is used for backup tables</jtmpl:translate>
-										</em>
-									</td>
-								</tr>
-								</table>
-
+			                
+			                <fieldset>
+			                     <legend><jtmpl:translate>Basic Settings</jtmpl:translate></legend>
+			                     
+			                     <div class="control-group">
+			                         <label class="control-label" for="vars_dbhostname"><jtmpl:translate>Host Name</jtmpl:translate></label>
+			                         <div class="controls">
+			                             <input id="vars_dbhostname" class="inputbox validate required none dbhostnamemsg" type="text" name="vars[DBhostname]" value="{VAR_DBHOSTNAME}" />
+			                             <p class="help-block"><jtmpl:translate key="tipHost">This is usually 'localhost'</jtmpl:translate></p>
+			                         </div>
+			                     </div>
+			                     
+			                     <div class="control-group">
+			                         <label class="control-label" for="vars_dbusername"><jtmpl:translate>User Name</jtmpl:translate></label>
+			                         <div class="controls">
+			                             <input id="vars_dbusername" class="inputbox validate required none dbusernamemsg" type="text" name="vars[DBuserName]" value="{VAR_DBUSERNAME}" />
+			                             <p class="help-block"><jtmpl:translate key="tipUser">Either something as 'root' or a username given by the hoster</jtmpl:translate></p>
+			                         </div>
+			                     </div>
+			                     
+			                     <div class="control-group">
+			                         <label class="control-label" for="vars_dbpassword"><jtmpl:translate>Password</jtmpl:translate></label>
+			                         <div class="controls">
+			                             <input id="vars_dbpassword" class="inputbox" type="password" name="vars[DBpassword]" value="{VAR_DBPASSWORD}" />
+			                             <p class="help-block"><jtmpl:translate key="tipPassword">For site security using a password for the mysql account is mandatory</jtmpl:translate></p>
+			                         </div>
+			                     </div>
+			                     
+			                      <div class="control-group">
+                                     <label class="control-label" for="vars_dbname"><jtmpl:translate>Database Name</jtmpl:translate></label>
+                                     <div class="controls">
+                                        <input id="vars_dbname" class="inputbox validate required none dbnamemsg" type="text" name="vars[DBname]" value="{VAR_DBNAME}" />
+                                         <p class="help-block"><jtmpl:translate key="tipDatabase">Some hosts allow only a certain DB name per site. Use table prefix in this case for distinct Anahita™ sites.</jtmpl:translate></p>
+                                     </div>
+                                 </div>
+			                </fieldset>
+			
+			
+			                <fieldset>
+			                     <legend><jtmpl:translate>Advanced settings</jtmpl:translate></legend>
+			                     
+			                     <div class="control-group">
+			                         <label class="control-label">
+			                             <input id="vars_dbolddel" type="radio" name="vars[DBOld]" value="rm" /> 
+			                             <jtmpl:translate>Drop Existing Tables</jtmpl:translate>
+			                         </label>
+			                     </div>
+			                     
+			                     <div class="control-group">     
+			                         <label class="control-label">
+                                         <input id="vars_dboldbackup" type="radio" name="vars[DBOld]" value="bu"  checked="checked"/>
+                                         <jtmpl:translate>Backup Old Tables</jtmpl:translate>
+                                     </label>
+                                     <p class="help-block"><jtmpl:translate key="tipBackup">Any existing backup tables from former Anahita™ installations will be replaced</jtmpl:translate></p>
+			                    </div>
+			                    
+			                    <div class="control-group">  
+			                         <label class="control-label"><jtmpl:translate>Table Prefix</jtmpl:translate></label>
+			                         <div class="controls">
+			                             <input id="vars_dbprefix" class="inputbox" type="text" name="vars[DBPrefix]" value="{VAR_DBPREFIX}" />
+			                             <p class="help-block"><jtmpl:translate key="tipPrefix">Dont use 'old_' since this is used for backup tables</jtmpl:translate></p>
+			                         </div>
+			                    </div>  
+			                </fieldset>
+			
 						</div>
 						<div class="clr"></div>
 			</div>

@@ -56,16 +56,8 @@
 		</div>
 		<div class="m">
 				<div class="far-right">
-					<jtmpl:tmpl name="buttons" type="condition" conditionvar="direction">
-						<jtmpl:sub condition="ltr">
-							<div class="button1-right"><div class="prev"><a onclick="submitForm( adminForm, '{PREVIOUS}' );" alt="<jtmpl:translate escape="yes">Previous</jtmpl:translate>"><jtmpl:translate escape="yes">Previous</jtmpl:translate></a></div></div>
-							<div class="button1-left"><div class="next"><a onclick="validateForm( adminForm, 'saveconfig' );" alt="<jtmpl:translate escape="yes">Next</jtmpl:translate>"><jtmpl:translate escape="yes">Next</jtmpl:translate></a></div></div>
-						</jtmpl:sub>
-						<jtmpl:sub condition="rtl">
-							<div class="button1-right"><div class="prev"><a onclick="validateForm( adminForm, 'saveconfig' );" alt="<jtmpl:translate escape="yes">Next</jtmpl:translate>"><jtmpl:translate escape="yes">Next</jtmpl:translate></a></div></div>
-							<div class="button1-left"><div class="next"><a onclick="submitForm( adminForm, '{PREVIOUS}' );" alt="<jtmpl:translate escape="yes">Previous</jtmpl:translate>"><jtmpl:translate escape="yes">Previous</jtmpl:translate></a></div></div>
-						</jtmpl:sub>
-					</jtmpl:tmpl>
+					<a class="btn" onclick="submitForm( adminForm, '{PREVIOUS}' );"><i class="icon-circle-arrow-left"></i> Previous</a>
+					<a class="btn btn-primary" onclick="validateForm( adminForm, 'saveconfig' );"><i class="icon-circle-arrow-right icon-white"></i> Next</a>
 				</div>
 				<span class="step"><jtmpl:translate>Main Configuration</jtmpl:translate></span>
 			</div>
@@ -100,20 +92,14 @@
 			</div>
 			</div>
 			<div class="m">
-						<fieldset>
-							<table class="content2">
-								<tr>
-									<td class="item">
-									<label for="siteName">
-										<span id="sitenamemsg"><jtmpl:translate>Site name</jtmpl:translate></span>
-									</label>
-									</td>
-									<td align="center">
-									<input class="inputbox validate required sitename sitenamemsg" type="text" id="siteName" name="vars[siteName]" size="30" value="{VAR_SITENAME}" />
-									</td>
-								</tr>
-							</table>
-						</fieldset>
+				<fieldset>
+				    <div class="control-group">
+				        <label class="control-label" for="siteName"><jtmpl:translate>Site name</jtmpl:translate></label>
+				        <div class="controls">
+				            <input class="inputbox validate required sitename sitenamemsg" type="text" id="siteName" name="vars[siteName]" size="30" value="{VAR_SITENAME}" />
+				        </div>
+				    </div>
+				</fieldset>
 			</div>
 			<div class="b">
 			<div class="b">
@@ -137,40 +123,29 @@
 			</div>
 			</div>
 			<div class="m">
-						<fieldset>
-							<table class="content2">
-							<tr>
-								<td class="item">
-								<label for="adminEmail">
-									<span id="emailmsg"><jtmpl:translate>Your E-mail</jtmpl:translate></span>
-								</label>
-								</td>
-								<td align="center">
-								<input class="inputbox validate required email emailmsg" type="text" id="adminEmail" name="vars[adminEmail]" value="" size="30" />
-								</td>
-							</tr>
-							<tr>
-								<td class="item">
-								<label for="adminPassword">
-									<span id="passwordmsg"><jtmpl:translate>Admin password</jtmpl:translate></span>
-								</label>
-								</td>
-								<td align="center">
-								<input onfocus="clearPasswordFields( adminForm );" class="inputbox validate required password passwordmsg" type="password" id="adminPassword" name="vars[adminPassword]" value="" size="30"/>
-								</td>
-							</tr>
-							<tr>
-								<td class="item">
-								<label for="confirmAdminPassword">
-									<span id="confirmpasswordmsg"><jtmpl:translate>Confirm admin password</jtmpl:translate></span>
-								</label>
-								</td>
-								<td align="center">
-								<input class="inputbox validate required confirmpassword confirmpasswordmsg" type="password" id="confirmAdminPassword" name="vars[confirmAdminPassword]" value="" size="30"/>
-								</td>
-							</tr>
-							</table>
-						</fieldset>
+						
+			    <fieldset>
+				    <div class="control-group">
+				        <label class="control-label" for="adminEmail"><jtmpl:translate>Your E-mail</jtmpl:translate></label>
+				        <div class="controls">
+				            <input class="inputbox validate required email emailmsg" type="text" id="adminEmail" name="vars[adminEmail]" value="" size="30" />
+				        </div>
+				    </div>		
+				    
+				    <div class="control-group">
+				        <label class="control-label" for="adminPassword"><jtmpl:translate>Admin password</jtmpl:translate></label>
+				        <div class="controls">
+				            <input onfocus="clearPasswordFields( adminForm );" class="inputbox validate required password passwordmsg" type="password" id="adminPassword" name="vars[adminPassword]" value="" size="30"/>
+				        </div>
+				    </div>
+						
+					<div class="control-group">
+					   <label for="confirmAdminPassword"><jtmpl:translate>Confirm admin password</jtmpl:translate></label>
+					   <div class="controls">
+					       <input class="inputbox validate required confirmpassword confirmpasswordmsg" type="password" id="confirmAdminPassword" name="vars[confirmAdminPassword]" value="" size="30"/>
+					   </div>
+					</div>
+				</fieldset>
 			</div>
 			<div class="b">
 			<div class="b">

@@ -7,10 +7,8 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 	<head>
 		<jdoc:include type="head" />
 
+		<link href="../templates/shiraz/css/style1.css" rel="stylesheet" type="text/css" />
 		<link href="template/css/template.css" rel="stylesheet" type="text/css" />
-		<?php if($this->direction == 'rtl') : ?>
-		<link href="template/css/template_rtl.css" rel="stylesheet" type="text/css" />
-		<?php endif; ?>
 
 		<script type="text/javascript" src="../media/lib_anahita/js/min/mootools.js"></script>
 		<script type="text/javascript" src="includes/js/installation.js"></script>
@@ -25,10 +23,17 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 			});
   		</script>
 	</head>
-	<body>
-		<div id="header">
-			<div id="version"><?=Anahita::getVersion()?></div>
-		</div>
+	<body>		
+		<div class="navbar">
+        	<div class="navbar-inner">
+        		<div class="container">
+	        		<a class="brand brand-logo" style="background: url(../templates/shiraz/images/logo/logo.png) no-repeat 10px 10px transparent">
+	        			Anahita™ <?php print Anahita::getVersion() ?> - Social Networking Platform & Framework
+	        		</a>
+        		</div>
+        	</div>
+        </div>
+		
 		<div id="content-box">
 			<div id="content-pad">
 				<jdoc:include type="installation" />

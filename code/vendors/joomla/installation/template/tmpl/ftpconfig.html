@@ -76,16 +76,8 @@
 			</div>
 			<div class="m">
 				<div class="far-right">
-					<jtmpl:tmpl name="buttons" type="condition" conditionvar="direction">
-						<jtmpl:sub condition="ltr">
-							<div class="button1-right"><div class="prev"><a onclick="submitForm( adminForm, 'dbconfig' );" alt="<jtmpl:translate escape="yes">Previous</jtmpl:translate>"><jtmpl:translate escape="yes">Previous</jtmpl:translate></a></div></div>
-							<div class="button1-left"><div class="next"><a onclick="validateForm( adminForm, 'mainconfig' );" alt="<jtmpl:translate escape="yes">Next</jtmpl:translate>"><jtmpl:translate escape="yes">Next</jtmpl:translate></a></div></div>
-						</jtmpl:sub>
-						<jtmpl:sub condition="rtl">
-							<div class="button1-right"><div class="prev"><a onclick="validateForm( adminForm, 'mainconfig' );" alt="<jtmpl:translate escape="yes">Next</jtmpl:translate>"><jtmpl:translate escape="yes">Next</jtmpl:translate></a></div></div>
-							<div class="button1-left"><div class="next"><a onclick="submitForm( adminForm, 'dbconfig' );" alt="<jtmpl:translate escape="yes">Previous</jtmpl:translate>"><jtmpl:translate escape="yes">Previous</jtmpl:translate></a></div></div>
-						</jtmpl:sub>
-					</jtmpl:tmpl>
+				    <a class="btn" onclick="submitForm( adminForm, 'dbconfig' );"><i class="icon-circle-arrow-left"></i> Previous</a>
+					<a class="btn btn-primary" onclick="validateForm( adminForm, 'mainconfig' );"><i class="icon-circle-arrow-right icon-white"></i> Next</a>
 				</div>
 				<span class="step"><jtmpl:translate>FTP Configuration</jtmpl:translate></span>
 			</div>
@@ -129,104 +121,86 @@
 					</div>
 					<div class="m">
 
-						<h3 class="title-smenu" title="<jtmpl:translate>Basic</jtmpl:translate>"><jtmpl:translate>Basic Settings</jtmpl:translate></h3>
-						<div class="section-smenu">
-							<table class="content2">
-								<tr>
-									<td width="100">
-										<input id="ftpenable" type="radio" name="vars[ftpEnable]" value="1" />
-										<label for="vars_ftpenable">
-											<jtmpl:translate key="YES">Yes</jtmpl:translate>
-										</label>
-										<br />
-										<input id="ftpdisable" type="radio" name="vars[ftpEnable]" value="0" checked="checked" />
-										<label for="vars_ftpdisable">
-											<jtmpl:translate key="NO">No</jtmpl:translate>
-										</label>
-									</td>
-									<td align="justify">
-										<jtmpl:translate key="ENABLEFTPDESC">Enable FTP filesystem layer</jtmpl:translate>
-									</td>
-								</tr>
-								<tr>
-									<td width="100">
-										<label for="ftpuser">
-											<span id="ftpusermsg"><jtmpl:translate>FTP user</jtmpl:translate></span>
-										</label>
-									</td>
-									<td align="center">
-										<input class="inputbox validate notrequired isftp ftpusermsg" type="text" id="ftpuser" name="vars[ftpUser]" value="{VAR_FTPUSER}" size="30"/>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<label for="ftppass">
-											<span id="ftppassmsg"><jtmpl:translate>FTP password</jtmpl:translate></span>
-										</label>
-									</td>
-									<td align="center">
-										<input class="inputbox validate notrequired isftp ftppassmsg" type="password" id="ftppass" name="vars[ftpPassword]" value="{VAR_FTPPASSWORD}" size="30"/>
-									</td>
-								</tr>
-								<tr id="rootPath">
-									<td>
-										<label for="ftproot">
-											<span id="ftprootmsg"><jtmpl:translate>FTP Root Path</jtmpl:translate></span>
-										</label>
-									</td>
-									<td align="center">
-										<input class="inputbox validate notrequired isftp ftprootmsg" id="ftproot" type="text" name="vars[ftpRoot]" value="{VAR_FTPROOT}" size="30"/>
-									</td>
-								</tr>
-							</table>
-							<input type="button" id="findbutton" class="button" value="<jtmpl:translate>Autofind FTP Path</jtmpl:translate>" onclick="JProcess();" />
-							<input type="button" id="verifybutton" class="button" value="<jtmpl:translate>Verify FTP Settings</jtmpl:translate>" onclick="doFTPVerify();" />
-							<br /><br />
-						</div>
-
-						<h3 class="title-smenu moofx-toggler" title="<jtmpl:translate>Advanced</jtmpl:translate>"><jtmpl:translate>Advanced settings</jtmpl:translate></h3>
-						<div class="section-smenu moofx-slider">
-							<table class="content2">
-								<tr id="host">
-									<td width="100">
-										<label for="ftphost">
-											<jtmpl:translate>FTP host</jtmpl:translate>
-										</label>
-									</td>
-									<td align="center">
-										<input class="inputbox" type="text" id="ftphost" name="vars[ftpHost]" value="{VAR_FTPHOST}" size="30"/>
-									</td>
-								</tr>
-								<tr id="port">
-									<td width="100">
-										<label for="ftpport">
-											<jtmpl:translate>FTP port</jtmpl:translate>
-										</label>
-									</td>
-									<td align="center">
-										<input class="inputbox" type="text" id="ftpport" name="vars[ftpPort]" value="{VAR_FTPPORT}" size="30"/>
-									</td>
-								</tr>
-								<tr>
-									<td width="100">
-										<label for="ftpsavepass">
-											<jtmpl:translate>Save FTP Password</jtmpl:translate>
-										</label>
-									</td>
-									<td align="justify">
-										<input id="ftpsavepass" type="radio" name="vars[ftpSavePass]" value="1" />
-										<label for="ftpsavepass">
-											<jtmpl:translate key="YES">Yes</jtmpl:translate>
-										</label>
-										<br />
-										<input id="ftpnosavepass" type="radio" name="vars[ftpSavePass]" value="0" checked="checked" />
-										<label for="ftpnosavepass">
-											<jtmpl:translate key="NO">No</jtmpl:translate>
-										</label>
-									</td>
-								</tr>
-							</table>
-						</div>
+                        <fieldset>
+                            <legend><jtmpl:translate>Basic Settings</jtmpl:translate></legend>
+                            
+                            <span class="help-block"><jtmpl:translate key="ENABLEFTPDESC">Enable FTP filesystem layer</jtmpl:translate></span>
+                            
+                            <div class="control-group">
+                                <label class="control-label" for="vars_ftpenable">
+                                    <input id="ftpenable" type="radio" name="vars[ftpEnable]" value="1" />
+                                    <jtmpl:translate key="YES">Yes</jtmpl:translate>
+                                 </label>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label class="control-label" for="vars_ftpdisable">
+                                    <input id="ftpdisable" type="radio" name="vars[ftpEnable]" value="0" checked="checked" /> 
+                                    <jtmpl:translate key="NO">No</jtmpl:translate>   
+                                </label>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label class="control-label" for="ftpuser"><jtmpl:translate>FTP user</jtmpl:translate></label>
+                                <div class="controls">
+                                    <input class="inputbox validate notrequired isftp ftpusermsg" type="text" id="ftpuser" name="vars[ftpUser]" value="{VAR_FTPUSER}" size="30"/>
+                                </div>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label class="control-label" for="ftppass"><jtmpl:translate>FTP password</jtmpl:translate></label>
+                                <div class="controls">
+                                    <input class="inputbox validate notrequired isftp ftppassmsg" type="password" id="ftppass" name="vars[ftpPassword]" value="{VAR_FTPPASSWORD}" size="30"/>
+                                </div>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label class="control-label" for="ftproot"><jtmpl:translate>FTP Root Path</jtmpl:translate></label>
+                                <div class="controls">
+                                    <input class="inputbox validate notrequired isftp ftprootmsg" id="ftproot" type="text" name="vars[ftpRoot]" value="{VAR_FTPROOT}" size="30"/>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <input type="button" id="findbutton" class="btn" value="<jtmpl:translate>Autofind FTP Path</jtmpl:translate>" onclick="JProcess();" />
+                                <input type="button" id="verifybutton" class="btn" value="<jtmpl:translate>Verify FTP Settings</jtmpl:translate>" onclick="doFTPVerify();" />
+                            </div>
+                        </fieldset>
+                        
+                        <fieldset>
+                            <legend><jtmpl:translate>Advanced settings</jtmpl:translate></legend>
+                            
+                            <div class="control-group">
+                                <label class="control-label" for="ftphost"><jtmpl:translate>FTP host</jtmpl:translate></label>
+                                <div class="controls">
+                                    <input class="inputbox" type="text" id="ftphost" name="vars[ftpHost]" value="{VAR_FTPHOST}" size="30"/>
+                                </div>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label class="control-label" for="ftpport"><jtmpl:translate>FTP port</jtmpl:translate></label>
+                                <div class="controls">
+                                    <input class="inputbox" type="text" id="ftpport" name="vars[ftpPort]" value="{VAR_FTPPORT}" size="30"/>
+                                </div>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label class="control-label" for="ftpsavepass"><jtmpl:translate>Save FTP Password</jtmpl:translate></label>
+                                <div class="controls">
+                                   <label class="control-label" for="ftpsavepass">
+                                       <input id="ftpsavepass" type="radio" name="vars[ftpSavePass]" value="1" /> 
+                                       <jtmpl:translate key="YES">Yes</jtmpl:translate>
+                                   </label>
+                                </div>
+                                
+                                <div class="controls">
+                                   <label class="control-label" for="ftpnosavepass">
+                                        <input id="ftpnosavepass" type="radio" name="vars[ftpSavePass]" value="0" checked="checked" /> 
+                                        <jtmpl:translate key="NO">No</jtmpl:translate>
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
 						<div class="clr"></div>
 					</div>
 					<div class="b">
