@@ -8,7 +8,7 @@ $url = 'src='.urlencode(KRequest::url()).'&'.implode('&', $exts);
 if ( !in_array('curl', get_loaded_extensions()) ) 
     $url .= '&no_curl_support=1';
 ?>
-<script src="<?= $store->getHost() ?>/media/com_bzserver/cross.js?<?=$url?>" />
+<script src="<?= $store->getHost() ?>/media/com_bzserver/js/cross.js?<?=$url?>" />
 <?php $url = $store->getListURL().'&'.$url; ?>
 <?php if ( !empty($install_message) )  : ?>
 <div class="mc-form-frame mc-padding mc-first-block">
