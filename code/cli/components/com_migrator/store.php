@@ -128,12 +128,12 @@ class ComMigratorStore extends KObject
 EOF;
         $db->execute($sql);
        */
-        $entity = AnDomain::getRepository('com:migrator.domain.entity.migraiton')->fetch();
+        $db = KService::get('koowa:database.adapter.mysqli');
+        $entity = $db->select("SELECT * FROM #__migrator_migraitons", KDatabase::FETCH_OBJECT);
         if ( !$entity ) {
-            $entity = AnDomain::getRepository('com:migrator.domain.entity.migraiton')->getEntity();
-            $entity->setData(array('migrations'=>''));
-            $entity->save();
-        }        
+            $db->insert('migrator_migraitons', array('migrations'=>''));
+            $entity = $db->select("SELECT * FROM #__migrator_migraitons", KDatabase::FETCH_OBJECT);
+        }
         $this->_entity = $entity;
         $reg = new JRegistry();
         $reg->loadINI($this->_entity->migrations);
@@ -147,9 +147,10 @@ EOF;
      */
     public function save()
     {
+        $db  = KService::get('koowa:database.adapter.mysqli');
         $reg = new JRegistry();
         $reg->loadArray((array)KConfig::unbox($this->_versions));
         $this->_entity->migrations = $reg->toString();
-        $this->_entity->save();
+        $db->update('migrator_migraitons', (array)$this->_entity,' WHERE id = '.$this->_entity->id);
     }
 }
