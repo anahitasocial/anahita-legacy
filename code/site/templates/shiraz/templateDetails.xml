@@ -248,6 +248,9 @@
         <file>component.php</file>
 		<file>offline.php</file>
         <file>debugbody.php</file>
+        <file>error_default.php</file>
+        <file>error_404.php</file>
+        <file>error_405.php</file>
         <file>en-GB.tpl_shiraz.ini</file>
         <file>gantry.config.php</file>
         <file>htaccess.txt</file>
