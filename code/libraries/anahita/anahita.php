@@ -73,12 +73,6 @@ class Anahita
         //store the path
         $this->_path = dirname(__FILE__);
                 
-        //if caching is not enabled then reset the apc cache to
-        //to prevent corrupt identifier        
-        if ( !$config['cache_enabled'] ) {
-              clean_apc_with_prefix($config['cache_prefix']);
-        }
-                
         //instantiate koowa
         Koowa::getInstance(array(
             'cache_prefix'  => $config['cache_prefix'],
@@ -98,6 +92,12 @@ class Anahita
         
         require_once $this->_path.'/functions.php';
         require_once $this->_path.'/loader/adapter/anahita.php';
+                
+        //if caching is not enabled then reset the apc cache to
+        //to prevent corrupt identifier        
+        if ( !$config['cache_enabled'] ) {
+              clean_apc_with_prefix($config['cache_prefix']);
+        }   
    
         KLoader::addAdapter(new AnLoaderAdapterAnahita(array('basepath'=>$this->_path)));
         KLoader::addAdapter(new AnLoaderAdapterComponent(array('basepath'=>JPATH_BASE)));
