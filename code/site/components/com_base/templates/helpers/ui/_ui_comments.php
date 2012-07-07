@@ -27,9 +27,9 @@
         <?php $return = base64_encode(@route($entity->getURL())); ?>
         <?= @message(sprintf(@text('LIB-AN-MEDIUM-COMMENT-GUEST-MUST-LOGIN'), @route(array('option'=>'com_user', 'view'=>'login', 'return'=>$return))), array('type'=>'warning')) ?>
     <?php elseif ( !$entity->openToComment ) : ?>
-        <?= @message('Comments are closed', array('type'=>'warning')) ?>
+        <?= @message(@text('LIB-AN-MEDIUM-COMMENTS-ARE-CLOSED')) ?>
     <?php else : ?>
-        <?= @message("Don't have permission to comment",array('type'=>'warning')) ?>
+        <?= @message(@text('LIB-AN-MEDIUM-COMMENT-NO-PERMISSION')) ?>
     <?php endif; ?>    
 <?php endif; ?>
 </div>
