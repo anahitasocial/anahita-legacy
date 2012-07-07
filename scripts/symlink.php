@@ -131,7 +131,8 @@ function joomla_symlinks(&$links)
          'vendors/joomla/administrator/components/com_modules' => 'administrator/components/com_modules',
          'vendors/joomla/administrator/components/com_menus' => 'administrator/components/com_menus',
          'vendors/joomla/administrator/components/com_admin' => 'administrator/components/com_admin',         
-         'vendors/joomla/components/com_user' => 'components/com_user'                        
+         'vendors/joomla/components/com_user' => 'components/com_user',
+         'vendors/joomla/templates/system' => 'templates/system'                        
     ));    
 }
 
