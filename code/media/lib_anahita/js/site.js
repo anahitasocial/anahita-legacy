@@ -568,6 +568,50 @@ Delegator.register('click', {
 	}
 });
 
+(function(){
+	Delegator.register('click', 'BS.showPopup', {
+		handler: function(event, link, api) {
+			var target, url;	
+			event.preventDefault();
+			if ( api.get('target') ) {
+				target = link.getElement(api.get('target'));
+			} 
+			if ( api.get('url') ) {			
+				url	   = api.get('url');
+			}
+			if ( !url && !target ) {
+				api.fail('Need either a url to the content or can\'t find the target element');
+			}
+						
+			if ( target )								
+				target.getBehaviorResult('BS.Popup').show();
+			else {
+				var popup = Bootstrap.Popup.from({
+					header : 'Prompt.loading'.translate(),
+					body   : '<div class="uiActivityIndicator">&nbsp;</div>',
+					buttons : [{name: 'Action.close'.translate(), dismiss:true}]
+				});
+				popup.show();			
+				var req = new Request.HTML({
+					url : url,
+					onSuccess : function(nodes, tree, html) { 
+					    var title = html.parseHTML().getElement('.popup-header');
+					    var body  = html.parseHTML().getElement('.popup-body');
+					    if ( title ) {
+					    	popup.element.getElement('.modal-header').empty().adopt(title);
+					    }
+					    if ( body ) {
+					    	popup.element.getElement('.modal-body').empty().adopt(body);
+					    }
+					}
+				}).get();
+			}
+		}
+
+	}, true);
+
+})();
+
 Request.Options = {};
 
 /**

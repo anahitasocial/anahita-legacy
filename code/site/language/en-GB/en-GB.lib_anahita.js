@@ -1,4 +1,5 @@
 'Action' : {
+	'close'			: 'Close',
 	'ok'       		: 'Ok',
 	'save'     		: 'Save',
 	'cancel'   		: 'Cancel',
