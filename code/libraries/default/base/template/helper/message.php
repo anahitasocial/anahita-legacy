@@ -62,7 +62,8 @@ class LibBaseTemplateHelperMessage extends KTemplateHelperAbstract
         //get the first message
         $message  = array_shift($messages);
         
-        return $this->render($message);            
+        if ( isset($message['message']) )        
+            return $this->render($message);            
     }
          
     /**
