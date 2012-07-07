@@ -16,6 +16,9 @@ var AnEditorMode = {
 Behavior.addGlobalFilter('Editor', {
 	setup : function(el, api) 
 	{
+		if ( Browser.Platform.mobile )
+			return;
+			
 		var options = Object.merge(api._getOptions(),{element:el});
 		new AnEditor(options);	 
 	}

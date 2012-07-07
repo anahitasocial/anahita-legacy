@@ -21,6 +21,9 @@
 			});
 		});
 	});
+	
+	Browser.Platform.mobile = Browser.Platform.ios || Browser.Platform.android ||
+							  Browser.Platform.webos || Browser.Platform.name.match(/BlackBerry/i)	
 })();
 
 /**
