@@ -51,12 +51,10 @@ class PlgSystemAnahita extends JPlugin
             }
         }
         
-        // Check if Koowa is active
-        if(JFactory::getApplication()->getCfg('dbtype') != 'mysqli')
+        if (!function_exists('mysqli_connect')) 
         {
-            JError::raiseWarning(0, JText::_("Koowa plugin requires MySQLi Database Driver. Please change your database configuration settings to 'mysqli'"));
-            return;
-        }
+            JFactory::getApplication()->redirect(JURI::base().'templates/system/error_mysqli.html');
+        } 
         
         // Check for suhosin
         if(in_array('suhosin', get_loaded_extensions()))
@@ -67,7 +65,7 @@ class PlgSystemAnahita extends JPlugin
             //Checking if the whitelist is ok
             if(!@ini_get('suhosin.executor.include.whitelist') || strpos(@ini_get('suhosin.executor.include.whitelist'), 'tmpl://') === false)
             {
-                JError::raiseWarning(0, sprintf(JText::_('Your server has Suhosin loaded. Please follow <a href="%s" target="_blank">this</a> tutorial.'), 'https://nooku.assembla.com/wiki/show/nooku-framework/Known_Issues'));
+                JFactory::getApplication()->redirect(JURI::base().'templates/system/error_suhosin.html');
                 return;
             }
         }
