@@ -62,8 +62,7 @@
         <div class="form-actions">
             <button type="submit" class="btn" onclick="submitbutton( this.form );return false;"><?php print JText::_('Save'); ?></button>
         </div>
-            
-        <input type="hidden" name="username" value="<?php print $user->get('username');?>" />
+                    
         <input type="hidden" name="id" value="<?php print $user->get('id');?>" />
         <input type="hidden" name="gid" value="<?php print $user->get('gid');?>" />
         <input type="hidden" name="option" value="com_user" />
