@@ -68,6 +68,8 @@
         <input type="hidden" name="gid" value="<?php print $user->get('gid');?>" />
         <input type="hidden" name="option" value="com_user" />
         <input type="hidden" name="task" value="save" />
+        
+        <input type="hidden" name="return" value="<?=base64_encode(@route($entity->getURL().'&get=settings&edit=account'))?>" />
         <?php print JHTML::_( 'form.token' ); ?>
         </form>
 
