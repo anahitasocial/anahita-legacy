@@ -61,7 +61,7 @@ class MenusHelper
         $result = array();
         foreach($components as $component) 
         {
-            $path = JPATH_SITE.DS.'components'.DS.$component->option.DS.'metadata.xml';
+            $path = JPATH_SITE.DS.'components'.DS.$component->option.DS.'views'.DS.'metadata.xml';
             if ( is_readable($path) ) {
                 $data = file_get_contents($path);
                 if ( preg_match('/hidden="true"/', $data) ) {
