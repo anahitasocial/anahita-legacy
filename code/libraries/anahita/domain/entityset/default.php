@@ -174,7 +174,7 @@ class AnDomainEntitysetDefault extends AnDomainEntityset
         }
 
         //forward a call to the query
-    	if ( method_exists($method, $this->getQuery()) || !$this->_repository->entityMethodExists($method) ) 
+    	if ( method_exists($this->getQuery(), $method) || !$this->_repository->entityMethodExists($method) ) 
     	{
     		$result = call_object_method($this->getQuery(), $method, $arguments);
     		if ( $result instanceof AnDomainQuery )
