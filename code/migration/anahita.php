@@ -290,4 +290,11 @@ WHEN '2' THEN 'Other'
 ELSE IF(actor_gender IS NULL, NULL, actor_gender)
 END)  WHERE type LIKE \"ComActorsDomainEntityActor,ComPeopleDomainEntityPerson,com:people.domain.entity.person\"");
 }
+
+function anahita_14()
+{
+    dbexec('UPDATE jos_components SET `link` = "option=com_people" where `option` LIKE "com_people"');
+    dbexec('UPDATE jos_components SET `link` = "option=com_dashboard" where `option` LIKE "com_dashboard"');
+}
+
 ?>
