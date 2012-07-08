@@ -295,6 +295,9 @@ function anahita_14()
 {
     dbexec('UPDATE jos_components SET `link` = "option=com_people" where `option` LIKE "com_people"');
     dbexec('UPDATE jos_components SET `link` = "option=com_dashboard" where `option` LIKE "com_dashboard"');
+        
+    dbexec('UPDATE jos_menu SET `componentid` = 37 where `id` = 2');
+    dbexec('UPDATE jos_menu SET `componentid` = 38 where `id` = 4');
 }
 
 ?>
