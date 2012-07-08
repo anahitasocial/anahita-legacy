@@ -1,7 +1,5 @@
 <?php defined('KOOWA') or die ?>
 
-<module position="sidebar-b"></module>
-
 <h3><?= @text('COM-ACTORS-PROFILE-EDIT-DELETE') ?></h3>
 
 <form action="<?=@route($entity->getURL())?>" method="post">

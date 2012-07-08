@@ -169,7 +169,11 @@ class ComActorsViewSettingsHtml extends ComBaseViewHtml
 		
 		
 		$this->getService('anahita:event.dispatcher')->dispatchEvent('onSettingDisplay', array('actor'=>$this->entity, 'tabs'=>$tabs));
-					
+		
+        $tabs->insert('delete', array(
+                'label'     => JText::_('COM-ACTORS-PROFILE-EDIT-TAB-DELETE'),
+        ));
+                			
 		$url        = $this->entity->getURL().'&get=settings&edit=';		
 		$active_tab = $tabs['profile'];;
 		foreach($tabs as $tab) 
