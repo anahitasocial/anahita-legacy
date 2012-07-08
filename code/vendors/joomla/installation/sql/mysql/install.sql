@@ -82,8 +82,8 @@ INSERT INTO `#__components` VALUES (33, 'Control Panel', '', 0, 0, '', 'Control 
 INSERT INTO `#__components` VALUES (34, 'Gantry', '', 0, 0, '', 'Gantry', 'com_gantry', 0, '', 0, '', 1);
 INSERT INTO `#__components` VALUES(36, 'Bazaar', 'option=com_bazaar', 0, 0, 'option=com_bazaar', 'Bazaar', 'com_bazaar', 0, 'js/ThemeOffice/component.png', 1, '', 1);
 INSERT INTO `#__components` VALUES(35, 'Apps', 'option=com_apps', 0, 0, 'option=com_apps', 'Apps', 'com_apps', 0, 'js/ThemeOffice/component.png', 1, '', 1);
-INSERT INTO `#__components` VALUES(37, 'Dashboard', '', 0, 0, '', 'Dashboard', 'com_dashboard', 0, '', 1, '', 1);
-INSERT INTO `#__components` VALUES(38, 'People', '', 0, 0, '', 'People', 'com_people', 0, '', 1, '', 1);
+INSERT INTO `#__components` VALUES(37, 'Dashboard', 'option=com_dashboard', 0, 0, '', 'Dashboard', 'com_dashboard', 0, '', 1, '', 1);
+INSERT INTO `#__components` VALUES(38, 'People', 'option=com_people', 0, 0, '', 'People', 'com_people', 0, '', 1, '', 1);
 INSERT INTO `#__components` VALUES(39, 'Stories', '', 0, 0, '', 'Stories', 'com_stories', 0, '', 1, '', 1);
 INSERT INTO `#__components` VALUES(40, 'Notifications', 'option=com_notifications', 0, 0, 'option=com_notifications', 'Notifications', 'com_notifications', 0, 'js/ThemeOffice/component.png', 1, '', 1);
  
