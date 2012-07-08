@@ -111,9 +111,9 @@ class ComInstallerAdapterComponent extends ComInstallerAdapterAbstract
             'name'      => (string)$this->_xml->name,
             'enabled'   => 1,
             'link'      => '',
-            'admin_menu_link' => '',
-            'admin_menu_alt'  => '',            
-            'admin_menu_img'  => ''
+            'adminMenuLink' => '',
+            'adminMenuAlt'  => '',            
+            'adminMenuImg'  => ''
         ));
         
         if ( $site_menu ) 
@@ -121,23 +121,14 @@ class ComInstallerAdapterComponent extends ComInstallerAdapterAbstract
             $component->link = 'option='.$this->_name;
         }        
         elseif ( $admin_menu ) 
-        {
-            $component->link = 'option='.$this->_name;
-            
-            //create a new componnet 
-            /*
-            $component = $components->getEntity()->setData(array(
-                'name'      => (string)$admin_menu,
-                'enabled'   => 1,
-                'parent'    => $component->id,
-                'option'    => (string)$this->_name,
-                'link'      => 'option='.$this->_name,            
-                'admin_menu_link' => 'option='.$this->_name,
-                'admin_menu_alt'  => (string)$admin_menu,            
-                'admin_menu_img'  => 'js/ThemeOffice/component.png',
-                'params' => '',                        
-           ));*/
-        }
+        {         
+            $component->setData(array(
+                'link'      => 'option='.$this->_name,
+                'adminMenuLink' => 'option='.$this->_name,
+                'adminMenuAlt'  => (string)$admin_menu,            
+                'adminMenuImg'  => 'js/ThemeOffice/component.png'
+            ));
+        }         
         
         $component->save();        
         
