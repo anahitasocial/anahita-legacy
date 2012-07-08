@@ -125,6 +125,7 @@ class ComInstallerAdapterComponent extends ComInstallerAdapterAbstract
             $component->link = 'option='.$this->_name;
             
             //create a new componnet 
+            /*
             $component = $components->getEntity()->setData(array(
                 'name'      => (string)$admin_menu,
                 'enabled'   => 1,
@@ -135,7 +136,7 @@ class ComInstallerAdapterComponent extends ComInstallerAdapterAbstract
                 'admin_menu_alt'  => (string)$admin_menu,            
                 'admin_menu_img'  => 'js/ThemeOffice/component.png',
                 'params' => '',                        
-           ));
+           ));*/
         }
         
         $component->save();        
