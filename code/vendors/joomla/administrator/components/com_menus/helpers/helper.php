@@ -57,7 +57,21 @@ class MenusHelper
 				' WHERE c.link <> "" AND parent = 0 AND enabled = 1' .
 				' ORDER BY c.name';
 		$db->setQuery( $query );
-		$result = $db->loadObjectList( );
+		$components = $db->loadObjectList( );
+        $result = array();
+        foreach($components as $component) 
+        {
+            $path = JPATH_SITE.DS.'components'.DS.$component->option.DS.'metadata.xml';
+            if ( is_readable($path) ) {
+                $data = file_get_contents($path);
+                if ( preg_match('/hidden="true"/', $data) ) {
+                    continue;     
+                }
+            }
+            $result[] = $component;       
+        }
+            
+            
 		return $result;
 	}
 
