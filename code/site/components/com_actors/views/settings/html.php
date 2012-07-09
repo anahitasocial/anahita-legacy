@@ -120,17 +120,14 @@ class ComActorsViewSettingsHtml extends ComBaseViewHtml
 		
 		$tabs->insert('profile', array(
             'label' => JText::_('COM-ACTORS-PROFILE-EDIT-TAB-PROFILE'),
-            'icon'  => 'pencil'
 		));
 
 		$tabs->insert('avatar', array(
 		   'label' => JText::_('COM-ACTORS-PROFILE-EDIT-TAB-AVATAR'),
-           'icon'  => 'user'
 		));			
 		
 		$tabs->insert('permissions', array(
-            'label' => JText::_('COM-ACTORS-PROFILE-EDIT-TAB-PERMISSIONS'),
-            'icon'  => 'lock'            
+            'label' => JText::_('COM-ACTORS-PROFILE-EDIT-TAB-PERMISSIONS'),            
 		));
         
         if ( $this->entity->isFollowable() && $this->entity->followRequesterIds->count() > 0 )
