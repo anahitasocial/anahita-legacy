@@ -54,7 +54,7 @@ class LibBaseDomainBehaviorPrivatable extends AnDomainBehaviorAbstract
 		$config->append(array(
 			'attributes' => array(
 				'access'			=> array('default'=>self::GUEST),
-				'permissions'		=> array('type'=>'json','default'=>'json')
+				'permissions'		=> array('type'=>'json','default'=>'json','write'=>'private')
 			)
 		));
 		
@@ -147,6 +147,20 @@ class LibBaseDomainBehaviorPrivatable extends AnDomainBehaviorAbstract
 		return $this;
 	}
 	
+    /**
+     * Checks if an entity has a permission value for a key
+     * 
+     * @param string $key   The key permission key
+     * @param string $value The value to to check if permission has
+     * 
+     * @return boolean
+     */
+    public function hasPermission($key, $value)
+    {
+        $values = explode(',', $this->getPermission($key));
+        return in_array($value, $values);
+    }
+    
 	/**
 	 * Return whether $actor has privellege perform $action on the entity 
 	 * 

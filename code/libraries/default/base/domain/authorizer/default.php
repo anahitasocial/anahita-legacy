@@ -92,8 +92,16 @@ class LibBaseDomainAuthorizerDefault extends LibBaseDomainAuthorizerAbstract
                     return false;
                                     
                 $action  = 'com_'.$this->_entity->getIdentifier()->package.':'.$this->_entity->getIdentifier()->name.':addcomment';
-                				            
-                return $this->_entity->owner->authorize('action',array('action'=>$action));
+                $result  = $this->_entity->owner->authorize('action',array('action'=>$action));
+                if ( $result === false ) 
+                {
+                    //HACK, the only way I can communicate back
+                    $this->_entity->__require_follow = false;
+                    if ( $this->_entity->owner->hasPermission($action, LibBaseDomainBehaviorPrivatable::FOLLOWER) ) {   
+                        $this->_entity->__require_follow = true;
+                    }
+                }
+                return $result;
 			}
 		}
 		

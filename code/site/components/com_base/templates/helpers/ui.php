@@ -134,8 +134,18 @@ class ComBaseTemplateHelperUi extends KTemplateHelperAbstract
 			$config['comments'] = $entity->comments->limit($limit, $offset);
 		}
 		
-        if ( !isset($config['can_comment']) ) {
-            $config['can_comment'] = $entity && $entity->isAuthorizer() && $entity->authorize('add.comment');    
+        if ( !isset($config['can_comment']) ) 
+        {
+            $config['can_comment'] = false;
+            if ( $entity && $entity->isAuthorizer() ) 
+            {
+                $config['can_comment'] = $entity->authorize('add.comment');
+                //if can't comment then check if it needs to follow
+                if ( $config['can_comment'] === false && $entity->__require_follow) 
+                {
+                    $config['require_follow'] = true;
+                }
+            }    
         }
         
         if ( !isset($config['strip_tags']) ) {
