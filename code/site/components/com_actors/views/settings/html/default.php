@@ -9,6 +9,9 @@
 <?php foreach($tabs as $tab) : ?>
 	<li class="<?= $tab->active ? 'active' : ''?>">        
 		<a href="<?=@route($tab->url)?>">
+            <?php if ( false ) : ?>
+            <i class="icon icon-<?= pick($tab->icon,'cog') ?> <?= $tab->active ? 'icon-white' : ''?>">&nbsp;</i>
+            <?php endif; ?>
             <?= @text($tab->label)?>
         </a>
 	</li>
