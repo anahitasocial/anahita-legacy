@@ -5,11 +5,11 @@
 <form action="<?=@route($entity->getURL())?>" method="post">
 	<input type="hidden" name="action" value="delete" />	
 	
-	<div class="alert-message block-message error">
+	<div class="alert alert-block alert-warning">
   		<p><?= $msg = sprintf(translate(array($entity->component.'-DELETE-PROMPT','COM-ACTORS-DELETE-PROMPT'))) ?></p>
   		
-  		<div class="alert-actions">
-  			<button data-trigger="Remove" data-remove-form="!form" data-remove-confirm-message="<?= $msg?>"  class="btn danger"><?= @text('LIB-AN-ACTION-DELETE') ?></button>
-  		</div>
+  		<p>
+  			<button data-trigger="Remove" data-remove-form="!form" data-remove-confirm-message="<?= $msg?>"  class="btn btn-danger"><?= @text('LIB-AN-ACTION-DELETE') ?></button>
+  		</p>
 	</div>
 </form>
