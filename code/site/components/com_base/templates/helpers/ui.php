@@ -468,12 +468,14 @@ class ComBaseTemplateHelperUi extends KTemplateHelperAbstract
                 $config->options = $options;
             }
             
-	        if ( $config->entity )
+	        if ( $config->entity ) 
+            {
 	            $config->append(array(
-                    'selected' => $config->entity->getPermission($config->name)
+                    'selected' => $config->entity->getPermission($config->name, LibBaseDomainBehaviorPrivatable::FOLLOWER)
 	            ));
+            }
 	
-	        if ( strpos($config->name, ':publish:') ) {
+	        if ( strpos($config->name, 'access') === false ) {
 	            unset($config->options[LibBaseDomainBehaviorPrivatable::GUEST]);
 	        }
 	
