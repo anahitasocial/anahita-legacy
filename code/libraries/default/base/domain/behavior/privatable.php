@@ -148,37 +148,43 @@ class LibBaseDomainBehaviorPrivatable extends AnDomainBehaviorAbstract
 	}
 	
 	/**
-	 * Return whether $accessor has privellege perform $operation on the entity 
+	 * Return whether $actor has privellege perform $action on the entity 
 	 * 
-	 * @param  ComPeopleDomainEntityPerson $accessor  The person who's trying to perform an operation on the entity
-	 * @param  string	 	               $operation The name of the operation being performed
-	 * @param  string                      $default   The default value to use if the there are no values are set for the operation
+	 * @param  ComPeopleDomainEntityPerson $actor   The person who's trying to perform an operation on the entity
+	 * @param  string	 	               $action  The name of the action being performed
+	 * @param  string                      $default The default value to use if the there are no values are set for the operation
 	 * 
 	 * @return boolean
 	 */
-	public function allows($accessor, $operation, $default = LibBaseDomainBehaviorPrivatable::REG)
+	public function allows($actor, $action, $default = LibBaseDomainBehaviorPrivatable::REG)
 	{
         //keep a reference to mixer just in case
         $mixer = $this->_mixer;
         
-		$actor = null;
+		$owner = null;
 		
 		if ( is($this->_mixer, 'ComActorsDomainEntityActor') )
-			$actor = $this->_mixer;
+			$owner = $this->_mixer;
 		elseif ( $this->isOwnable() ) {
-			$actor = $this->owner;
+			$owner = $this->owner;
 		}
 		
-        if ( !empty($actor) ) 
+        if ( !empty($owner) ) 
         {
-            //no operation is allowed if the actor is blokcing the $accessor
-            if ( $actor->isFollowable() && $actor->blocking($accessor) )
+            //if actor and owner the same then 
+            //allow
+            if ( $actor->id == $owner->id ) {
+                return true;    
+            }
+            
+            //no operation is allowed if the owner is blokcing the $actor
+            if ( $owner->isFollowable() && $owner->blocking($actor) )
                 return false;
             
             //no opreation is allowed if actor is not published and the accessor
             //is not admin
-            if ( $actor->isEnableable() && $actor->enabled === false ) {
-                if ( $accessor->isAdministrator() && !$accessor->administrator($actor) )
+            if ( $owner->isEnableable() && $owner->enabled === false ) {
+                if ( $actor->isAdministrator() && !$actor->administrator($owner) )
                     return false;
             }
         }
@@ -186,16 +192,16 @@ class LibBaseDomainBehaviorPrivatable extends AnDomainBehaviorAbstract
         //an array of entities whose permission must return true 
         $entities = array();
         
-        if ( !empty($actor) ) 
-            $entities[] = $actor;
+        if ( !empty($owner) ) 
+            $entities[] = $owner;
          
         if ( !in_array($mixer, $entities) )
             $entities[] = $mixer;     
       
         foreach($entities as $enttiy)
         {
-            $permissions = explode(',', $enttiy->getPermission($operation, $default));            
-            $result      = $this->checkPermissions($accessor, $permissions, $actor);
+            $permissions = explode(',', $enttiy->getPermission($action, $default));
+            $result      = $this->checkPermissions($actor, $permissions, $owner);
             if ( $result === false )
                 return false;               
         }
@@ -207,13 +213,13 @@ class LibBaseDomainBehaviorPrivatable extends AnDomainBehaviorAbstract
      * Checks an array of permissions against an accessor using the socialgraph between the
      * accessor and actor
      * 
-     * @param ComActorsDomainEntityActor $accessor     The actor who's trying to perform an operation
+     * @param ComActorsDomainEntityActor $actor     The actor who's trying to perform an operation
      * @param array                      $permissions  An array of permissions
-     * @param ComActorsDomainEntityActor $actor        If one of the permision
+     * @param ComActorsDomainEntityActor $owner        If one of the permision
      * 
      * @return boolean
      */
-    public function checkPermissions($accessor, $permissions, $actor)
+    public function checkPermissions($actor, $permissions, $owner)
     {        
         $result = true;
         
@@ -230,25 +236,25 @@ class LibBaseDomainBehaviorPrivatable extends AnDomainBehaviorAbstract
                     break;
                 //registered
                 case LibBaseDomainBehaviorPrivatable::REG :                         
-                    $result = !$accessor->guest();
+                    $result = !$actor->guest();
                     break;
                 //follower
                 case LibBaseDomainBehaviorPrivatable::FOLLOWER :
-                    $result = $accessor->following($actor) || $accessor->leading($actor) || $accessor->administrator($actor);
+                    $result = $actor->following($owner) || $actor->leading($owner) || $actor->administrator($owner);
                     break;
                 //leader
                 case LibBaseDomainBehaviorPrivatable::LEADER :
-                    $result = $accessor->leading($actor) || $accessor->administrator($actor);
+                    $result = $actor->leading($owner) || $actor->administrator($owner);
                     break;
                 //mutual                        
                 case LibBaseDomainBehaviorPrivatable::MUTUAL :
-                    $result = $accessor->mutuallyLeading($actor) || $accessor->administrator($actor);
+                    $result = $actor->mutuallyLeading($owner) || $actor->administrator($owner);
                     break;
                 case LibBaseDomainBehaviorPrivatable::ADMIN :
-                    $result = $accessor->administrator($actor);
+                    $result = $actor->administrator($owner);
                     break;
                 default : 
-                     $result = $accessor->id == $value;
+                     $result = $actor->id == $value;
             }
             
             if ( $result === true ) {                
