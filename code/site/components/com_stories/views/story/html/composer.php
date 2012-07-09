@@ -1,6 +1,6 @@
 <?php defined('KOOWA') or die ?>
 
-<?php if ( $actor->authorize('publish', 'com_stories:stories') ) : ?>
+<?php if ( $actor->authorize('action', 'com_stories:story:add') ) : ?>
 <div id="story-composer">
 	<form id="story-composer-form" action="<?= @route('option=com_stories&view=story&oid='.$actor->id) ?>" method="POST" data-formvalidator-options="'evaluateFieldsOnBlur':true">
 		<textarea class="input-xxlarge" data-validators="minLength:1 maxLength:<?=STORY_MAX_LIMIT?>" id="composer-textarea"  name="body" overtext="<?= @text('COM-STORIES-SHARE-PROMPT') ?>"></textarea>

@@ -279,9 +279,16 @@ class ComAppsDomainDelegateDefault extends KEventSubscriberAbstract
                     $identifier->name = $name;
                     try {
                         $repos = AnDomain::getRepository($identifier);
-                        if ( $repos->entityInherits('ComMediumDomainEntityMedium') ) {
+                        if ( $repos->entityInherits('ComMediumDomainEntityMedium') ) 
+                        {
+                            $actions = array('add');
+                            //if commentable then allow to set 
+                            //comment permissions
+                            if ( $repos->hasBehavior('commentable') ) {
+                                $actions[] = 'addcomment';
+                            }
                             $resources->append(array(
-                                KInflector::pluralize($identifier->name) => array('publish')
+                               $identifier->name => $actions
                             ));
                         }
                     } 

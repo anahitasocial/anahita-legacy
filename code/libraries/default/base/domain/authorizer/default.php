@@ -75,27 +75,28 @@ class LibBaseDomainAuthorizerDefault extends LibBaseDomainAuthorizerAbstract
 	 * @return boolean
 	 */
 	protected function _authorizeAddComment($context)
-	{
-		$ret = false;
-		
+	{		
 		if ( $this->_viewer->guest() )
 		    return false;
 		
 		if ( $this->_entity->isCommentable() )
 		{
-			$ret = !$this->_viewer->guest() && $this->_entity->openToComment;
+			if ( !$this->_entity->openToComment )
+                return false;
 			
 			if ( $this->_entity->isOwnable() ) 
 			{
-				$ret = $ret && $this->_entity->owner->authorize('access');
-				
-				if (  $this->_entity->owner->isFollowable() ) {
-					$ret = $ret && 
-                    ($this->_entity->owner->id == $this->_viewer->id || $this->_entity->owner->leading($this->_viewer));
-				}
+                //if ownable and can't access the owner then
+                //can't comment
+				if ( $this->_entity->owner->authorize('access') === false )
+                    return false;
+                                    
+                $action  = 'com_'.$this->_entity->getIdentifier()->package.':'.$this->_entity->getIdentifier()->name.':addcomment';
+                				            
+                return $this->_entity->owner->authorize('action',array('action'=>$action));
 			}
-		}		
+		}
 		
-		return  $ret;		
+		return  false;		
 	}
 }

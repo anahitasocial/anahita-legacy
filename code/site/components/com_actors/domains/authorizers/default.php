@@ -96,44 +96,53 @@ class ComActorsDomainAuthorizerDefault extends LibBaseDomainAuthorizerDefault
         //if entity is not privatable then it doesn't have access to allow method
         if ( !$this->_entity->isPrivatable() )
             return true;
-            
-		$resource = $context->resource;
-		
-		if ( empty($resource) ) {
-			$resource = 'access';
-		}
 				
-		if ( $resource == 'access' ) 
-        {
-            $ret = true;
+	    $ret = true;
+        
+        if  ( $this->_entity->isFollowable() && $this->_entity->blocking($this->_viewer) )
+            $ret = false;                
+        else
+            $ret = $this->_entity->allows($this->_viewer, 'access');
             
-            if  ( $this->_entity->isFollowable() && $this->_entity->blocking($this->_viewer) )
-                $ret = false;                
-			else
-                $ret = $this->_entity->allows($this->_viewer, $resource);
-                
-            return $ret;
-		} 
-		else if ( $resource != 'access'  ) 
-		{
-			if ( $this->_entity->allows($this->_viewer, 'access') === false )
-				return false;
-		}
+        return $ret;
 		
-		if ( strpos($resource,':') === false ) {
-			$access = $this->_entity->component.':access:'.$resource;
-		} else {
-			$parts = explode(':', $resource);
-			$component = array_shift($parts);
-			array_unshift($parts, 'view');
-			array_unshift($parts, $component);
-			$access = implode($parts, ':');
-		}
-		
-		return $this->_entity->allows($this->_viewer, $access);
 	}
 	
-	 /**
+    /**
+     * Authorizes an action on resources owned by the actor
+     * 
+     * @param KCommandContext $context Context parameter
+     * 
+     * @return boolean
+     */ 
+    protected function _authorizeAction(KCommandContext $context)
+    {
+        $action = $context->action;
+        
+        //any action on the actor requires being a follower by default
+        $context->append(array(
+            'default' => LibBaseDomainBehaviorPrivatable::FOLLOWER
+        ));
+        
+        //not access to the entiy
+        if ( $this->_entity->authorize('access') === false )
+            return false;
+        
+        $parts = explode(':', $action);
+        $component = array_shift($parts);
+        //check if it's a social app then if it's enabled
+        if ( $component ) 
+        {
+            $app = $this->getService('repos:apps.app')->fetch(array('component'=>$component));
+            if ( $app && !$app->authorize('publish', array('actor'=>$this->_entity)))  {
+                return false;
+            }
+        }
+        
+        return $this->_entity->allows($this->_viewer, $action, $context->default);
+    }
+    
+    /**
 	 * Check if an actor authorizes publishing a medium node for it
 	 * 
 	 * @param KCommandContext $context Context parameter
@@ -142,33 +151,7 @@ class ComActorsDomainAuthorizerDefault extends LibBaseDomainAuthorizerDefault
 	 */	
 	protected function _authorizePublish(KCommandContext $context)
 	{
-		$resource = $context->resource;
-		
-		if ( $this->_entity->authorize('access', $context) )
-		{
-		    if ( strpos($resource,':') === false )
-		    {
-		        $access = $this->_entity->component.':publish:'.$resource;
-		    }
-		    else
-		    {
-		        $parts = explode(':', $resource);
-		        $component = array_shift($parts);
-		        
-		        $app = $this->getService('repos:apps.app')->fetch(array('component'=>$component));
-		        //check if it's a social app then if it's enabled		        
-		        if ( $app && !$app->authorize('publish', array('actor'=>$this->_entity)))  {
-		            return false;
-		        }
-		         
-		        array_unshift($parts, 'publish');
-		        array_unshift($parts, $component);
-		        $access = implode($parts, ':');
-		    }
-		    
-		    return $this->_entity->allows($this->_viewer, $access);		    
-		}
-		else return false;		    
+        deprecated('This method is deprecated');
 	}
 	
 	/**

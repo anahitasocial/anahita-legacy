@@ -79,7 +79,7 @@ class ComStoriesDelegate extends ComAppsDomainDelegateDefault
      */
     protected function _setComposers($actor, $composers, $mode)
     {
-        if ( $actor->authorize('publish','com_stories:stories') )
+        if ( $actor->authorize('action','com_stories:story:add') )
         {
             $composers->insert('stories',array(
                 'title'	       => JText::_('COM-STORIES-COMPOSER-STORY'),
@@ -97,7 +97,7 @@ class ComStoriesDelegate extends ComAppsDomainDelegateDefault
 	public function getResources()
 	{
 	    return array(
-	        'stories' => array('publish')	            
+	        'story' => array('add','addcomment')	            
 	    );
 	}	
 }

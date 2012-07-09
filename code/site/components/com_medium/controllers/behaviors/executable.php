@@ -59,11 +59,11 @@ class ComMediumControllerBehaviorExecutable extends LibBaseControllerBehaviorExe
 	{
 		$actor		= pick($data->actor, get_viewer());
         
-		$resource	= 'com_'.$this->_mixer->getIdentifier()->package.':'.KInflector::pluralize($this->_mixer->getIdentifier()->name);
+		$action 	= 'com_'.$this->_mixer->getIdentifier()->package.':'.$this->_mixer->getIdentifier()->name.':add';
         
         //if repository is ownable then ask the actor if viewer can publish things
 		if ( $this->getRepository()->isOwnable() && in_array($this->layout, array('add', 'edit', 'form','composer')))
-			return $actor->authorize('publish', $resource);
+			return $actor->authorize('action', $action);
 				
         if ( !$data->entity )
             return false;
@@ -85,8 +85,8 @@ class ComMediumControllerBehaviorExecutable extends LibBaseControllerBehaviorExe
 	    
 	    if ( $actor )
 	    {
-	        $resource  = 'com_'.$this->_mixer->getIdentifier()->package.':'.KInflector::pluralize($this->_mixer->getIdentifier()->name);
-	        return $actor->authorize('publish',$resource);
+	        $action  = 'com_'.$this->_mixer->getIdentifier()->package.':'.$this->_mixer->getIdentifier()->name.':add';
+	        return $actor->authorize('action',$action);
 	    }
 	    
 	    return false;	    

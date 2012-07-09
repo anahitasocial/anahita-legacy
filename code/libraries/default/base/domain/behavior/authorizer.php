@@ -114,7 +114,7 @@ class LibBaseDomainBehaviorAuthorizer extends AnDomainBehaviorAbstract
 	public function authorize($action, $config = array())
 	{
 		if ( is_string($config) )
-			$config = array('resource'=>$config);
+			$config = array($action => $config);
 		
         $config  = KConfig::unbox($config);
         

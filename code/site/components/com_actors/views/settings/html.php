@@ -89,18 +89,16 @@ class ComActorsViewSettingsHtml extends ComBaseViewHtml
     			{
     				foreach($resources as $name => $operations ) 
     				{
-    					$label = array();
     					foreach($operations as $operation) 
     					{
     						//COM-<Name>-PERMISSION-<Resource>-<Operation>
-    						$label[]  = strtoupper('COM-'.$app->getName().'-PERMISSION'.'-'.$name.'-'.$operation);					
+    						$label  = strtoupper('COM-'.$app->getName().'-PERMISSION'.'-'.$name.'-'.$operation);
+                            $apps_resources->append(array(
+                                $app->getName() => array(
+                                    translate($label) => $app->component.':'.$name.':'.$operation
+                                )
+                            ));					
     					}
-    				
-    					$apps_resources->append(array(
-    					    $app->getName() => array(
-    						    translate($label) => $app->component.':'.$operation.':'.$name
-    						)
-    					));
     				}
     			}
 		    }

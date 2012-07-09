@@ -47,7 +47,7 @@ class ComAppsDomainAuthorizerApp extends LibBaseDomainAuthorizerAbstract
         $actor = $context->actor;
         
         if ( $actor ) 
-        {
+        {            
             if ( $this->_entity->enabled($actor) ||
                  $this->_entity->getAssignment($actor) == ComAppsDomainEntityApp::ACCESS_GLOBAL )
                 return true;

@@ -291,6 +291,9 @@ ELSE IF(actor_gender IS NULL, NULL, actor_gender)
 END)  WHERE type LIKE \"ComActorsDomainEntityActor,ComPeopleDomainEntityPerson,com:people.domain.entity.person\"");
 }
 
+/**
+ * Fix the menu items
+ */
 function anahita_14()
 {
     dbexec('UPDATE jos_components SET `link` = "option=com_people" where `option` LIKE "com_people"');
@@ -298,6 +301,60 @@ function anahita_14()
         
     dbexec('UPDATE jos_menu SET `componentid` = 37 where `id` = 2');
     dbexec('UPDATE jos_menu SET `componentid` = 38 where `id` = 4');
+}
+
+/**
+ * Fix the permsions format from component:action:resource to component:resource:action
+ */
+function anahita_15()
+{
+    $rows = dbfetch("select id,permissions from jos_anahita_nodes where permissions <> '' AND permissions <> '[]'");
+    if ( empty($rows) ) {
+        return;   
+    }
+    $sql  = 'UPDATE jos_anahita_nodes SET permissions = CASE id ';   
+    //$sql = 'SELECT permissions, CASE id';
+    $ids = array();
+    foreach($rows as $row) 
+    {
+        $ids[]       = $row['id'];
+        $persmissions = $row['permissions'];
+        $persmissions = json_decode(str_replace(':publish',':add',$persmissions), true);
+        
+        foreach($persmissions as $key => $value)
+        {
+            $regx    = '/(\w+):(\w+):(\w+)/';
+            $matches = array();
+            if ( preg_match($regx, $key, $matches) )
+            {
+                $component = $matches[1];
+                $action    = $matches[2];
+                $resource  = KInflector::singularize($matches[3]);
+                if ( $action == 'access' || $action == 'add' || $action == 'edit' )
+                {
+                    unset($persmissions[$key]);
+                    $key  = "$component:$resource:$action";
+                    $persmissions[$key] = $value;
+                }
+                $matches = array();
+                preg_match($regx, $key, $matches);
+                $component = $matches[1];                
+                $resource  = KInflector::singularize($matches[2]);
+                $action    = $matches[3];
+                //remove any access permission
+                if ( $action == 'access' ) {
+                    unset($persmissions[$key]);
+                }
+            }
+        }
+        $persmissions = json_encode($persmissions);
+        $sql   .= ' WHEN '.$row['id'].' THEN \''.$persmissions.'\'';
+    }
+    $sql .= ' END ';
+    //$sql .= ' AS new_per';
+    //$sql .= ' FROM jos_anahita_nodes ';
+    $sql .= ' WHERE id IN ('.implode(',',$ids).')';
+    dbexec($sql);
 }
 
 ?>
