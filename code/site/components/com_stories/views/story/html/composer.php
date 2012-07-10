@@ -10,14 +10,21 @@
 		        $app = @service('repos:apps.app')->fetch(array('component'=>'com_connect'));		    
 		    ?>
 			<?php if ( $app && $app->authorize('echo', array('actor'=>$actor)) ) : ?>
-        	    <?php     	        
+                <?php               
                 $services  = ComConnectHelperApi::getServices();
-    	        @service('repos:connect.session'); 
-                ?>   	        
-    			<?php if ( count($actor->sessions) > 0 ) : ?>
+                @service('repos:connect.session'); 
+                $sessions  = $actor->sessions->toArray();
+                foreach($sessions as $key => $session) 
+                {
+                    if ( $session->getApi()->isReadOnly() ) {
+                        unset($sessions[$key]);
+                    }
+                }                
+                ?>    	        
+    			<?php if ( count($sessions) > 0 ) : ?>
     			<div class="story-action">
     			    <div class="connect-service-share">			        
-    			    <?php foreach($actor->sessions as $session) : ?>
+    			    <?php foreach($sessions as $session) : ?>
     			        <a data-behavior="BS.Twipsy" title="<?= sprintf(@text('COM-CONNECT-SHARE-STORY'), ucfirst($session->api->getName()))?>">
     			            <?= @helper('com://site/connect.template.helper.service.icon', $session->api->getName())?>
     			            <input type="checkbox" name="channels[]" value="<?= $session->getName() ?>" class="hide"/>			         
