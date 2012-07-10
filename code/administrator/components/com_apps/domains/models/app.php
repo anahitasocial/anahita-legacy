@@ -16,7 +16,7 @@
 
 /**
  * Model to manage app and actortype synchronization
- *
+ * 
  * @category   Anahita
  * @package    Com_Apps
  * @subpackage Domain
@@ -27,6 +27,8 @@
  */
 class ComAppsDomainModelApp extends KObject 
 {
+    //@TODO need make the  ComAppsDomainModelApp an instantiatable object
+        
     /**
      * Array of actor identifiers
      * 
