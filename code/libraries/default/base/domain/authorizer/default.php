@@ -95,7 +95,12 @@ class LibBaseDomainAuthorizerDefault extends LibBaseDomainAuthorizerAbstract
                 $result  = $this->_entity->owner->authorize('action',array('action'=>$action));
                 if ( $result === false ) 
                 {
-                    //HACK, the only way I can communicate back
+                    /**
+                     * @TODO We need to communicate back the nature of not having a 
+                     * permission to comment on an entity.Right now we are using
+                     * the entity iself as the communication mechanism. Perpas an error
+                     * object to KCommandContext
+                     */
                     $this->_entity->__require_follow = false;
                     if ( $this->_entity->owner->hasPermission($action, LibBaseDomainBehaviorPrivatable::FOLLOWER) ) {   
                         $this->_entity->__require_follow = true;
