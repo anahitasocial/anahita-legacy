@@ -150,6 +150,8 @@ class ComNotificationsMailer extends KObject
 	                'body'    => $data->email_body))
 	                ->display();
 	    
+            //Supposed to fix the random exclamation points
+            $body   = wordwrap($body,900,"\n");
 	        $filter = KService::get('com://site/notifications.template.filter.url');
 	        $filter->write($body);
 	    
