@@ -61,6 +61,7 @@ class PlgInstallerHelper
         
         if ( $result && $adapter instanceof JInstallerComponent ) {
             //check if there's a delegate file and then install it as an app
+            KService::get('koowa:loader')->loadIdentifier('com://admin/apps.domain.model.app');
             ComAppsDomainModelApp::syncApps();
         }
     
@@ -133,6 +134,7 @@ class PlgInstallerHelper
     {
         if ( $adapter instanceof JInstallerComponent ) {
             //check if there's a delegate file and then install it as an app
+            KService::get('koowa:loader')->loadIdentifier('com://admin/apps.domain.model.app');                        
             ComAppsDomainModelApp::syncApps();
             
             //remove all the nodes related to this app
