@@ -132,15 +132,12 @@ class PlgInstallerHelper
      */
     static public function onAfterUnInstallExtension($installer, $adapter, $identifier, $client, $result)
     {
-        if ( $adapter instanceof JInstallerComponent ) {
+        $name = $installer->get('extension_name');
+        
+        if ( $name && $adapter instanceof JInstallerComponent ) {
             //check if there's a delegate file and then install it as an app
             KService::get('koowa:loader')->loadIdentifier('com://admin/apps.domain.model.app');                        
             ComAppsDomainModelApp::syncApps();
-            
-            //remove all the nodes related to this app
-            $name =& $installer->getManifest()->getElementByPath('name');
-            $name = JFilterInput::clean($name->data(), 'cmd');
-            $name = strtolower(str_replace(" ","", 'com_'.$name));        
             KService::get('anahita:domain.space')
                 ->removeNodesWithComponent($name);
         }

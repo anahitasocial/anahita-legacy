@@ -59,6 +59,7 @@ class PlgInstallerCore extends JPlugin
             $component = dbfetch('SELECT REPLACE(`option`,"com_","") FROM #__components WHERE id ='.$identifier, KDatabase::FETCH_FIELD);
             if ( $component )
             {
+                $installer->set('extension_name', 'com_'.$component);
                 KService::get('com://cli/migrator.store')->delete($component);
             }
         }
