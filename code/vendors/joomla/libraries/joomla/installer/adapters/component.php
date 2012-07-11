@@ -117,6 +117,8 @@ class JInstallerComponent extends JObject
 		{
 			return false;
 		}
+        
+        $this->parent->set('component_exists', $exists);
 
 		// If the component directory does not exist, lets create it
 		$created = false;
