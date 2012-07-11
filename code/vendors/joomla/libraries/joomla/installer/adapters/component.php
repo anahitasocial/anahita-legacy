@@ -118,7 +118,7 @@ class JInstallerComponent extends JObject
 			return false;
 		}
         
-        $this->set('component_exists', $exists);
+        $this->set('component_exists', KService::get('koowa:database.adapter.mysqli')->select('SELECT * FROM #__components WHERE name LIKE \''.$this->get('name').'\'', KDatabase::FETCH_ARRAY));
 
 		// If the component directory does not exist, lets create it
 		$created = false;
