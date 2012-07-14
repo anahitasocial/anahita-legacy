@@ -144,23 +144,44 @@
 			   padding: 5px 0;
 			}
 			
+			.entity-thumbnail
+			{
+			     img
+			     {
+			         width: 355px;
+			         height: auto;
+			         margin: 0;
+			     }
+			}
+			
 			.media-grid
 			{   
+			    .clearfix;
 			    > div
 			    {
-			        &.head
-			        {
-			           .clearfix;
-                       img
-                       {
-                          width: 350px;
-                       }
+                   margin: 5px;
+                   
+                   &.thumnail-medium
+                   {
+                        .clearfix;
+                        img
+                        {
+                            width: 355px;
+                            height: auto;
+                        }
+                    }
+			        
+			        &.thumbnail-square
+                    {
+				        img
+				        {
+				           .square(80px);
+				        }
 			        }
 			        
 			        img
 			        {
-			           width: 50px;
-			           margin: 5px;
+			             margin: 0;
 			        }
 			    }
 			    
