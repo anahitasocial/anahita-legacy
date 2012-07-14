@@ -411,14 +411,16 @@ abstract class AnDomainEntityAbstract extends KObject implements ArrayAccess
 		{
             $current = $this->_data[$property->getName()];
             
-            if ( $current instanceof AnDomainEntitysetOnetomany && $value instanceof  AnDomainEntitysetAbstract )
+            if ( $current instanceof AnDomainEntitysetOnetomany )
             {
-                $values = $value;
-                //delete all the current 
-                $current->delete();
-                //re-insert all the new
-                foreach($values as $value)  {
-                    $current->insert($value);
+                $values = KConfig::unbox($value);                
+                //can be an KObjectArray or KObjectSet object
+                if ( $values instanceof KObject && $values instanceof Iterator )
+                {
+                    $current->delete();
+                    foreach($values as $value)  {
+                        $current->insert($value);
+                    }
                 }
             }
 		} 
@@ -607,7 +609,7 @@ abstract class AnDomainEntityAbstract extends KObject implements ArrayAccess
             	{
             		//ignore any type related exceptions
           			try { $this->setData($property->getName(), $value); }
-            		catch(AnDomainExceptionType $e) {  }
+            		catch(AnDomainExceptionType $e) { print $e->getMessage();die; }
           		} 
           		elseif ( !$property ) 
           		{
