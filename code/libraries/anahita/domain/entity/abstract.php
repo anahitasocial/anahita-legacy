@@ -409,7 +409,7 @@ abstract class AnDomainEntityAbstract extends KObject implements ArrayAccess
 		} 
 		elseif ( $property->isRelationship() && ($property->isManyToMany() || $property->isOneToMany()) )
 		{
-            $current = $this->_data[$property->getName()];
+            $current = $this->get($name);
             
             if ( $current instanceof AnDomainEntitysetOnetomany )
             {
@@ -1116,10 +1116,7 @@ abstract class AnDomainEntityAbstract extends KObject implements ArrayAccess
                 //copy the one to many
                 elseif( $deep && $property->isOneToMany() && !$property->isManyToMany() )
                 {
-                    foreach($this->get($name) as $entity) {
-                        $entity = $entity->cloneEntity($deep);
-                        $copy->get($name)->insert($entity);
-                    }
+                    $copy->set($name, $this->get($name)->cloneEntity());
                 }
             }
         }
