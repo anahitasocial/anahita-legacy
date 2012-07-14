@@ -1069,16 +1069,60 @@ abstract class AnDomainEntityAbstract extends KObject implements ArrayAccess
 	}
 	
 	/**
-	 * Clones a model - this is for when creating a list of models and we don't want to instantiate them
+	 * Make a clone of the entity with it's attributes. The unique properties are
+     * not copied. If deep copy is selected, then this method tries to replicate
+     * all the ony-to-many relationships as well
 	 * 
+     * @param boolean $deep Flag to determine to whether to deep copy.
+     * 
 	 * @return AnDomainEntityAbstract
 	 */   
-	public function copy()
+	public function cloneEntity($deep = true)
 	{
-		$data   = $this->_data->toArray();		
-		$id		= $this->description()->getIdentityProperty()->getName();
-		unset($data[$id]);
-		return $this->getRepository()->getEntity(array('data'=>$data));
+        $copy       = $this->getRepository()->getEntity(); 
+        $properties = $this->description()->getProperty();
+        $data       = array();
+        foreach($properties as $property)
+        {
+            if ( $property->isUnique() )
+                continue;
+            
+            if ( $property === $this->description()->getIdentityProperty() )
+                continue;
+                
+            $name = $property->getName();
+            
+            if ( $property->isAttribute() ) 
+            {
+                $copy->set($name, $property->isScalar() ? $this->get($name) : clone $this->get($name));
+            }            
+            elseif ( $property->isRelationship() )
+            {
+                //if it's a belongs to then set the value in the 
+                //copy as  the original
+                if ( $property->isManyToOne() ) 
+                {
+                    $copy->set($name, $this->get($name));
+                }
+                //copy the one to one
+                elseif ( $deep && $property->isOneToOne() ) 
+                {
+                    if ( isset($this->$name) ) {
+                        $copy->set($name, $this->get($name)->cloneEntity($deep));    
+                    }
+                }
+                //copy the one to many
+                elseif( $deep && $property->isOneToMany() && !$property->isManyToMany() )
+                {
+                    foreach($this->get($name) as $entity) {
+                        $entity = $entity->cloneEntity($deep);
+                        $copy->get($name)->insert($entity);
+                    }
+                }
+            }
+        }
+
+		return $copy;
 	}	
 	
 	/**
