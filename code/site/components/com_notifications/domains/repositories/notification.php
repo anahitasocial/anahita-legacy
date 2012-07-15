@@ -45,7 +45,7 @@ class ComNotificationsDomainRepositoryNotification extends AnDomainRepositoryDef
         $use_cron = get_config_value('notifications.use_cron', false);
         
         if ( !$use_cron ) 
-            exec_in_background('php -n '.PROCESSOR_PATH.' '.JPATH_BASE.' '.$context->entity->id);
+            exec_in_background('php '.PROCESSOR_PATH.' '.JPATH_BASE.' '.$context->entity->id);
            
     }
 }
