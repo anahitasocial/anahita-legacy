@@ -12,7 +12,6 @@
 
 // no direct access
 defined('_JEXEC') or die('Restricted access');
-include_once(dirname(__FILE__).DS.'..'.DS.'icon.php');
 ?>
 
 <div class="rt-article <?php if ($this->item->state == 0) echo 'unpublished' ?>">
