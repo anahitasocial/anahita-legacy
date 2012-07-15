@@ -35,9 +35,23 @@
       * @return void
       */
      public function onAfterControllerBrowse(KEvent $event)
-     {     	
-     	$this->getController()->getToolbar('menubar')->addCommand(JText::_('Bazaar'), array('href'=>JRoute::_('index.php?option=com_bazaar&view=apps')));
-                              
-         parent::onAfterControllerBrowse($event);
-     }     
+     {     
+        if ( JDEBUG )
+        {
+            $this->getController()->getToolbar('menubar')->addCommand(JText::_('Bazaar'), array('href'=>JRoute::_('index.php?option=com_bazaar&view=apps')));
+            parent::onAfterControllerBrowse($event);    
+        }
+     } 
+     
+    /**
+     * SOnly add the parameter command if JDEBUG is on
+     *
+     * @return void
+     */
+    public function addParameterCommand()
+    {
+        if ( JDEBUG ) {   
+            return parent::addParameterCommand();
+        }
+    }         
  }
