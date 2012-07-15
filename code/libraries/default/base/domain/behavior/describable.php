@@ -86,6 +86,9 @@ class LibBaseDomainBehaviorDescribable extends AnDomainBehaviorAbstract
             if ( $id )             
                 $this->_url .= '&id='.$id;             
             
+            if ( $this->alias )
+                $this->_url .= '&alias='.$this->alias;
+                
             if ( $comment ) {
                 $this->_url .= '&permalink='.$this->_mixer->id;
             }
