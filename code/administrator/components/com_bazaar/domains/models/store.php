@@ -72,9 +72,8 @@ class ComBazaarDomainModelStore extends KObject
      */
     protected function _initialize(KConfig $config)
     {
-        $name = Anahita::isBirth() ? '' : 'embryo-releases';
         $config->append(array(
-            'name' => $name, //default store
+            'name' => get_config_value('bazaar.store', Anahita::isBirth() ? '' : 'embryo-releases'), //default store
             'host' => get_config_value('bazaar.host', BAZAAR_DEFAULT_HOST)
         ));
     
