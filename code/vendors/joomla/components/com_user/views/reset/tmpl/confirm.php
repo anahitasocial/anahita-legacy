@@ -1,34 +1,53 @@
-<?php defined('_JEXEC') or die; ?>
+<?php
+/**
+ * @package   Template Overrides - RocketTheme
+ * @version   3.1.4 November 12, 2010
+ * @author    RocketTheme http://www.rockettheme.com
+ * @copyright Copyright (C) 2007 - 2010 RocketTheme, LLC
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 only
+ *
+ * Rockettheme Gantry Template uses the Joomla Framework (http://www.joomla.org), a GNU/GPLv2 content management system
+ *
+ */
+// no direct access
+defined('_JEXEC') or die('Restricted access');
+?>
 
-<div class="componentheading">
-	<?php echo JText::_('Confirm your Account'); ?>
+<module position="sidebar-b" style="basic"></module>
+
+<div class="rt-joomla <?php print $this->params->get('pageclass_sfx')?>">
+	<div class="user">
+
+		<h1 class="rt-pagetitle">
+			<?php print JText::_('Confirm your Account'); ?>
+		</h1>
+
+		<p><?php print JText::_('RESET_PASSWORD_CONFIRM_DESCRIPTION'); ?></p>
+
+		<form data-behavior="FormValidator" action="<?php print JRoute::_( 'index.php?option=com_user&task=confirmreset' ); ?>" method="post">
+		<fieldset>
+			<legend><?php print JText::_('Confirm your Account'); ?></legend>
+			
+			<div class="control-group">
+				<label class="control-label" for="username"><?php print JText::_('User Name'); ?>:</label>
+				<div class="controls">
+					<input id="username" name="username" type="text" data-validators="required" size="36" />
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label" for="token"><?php print JText::_('Token'); ?>:</label>
+				<div class="controls">
+					<input id="token" name="token" type="text" size="36" />
+				</div>
+			</div>
+		
+			<div class="form-actions">
+				<button type="submit" class="btn btn-primary"><?php print JText::_('Submit'); ?></button>
+			</div>
+			
+		</fieldset>
+		<?php print JHTML::_( 'form.token' ); ?>
+		</form>
+	</div>
 </div>
-
-<form action="<?php echo JRoute::_( 'index.php?option=com_user&task=confirmreset' ); ?>" method="post" class="josForm form-validate">
-	<table cellpadding="0" cellspacing="0" border="0" width="100%" class="contentpane">
-		<tr>
-			<td colspan="2" height="40">
-				<p><?php echo JText::_('RESET_PASSWORD_CONFIRM_DESCRIPTION'); ?></p>
-			</td>
-		</tr>
-		<tr>
-			<td height="40">
-				<label for="username" class="hasTip" title="<?php echo JText::_('RESET_PASSWORD_USERNAME_TIP_TITLE'); ?>::<?php echo JText::_('RESET_PASSWORD_USERNAME_TIP_TEXT'); ?>"><?php echo JText::_('User Name'); ?>:</label>
-			</td>
-			<td>
-				<input id="username" name="username" type="text" class="required" size="36" />
-			</td>
-		</tr>
-		<tr>
-			<td height="40">
-				<label for="token" class="hasTip" title="<?php echo JText::_('RESET_PASSWORD_TOKEN_TIP_TITLE'); ?>::<?php echo JText::_('RESET_PASSWORD_TOKEN_TIP_TEXT'); ?>"><?php echo JText::_('Token'); ?>:</label>
-			</td>
-			<td>
-				<input id="token" name="token" type="text" class="required" size="36" />
-			</td>
-		</tr>
-	</table>
-
-	<button type="submit" class="validate"><?php echo JText::_('Submit'); ?></button>
-	<?php echo JHTML::_( 'form.token' ); ?>
-</form>

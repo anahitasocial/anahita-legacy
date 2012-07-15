@@ -1,85 +1,97 @@
-<?php // no direct access
-defined('_JEXEC') or die('Restricted access'); ?>
-<script type="text/javascript">
-<!--
-	Window.onDomReady(function(){
-		document.formvalidator.setHandler('passverify', function (value) { return ($('password').value == value); }	);
-	});
-// -->
-</script>
-
 <?php
-	if(isset($this->message)){
-		$this->display('message');
-	}
+/**
+ * @package   Template Overrides - RocketTheme
+ * @version   3.1.4 November 12, 2010
+ * @author    RocketTheme http://www.rockettheme.com
+ * @copyright Copyright (C) 2007 - 2010 RocketTheme, LLC
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 only
+ *
+ * Rockettheme Gantry Template uses the Joomla Framework (http://www.joomla.org), a GNU/GPLv2 content management system
+ *
+ */
+// no direct access
+defined('_JEXEC') or die('Restricted access');
 ?>
 
-<form action="<?php echo JRoute::_( 'index.php?option=com_user' ); ?>" method="post" id="josForm" name="josForm" class="form-validate">
+<module position="sidebar-b" style="basic"></module>
 
-<?php if ( $this->params->def( 'show_page_title', 1 ) ) : ?>
-<div class="componentheading<?php echo $this->escape($this->params->get('pageclass_sfx')); ?>"><?php echo $this->escape($this->params->get('page_title')); ?></div>
-<?php endif; ?>
+<div class="rt-joomla <?php print $this->escape($this->params->get('pageclass_sfx')); ?>">
+	
+	<div class="user">
+	
+		<?php if ( $this->params->get( 'show_page_title', 1) ) : ?>
+		<h1 class="rt-pagetitle">
+			<?php print $this->escape($this->params->get('page_title')); ?>
+		</h1>
+		<?php endif; ?>
 
-<table cellpadding="0" cellspacing="0" border="0" width="100%" class="contentpane">
-<tr>
-	<td width="30%" height="40">
-		<label id="namemsg" for="name">
-			<?php echo JText::_( 'Name' ); ?>:
-		</label>
-	</td>
-  	<td>
-  		<input type="text" name="name" id="name" size="40" value="<?php echo $this->escape($this->user->get( 'name' ));?>" class="inputbox required" maxlength="50" /> *
-  	</td>
-</tr>
-<tr>
-	<td height="40">
-		<label id="usernamemsg" for="username">
-			<?php echo JText::_( 'User name' ); ?>:
-		</label>
-	</td>
-	<td>
-		<input type="text" id="username" name="username" size="40" value="<?php echo $this->escape($this->user->get( 'username' ));?>" class="inputbox required validate-username" maxlength="25" /> *
-	</td>
-</tr>
-<tr>
-	<td height="40">
-		<label id="emailmsg" for="email">
-			<?php echo JText::_( 'Email' ); ?>:
-		</label>
-	</td>
-	<td>
-		<input type="text" id="email" name="email" size="40" value="<?php echo $this->escape($this->user->get( 'email' ));?>" class="inputbox required validate-email" maxlength="100" /> *
-	</td>
-</tr>
-<tr>
-	<td height="40">
-		<label id="pwmsg" for="password">
-			<?php echo JText::_( 'Password' ); ?>:
-		</label>
-	</td>
-  	<td>
-  		<input class="inputbox required validate-password" type="password" id="password" name="password" size="40" value="" /> *
-  	</td>
-</tr>
-<tr>
-	<td height="40">
-		<label id="pw2msg" for="password2">
-			<?php echo JText::_( 'Verify Password' ); ?>:
-		</label>
-	</td>
-	<td>
-		<input class="inputbox required validate-passverify" type="password" id="password2" name="password2" size="40" value="" /> *
-	</td>
-</tr>
-<tr>
-	<td colspan="2" height="40">
-		<?php echo JText::_( 'REGISTER_REQUIRED' ); ?>
-	</td>
-</tr>
-</table>
-	<button class="button validate" type="submit"><?php echo JText::_('Register'); ?></button>
-	<input type="hidden" name="task" value="register_save" />
-	<input type="hidden" name="id" value="0" />
-	<input type="hidden" name="gid" value="0" />
-	<?php echo JHTML::_( 'form.token' ); ?>
-</form>
+		<?php if(isset($this->message)) : ?>
+			<?php $this->display('message'); ?>
+		<?php endif; ?>
+
+		<form data-behavior="FormValidator" action="<?php print JRoute::_( 'index.php?option=com_user' ); ?>" method="post" name="josForm">
+		
+		<fieldset>
+			<legend></legend>
+			
+			<div class=control-group">
+				<label class="control-label"  for="name">
+					<?php print JText::_( 'Name' ); ?>:
+				</label>
+				<div class="controls">
+					<input data-validators="required" type="text" name="name" id="name" value="<?php print $this->escape($this->user->get( 'name' ));?>" maxlength="50" /> *		
+				</div>
+			</div>
+			
+			<div class=control-group">
+				<label class="control-label"  for="username">
+					<?php print JText::_( 'User name' ); ?>:
+				</label>
+				<div class="controls">
+					<input data-validators="required validate-remote url:'index.php?option=com_people&view=person'" type="text" id="username" name="username" value="<?php print $this->escape($this->user->get( 'username' ));?>" maxlength="25" /> *
+				</div>
+			</div>
+			
+			<div class=control-group">
+				<label class="control-label"  for="email">
+					<?php print JText::_( 'Email' ); ?>:
+				</label>
+				<div class="controls">
+					<input data-validators="required validate-email validate-remote url:'index.php?option=com_people&view=person'" type="text" id="email" name="email" value="<?php print $this->escape($this->user->get( 'email' ));?>" maxlength="100" /> *
+				</div>
+			</div>
+			
+			<div class=control-group">
+				<label class="control-label"  for="password">
+					<?php print JText::_( 'Password' ); ?>:
+				</label>
+				<div class="controls">
+					<input data-validators="required" type="password" id="password" name="password" value="" /> *
+				</div>
+			</div>
+			
+			<div class=control-group">
+				<label class="control-label"  for="password2">
+					<?php print JText::_( 'Verify Password' ); ?>:
+				</label>
+				<div class="controls">
+					<input data-validators="required validate-match matchInput:'password' matchName:'<?php print JText::_( 'Password' )?>'" type="password" id="password2" name="password2" value="" /> *
+				</div>
+			</div>
+			
+			<div class="alert alert-info">
+				<?php print JText::_( 'REGISTER_REQUIRED' ); ?>
+			</div>
+			
+			<div class="form-actions">
+				<input type="submit" name="Submit" class="btn btn-primary validate" value="<?php print JText::_('Register'); ?>" />
+			</div>
+		</fieldset>
+		
+		<input type="hidden" name="task" value="register_save" />
+		<input type="hidden" name="id" value="0" />
+		<input type="hidden" name="gid" value="0" />
+		<?php print JHTML::_( 'form.token' ); ?>
+		</form>
+	</div>
+</div>

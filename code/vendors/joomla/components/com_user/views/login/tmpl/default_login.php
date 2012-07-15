@@ -1,4 +1,18 @@
-<?php defined('_JEXEC') or die('Restricted access'); ?>
+<?php
+/**
+ * @package   Template Overrides - RocketTheme
+ * @version   3.1.4 November 12, 2010
+ * @author    RocketTheme http://www.rockettheme.com
+ * @copyright Copyright (C) 2007 - 2010 RocketTheme, LLC
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 only
+ *
+ * Rockettheme Gantry Template uses the Joomla Framework (http://www.joomla.org), a GNU/GPLv2 content management system
+ *
+ */
+// no direct access
+defined('_JEXEC') or die('Restricted access');
+?>
+
 <?php if(JPluginHelper::isEnabled('authentication', 'openid')) :
 		$lang = &JFactory::getLanguage();
 		$lang->load( 'plg_authentication_openid', JPATH_ADMINISTRATOR );
@@ -11,64 +25,90 @@
 		$document->addScriptDeclaration( $langScript );
 		JHTML::_('script', 'openid.js');
 endif; ?>
-<form action="<?php echo JRoute::_( 'index.php', true, $this->params->get('usesecure')); ?>" method="post" name="com-login" id="com-form-login">
-<table width="100%" border="0" align="center" cellpadding="4" cellspacing="0" class="contentpane<?php echo $this->escape($this->params->get('pageclass_sfx')); ?>">
-<tr>
-	<td colspan="2">
+
+<module position="sidebar-b" style="basic"></module>
+
+<div class="rt-joomla <?php print $this->escape($this->params->get('pageclass_sfx')); ?>">
+	
+	<div class="user">
+
 		<?php if ( $this->params->get( 'show_login_title' ) ) : ?>
-		<div class="componentheading<?php echo $this->escape($this->params->get('pageclass_sfx')); ?>">
-			<?php echo $this->params->get( 'header_login' ); ?>
-		</div>
+		<h1>
+			<?php print $this->params->get( 'header_login' ); ?>
+		</h1>
 		<?php endif; ?>
-		<div>
-			<?php echo $this->image; ?>
+
+		<?php if ($this->params->get('description_login') || $this->image) : ?>
+		<div class="rt-description">
 			<?php if ( $this->params->get( 'description_login' ) ) : ?>
-				<?php echo $this->params->get( 'description_login_text' ); ?>
-				<br /><br />
+				<?php print $this->params->get( 'description_login_text' ); ?>
 			<?php endif; ?>
 		</div>
-	</td>
-</tr>
+		<?php endif; ?>
+		
+		<form action="<?php print JRoute::_( 'index.php', true, $this->params->get('usesecure')); ?>" method="post" name="com-login" id="com-form-login">
+		<fieldset>
+			<legend><?php print JText::_('LOGIN') ?></legend>
+			
+			<?php KService::get('koowa:loader')->loadIdentifier('com://site/connect.template.helper.service')?>
+			<?php if ( class_exists('ComConnectTemplateHelperService', true) ): ?>
+			<div class="connect-service-actions">
+			<?php echo KService::get('com://site/connect.template.helper.service')->renderLogins() ?>
+			</div>
+			<?php endif; ?>
+			
+			<div class="control-group">
+				<label class="control-label"  for="username"><?php print JText::_('Username') ?></label>
+				<div class="controls">
+					<input name="username" id="username" type="text" alt="username" size="18" />
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label" for="passwd"><?php print JText::_('Password') ?></label>
+				<div class="controls">
+					<input type="password" id="passwd" name="passwd" size="18" alt="password" />
+				</div>
+			</div>
+			
+			<?php if(JPluginHelper::isEnabled('system', 'remember')) : ?>
+			<div id="form-login-remember" class="control-group">
+				<label class="checkbox">
+					<input type="checkbox" name="remember" value="yes" alt="<?php print JText::_('Remember me'); ?>" />
+					<?php print JText::_('Remember me'); ?>
+				</label>
+			</div>
+			<?php endif; ?>
+			<div class="form-actions">
+				<input type="submit" name="Submit" class="btn btn-primary" value="<?php print JText::_('LOGIN') ?>" />
+			</div>
+			
+		</fieldset>
+	
+		<ul>
+			<li>
+				<a href="<?php print JRoute::_( 'index.php?option=com_user&view=reset' ); ?>">
+					<?php print JText::_('FORGOT_YOUR_PASSWORD'); ?>
+				</a>
+			</li>
+			<li>
+				<a href="<?php print JRoute::_( 'index.php?option=com_user&view=remind' ); ?>">
+					<?php print JText::_('FORGOT_YOUR_USERNAME'); ?>
+				</a>
+			</li>
+			<?php $usersConfig = &JComponentHelper::getParams( 'com_users' ); ?>
+			<?php if ($usersConfig->get('allowUserRegistration')) : ?>
+			<li>
+				<a href="<?php print JRoute::_( 'index.php?option=com_user&task=register' ); ?>"><?php print JText::_('REGISTER'); ?></a>
+			</li>
+			<?php endif; ?>
+		</ul>
 
-</table>
-<fieldset class="input">
-	<p id="com-form-login-username">
-		<label for="username"><?php echo JText::_('Username') ?></label><br />
-		<input name="username" id="username" type="text" class="inputbox" alt="username" size="18" />
-	</p>
-	<p id="com-form-login-password">
-		<label for="passwd"><?php echo JText::_('Password') ?></label><br />
-		<input type="password" id="passwd" name="passwd" class="inputbox" size="18" alt="password" />
-	</p>
-	<?php if(JPluginHelper::isEnabled('system', 'remember')) : ?>
-	<p id="com-form-login-remember">
-		<label for="remember"><?php echo JText::_('Remember me') ?></label>
-		<input type="checkbox" id="remember" name="remember" class="inputbox" value="yes" alt="Remember Me" />
-	</p>
-	<?php endif; ?>
-	<input type="submit" name="Submit" class="button" value="<?php echo JText::_('LOGIN') ?>" />
-</fieldset>
-<ul>
-	<li>
-		<a href="<?php echo JRoute::_( 'index.php?option=com_user&view=reset' ); ?>">
-		<?php echo JText::_('FORGOT_YOUR_PASSWORD'); ?></a>
-	</li>
-	<li>
-		<a href="<?php echo JRoute::_( 'index.php?option=com_user&view=remind' ); ?>">
-		<?php echo JText::_('FORGOT_YOUR_USERNAME'); ?></a>
-	</li>
-	<?php
-	$usersConfig = &JComponentHelper::getParams( 'com_users' );
-	if ($usersConfig->get('allowUserRegistration')) : ?>
-	<li>
-		<a href="<?php echo JRoute::_( 'index.php?option=com_user&view=register' ); ?>">
-			<?php echo JText::_('REGISTER'); ?></a>
-	</li>
-	<?php endif; ?>
-</ul>
+		<input type="hidden" name="option" value="com_user" />
+		<input type="hidden" name="task" value="login" />
+		<input type="hidden" name="return" value="<?php print $this->return; ?>" />
+		<?php print JHTML::_( 'form.token' ); ?>
+		</form>
 
-	<input type="hidden" name="option" value="com_user" />
-	<input type="hidden" name="task" value="login" />
-	<input type="hidden" name="return" value="<?php echo $this->return; ?>" />
-	<?php echo JHTML::_( 'form.token' ); ?>
-</form>
+	</div>
+</div>

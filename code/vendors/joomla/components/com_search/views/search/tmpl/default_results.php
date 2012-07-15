@@ -1,53 +1,69 @@
-<?php defined('_JEXEC') or die('Restricted access'); ?>
+<?php
+/**
+ * @package   Template Overrides - RocketTheme
+ * @version   3.1.4 November 12, 2010
+ * @author    RocketTheme http://www.rockettheme.com
+ * @copyright Copyright (C) 2007 - 2010 RocketTheme, LLC
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 only
+ *
+ * Rockettheme Gantry Template uses the Joomla Framework (http://www.joomla.org), a GNU/GPLv2 content management system
+ *
+ */
+defined('_JEXEC') or die('Restricted access');
 
-<table class="contentpaneopen<?php echo $this->escape($this->params->get('pageclass_sfx')); ?>">
-	<tr>
-		<td>
+?>
+
+<?php if (!empty($this->searchword)) : ?>
+<div class="searchintro<?php print $this->escape($this->params->get('pageclass_sfx')) ?>">
+	<p>
+		<?php print JText::_('Search Keyword') ?> <strong><?php print $this->escape($this->searchword) ?></strong>
+		<?php print $this->result ?>
+	</p>
+	<p>
+		<a href="#form1" class="readon" onclick="document.getElementById('search_searchword').focus();return false" onkeypress="document.getElementById('search_searchword').focus();return false"><span><?php print JText::_('Search_again') ?></span></a>
+	</p>
+</div>
+<?php endif; ?>
+
+<?php if (count($this->results)) : ?>
+	<h3><?php print JText :: _('Search_result'); ?></h3>
+<div class="results">
+	<?php $start = $this->pagination->limitstart + 1; ?>
+	<ol class="list" start="<?php print  $start ?>">
+		<?php foreach ($this->results as $result) : ?>
 		<?php
-		foreach( $this->results as $result ) : ?>
-			<fieldset>
-				<div>
-					<span class="small<?php echo $this->escape($this->params->get('pageclass_sfx')); ?>">
-						<?php echo $this->pagination->limitstart + $result->count.'. ';?>
-					</span>
-					<?php if ( $result->href ) :
-						if ($result->browsernav == 1 ) : ?>
-							<a href="<?php echo JRoute::_($result->href); ?>" target="_blank">
-						<?php else : ?>
-							<a href="<?php echo JRoute::_($result->href); ?>">
-						<?php endif;
+		$text = $result->text;
+		$text = preg_replace( '/\[.+?\]/', '', $text);
+		?>	
+		<li>
+			<?php if ($result->href) : ?>
+			<h4>
+				<a href="<?php print JRoute :: _($result->href) ?>" <?php print ($result->browsernav == 1) ? 'target="_blank"' : ''; ?> >
+					<?php print $this->escape($result->title); ?></a>
+			</h4>
+			<?php endif; ?>
+			<?php if ($result->section) : ?>
+			<p><?php print JText::_('Category') ?>:
+				<span class="small">
+					<?php print $this->escape($result->section); ?>
+				</span>
+			</p>
+			<?php endif; ?>
 
-						echo $this->escape($result->title);
-
-						if ( $result->href ) : ?>
-							</a>
-						<?php endif;
-						if ( $result->section ) : ?>
-							<br />
-							<span class="small<?php echo $this->escape($this->params->get('pageclass_sfx')); ?>">
-								(<?php echo $this->escape($result->section); ?>)
-							</span>
-						<?php endif; ?>
-					<?php endif; ?>
-				</div>
-				<div>
-					<?php echo $result->text; ?>
-				</div>
-				<?php
-					if ( $this->params->get( 'show_date' )) : ?>
-				<div class="small<?php echo $this->escape($this->params->get('pageclass_sfx')); ?>">
-					<?php echo $result->created; ?>
-				</div>
-				<?php endif; ?>
-			</fieldset>
-		<?php endforeach; ?>
-		</td>
-	</tr>
-	<tr>
-		<td colspan="3">
-			<div align="center">
-				<?php echo $this->pagination->getPagesLinks( ); ?>
+			<div class="description">
+			<?php print $result->text; ?>
 			</div>
-		</td>
-	</tr>
-</table>
+			<span class="small">
+				<?php print $this->escape($result->created); ?>
+			</span>
+		</li>
+		<?php endforeach; ?>
+	</ol>
+	<div class="rt-pagination">
+	<?php print $this->pagination->getPagesLinks(); ?>
+</div>
+
+</div>
+<?php else: ?>
+<div class="noresults"></div>
+<?php endif; ?>

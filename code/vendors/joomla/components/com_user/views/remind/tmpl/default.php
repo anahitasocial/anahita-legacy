@@ -1,28 +1,49 @@
-<?php defined('_JEXEC') or die; ?>
+<?php
+/**
+ * @package   Template Overrides - RocketTheme
+ * @version   3.1.4 November 12, 2010
+ * @author    RocketTheme http://www.rockettheme.com
+ * @copyright Copyright (C) 2007 - 2010 RocketTheme, LLC
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 only
+ *
+ * Rockettheme Gantry Template uses the Joomla Framework (http://www.joomla.org), a GNU/GPLv2 content management system
+ *
+ */
+// no direct access
+defined('_JEXEC') or die('Restricted access');
+?>
 
-<?php if ( $this->params->def( 'show_page_title', 1 ) ) : ?>
-	<div class="componentheading<?php echo $this->escape($this->params->get('pageclass_sfx')); ?>">
-		<?php echo $this->escape($this->params->get('page_title')); ?>
+<module position="sidebar-b" style="basic"></module>
+
+<div class="rt-joomla <?php print $this->escape($this->params->get('pageclass_sfx')); ?>">
+	
+	<div class="user">
+	
+		<?php if ( $this->params->get( 'show_page_title', 1) ) : ?>
+		<h1 class="rt-pagetitle">
+			<?php print $this->escape($this->params->get('page_title')); ?>
+		</h1>
+		<?php endif; ?>
+
+		<p><?php print JText::_('REMIND_USERNAME_DESCRIPTION'); ?></p>
+
+		<form data-behavior="FormValidator" action="<?php print JRoute::_( 'index.php?option=com_user&task=remindusername' ); ?>" method="post">
+		<fieldset>
+			<legend><?php print JText::_( 'REMIND_USERNAME_EMAIL_TIP_TITLE' ) ?></legend>
+
+			<div class="control-group">
+				<label class="control-label" for="email"><?php print JText::_('Email Address'); ?>:</label>
+				<div class="controls">
+				    <input id="email" name="email" type="text" data-validators="required validate-email" />
+				</div>
+			</div>
+			
+			<div class="form-actions">
+				<button type="submit" class="btn btn-primary"><?php print JText::_('Submit'); ?></button>
+			</div>
+		</fieldset>
+		<?php print JHTML::_( 'form.token' ); ?>
+		</form>
+
 	</div>
-<?php endif; ?>
-
-<form action="<?php echo JRoute::_( 'index.php?option=com_user&task=remindusername' ); ?>" method="post" class="josForm form-validate">
-	<table cellpadding="0" cellspacing="0" border="0" width="100%" class="contentpane">
-		<tr>
-			<td colspan="2" height="40">
-				<p><?php echo JText::_('REMIND_USERNAME_DESCRIPTION'); ?></p>
-			</td>
-		</tr>
-		<tr>
-			<td height="40">
-				<label for="email" class="hasTip" title="<?php echo JText::_('REMIND_USERNAME_EMAIL_TIP_TITLE'); ?>::<?php echo JText::_('REMIND_USERNAME_EMAIL_TIP_TEXT'); ?>"><?php echo JText::_('Email Address'); ?>:</label>
-			</td>
-			<td>
-				<input id="email" name="email" type="text" class="required validate-email" />
-			</td>
-		</tr>
-	</table>
-
-	<button type="submit" class="validate"><?php echo JText::_('Submit'); ?></button>
-	<?php echo JHTML::_( 'form.token' ); ?>
-</form>
+</div>

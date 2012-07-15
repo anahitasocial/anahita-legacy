@@ -1,18 +1,28 @@
-<?php // no direct access
-defined('_JEXEC') or die('Restricted access'); ?>
+<?php
+/**
+ * @package   Template Overrides - RocketTheme
+ * @version   3.1.4 November 12, 2010
+ * @author    RocketTheme http://www.rockettheme.com
+ * @copyright Copyright (C) 2007 - 2010 RocketTheme, LLC
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 only
+ *
+ * Rockettheme Gantry Template uses the Joomla Framework (http://www.joomla.org), a GNU/GPLv2 content management system
+ *
+ */
+// no direct access
+defined('_JEXEC') or die('Restricted access');
+?>
+
 <?php if ($params->get('item_title')) : ?>
-<table class="contentpaneopen<?php echo $params->get( 'moduleclass_sfx' ); ?>">
-<tr>
-	<td class="contentheading<?php echo $params->get( 'moduleclass_sfx' ); ?>" width="100%">
+<h4>
 	<?php if ($params->get('link_titles') && $item->linkOn != '') : ?>
-		<a href="<?php echo $item->linkOn;?>" class="contentpagetitle<?php echo $params->get( 'moduleclass_sfx' ); ?>">
-			<?php echo $item->title;?></a>
+		<a href="<?php echo $item->linkOn;?>">
+			<?php echo $item->title;?>
+		</a>
 	<?php else : ?>
 		<?php echo $item->title; ?>
 	<?php endif; ?>
-	</td>
-</tr>
-</table>
+</h4>
 <?php endif; ?>
 
 <?php if (!$params->get('intro_only')) :
@@ -21,16 +31,8 @@ endif; ?>
 
 <?php echo $item->beforeDisplayContent; ?>
 
-<table class="contentpaneopen<?php echo $params->get( 'moduleclass_sfx' ); ?>">
-	<tr>
-		<td valign="top" ><?php echo $item->text; ?></td>
-	</tr>
-	<tr>
-        <td valign="top" >
+<?php echo $item->text; ?>
 
-       <?php if (isset($item->linkOn) && $item->readmore && $params->get('readmore')) :
-	      echo '<a class="readmore" href="'.$item->linkOn.'">'.$item->linkText.'</a>';
-        endif; ?>
-		</td>
-     </tr>
-</table>
+<?php if (isset($item->linkOn) && $item->readmore && $params->get('readmore')) : ?>
+  <a class="readon" href="<?php echo $item->linkOn; ?>"><span><?php echo $item->linkText ?></span></a>
+<?php endif; ?>
