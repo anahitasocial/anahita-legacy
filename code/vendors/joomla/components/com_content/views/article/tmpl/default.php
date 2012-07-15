@@ -12,7 +12,6 @@
 
 // no direct access
 defined('_JEXEC') or die('Restricted access');
-include_once(dirname(__FILE__).DS.'..'.DS.'icon.php');
 ?>
 
 <div class="rt-joomla <?php echo $this->escape($this->params->get('pageclass_sfx')); ?>">
