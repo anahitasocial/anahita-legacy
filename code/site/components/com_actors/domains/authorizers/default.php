@@ -141,18 +141,6 @@ class ComActorsDomainAuthorizerDefault extends LibBaseDomainAuthorizerDefault
         
         return $this->_entity->allows($this->_viewer, $action, $context->default);
     }
-    
-    /**
-	 * Check if an actor authorizes publishing a medium node for it
-	 * 
-	 * @param KCommandContext $context Context parameter
-	 * 
-	 * @return boolean
-	 */	
-	protected function _authorizePublish(KCommandContext $context)
-	{
-        deprecated('This method is deprecated');
-	}
 	
 	/**
 	 * If true then owner's name is visiable to the viewer, if not the default name is 
