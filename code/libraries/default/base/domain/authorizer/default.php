@@ -81,6 +81,9 @@ class LibBaseDomainAuthorizerDefault extends LibBaseDomainAuthorizerAbstract
 		
 		if ( $this->_entity->isCommentable() )
 		{
+            if ( is_person($this->_viewer) && $this->_viewer->admin() )
+                return true;
+                        
 			if ( !$this->_entity->openToComment )
                 return false;
 			

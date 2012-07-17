@@ -99,7 +99,11 @@ class ComActorsDomainAuthorizerDefault extends LibBaseDomainAuthorizerDefault
 				
 	    $ret = true;
         
-        if  ( $this->_entity->isFollowable() && $this->_entity->blocking($this->_viewer) )
+        if  ( is_person($this->_viewer) && $this->_viewer->admin() ) 
+        {
+            $ret = true;
+        }   
+        elseif  ( $this->_entity->isFollowable() && $this->_entity->blocking($this->_viewer) )
             $ret = false;                
         else
             $ret = $this->_entity->allows($this->_viewer, 'access');

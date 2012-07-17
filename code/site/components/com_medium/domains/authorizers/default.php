@@ -36,8 +36,12 @@ class ComMediumDomainAuthorizerDefault extends LibBaseDomainAuthorizerDefault
      */
     protected function _authorizeAccess($context)
     {
-        if ( $this->_entity->isPrivatable() )
-            return $this->_entity->allows($this->_viewer,'access');        
+        if ( is_person($this->_viewer) && $this->_viewer->admin() )
+            return true;
+            
+        if ( $this->_entity->isPrivatable() ) {
+            return $this->_entity->allows($this->_viewer,'access');
+        }        
     }
         
 	/**
