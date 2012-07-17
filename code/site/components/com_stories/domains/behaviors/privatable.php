@@ -39,7 +39,8 @@ class ComStoriesDomainBehaviorPrivatable extends ComMediumDomainBehaviorPrivatab
         //and use the object.access instead of the story access if there are ny
         $query->link('object', array('type'=>'weak','bind_type'=>false));
         $query->privacy->append(array(
-             'use_access_column' => 'IF(@col(object.id) IS NULL,@col(story.access), @col(object.access))'                
+             'use_access_column' => 'IF(@col(object.id) IS NULL,@col(story.access), @col(object.access))',
+             'allow_admin'       => false                
         ));
         parent::_beforeRepositoryFetch($context);
     }
