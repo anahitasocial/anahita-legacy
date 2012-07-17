@@ -51,9 +51,9 @@ class TOOLBAR_templates
 
 	function _EDIT(&$client){
 		JToolBarHelper::title( JText::_( 'Template' ) . ': <small><small>[ '. JText::_( 'Edit' ) .' ]</small></small>', 'thememanager' );
-		JToolBarHelper::custom('preview', 'preview.png', 'preview_f2.png', 'Preview', false, false);
-		JToolBarHelper::custom( 'edit_source', 'html.png', 'html_f2.png', 'Edit HTML', false, false );
-		JToolBarHelper::custom( 'choose_css', 'css.png', 'css_f2.png', 'Edit CSS', false, false );
+		//JToolBarHelper::custom('preview', 'preview.png', 'preview_f2.png', 'Preview', false, false);
+		//JToolBarHelper::custom( 'edit_source', 'html.png', 'html_f2.png', 'Edit HTML', false, false );
+		//JToolBarHelper::custom( 'choose_css', 'css.png', 'css_f2.png', 'Edit CSS', false, false );
 		JToolBarHelper::save( 'save' );
 		JToolBarHelper::apply();
 		JToolBarHelper::cancel( 'cancel', 'Close' );
