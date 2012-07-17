@@ -32,15 +32,8 @@ class ComMediumDomainBehaviorPrivatable extends LibBaseDomainBehaviorPrivatable
      */
     protected function _beforeRepositoryFetch(KCommandContext $context)
     {
-        $context->append(array(
-            'allow_admin' => true
-        ));
-        
-        if ( $context->allow_admin )
-        {            
-            if ( KService::has('com:people.viewer') && is_person(get_viewer()) && get_viewer()->admin() )
-                return;
-        }
+        if ( KService::has('com:people.viewer') && is_person(get_viewer()) && get_viewer()->admin() )
+            return;
                     
         $query		= $context->query;
         $repository = $query->getRepository();
