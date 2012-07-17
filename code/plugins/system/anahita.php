@@ -108,6 +108,7 @@ class PlgSystemAnahita extends JPlugin
             //since all of them starts with the same prefix. Needs to be fix
             clean_apc_with_prefix('cache_mod');
             clean_apc_with_prefix('cache_com');
+            clean_apc_with_prefix('cache_plg');
             clean_apc_with_prefix('cache__system');
         }
         
