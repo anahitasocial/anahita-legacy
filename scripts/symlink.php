@@ -129,6 +129,7 @@ function joomla_symlinks(&$links)
 		 'vendors/joomla/modules/mod_mainmenu'      => 'modules/mod_mainmenu',
          'vendors/joomla/modules/mod_breadcrumbs'   => 'modules/mod_breadcrumbs',
          'vendors/joomla/administrator/components/com_modules' => 'administrator/components/com_modules',
+         'vendors/joomla/administrator/components/com_templates' => 'administrator/components/com_templates',
          'vendors/joomla/administrator/components/com_menus' => 'administrator/components/com_menus',
          'vendors/joomla/administrator/components/com_admin' => 'administrator/components/com_admin',         
          'vendors/joomla/components/com_user' => 'components/com_user',
