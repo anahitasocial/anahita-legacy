@@ -38,14 +38,7 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 	 * 
 	 * @var array
 	 */
-	protected $_paths = array();
-		
-	/**
-	 * Caches fetched paths for faster response
-	 * 
-	 * @var array
-	 */
-	protected $_internal_cache = array();	
+	protected $_paths = array();			
 	
 	/**
 	 * Path stach
@@ -61,6 +54,13 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 	 */
 	protected $_helpers = array();
 	
+    /**
+     * ArrayAccess interface
+     * 
+     * @var ArrayAccess
+     */
+    protected $_cache;
+    
     /** 
      * Constructor.
      *
@@ -72,7 +72,9 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
     {
         parent::__construct($config);
         
-        $this->_data = KConfig::unbox($config->data);
+        $this->_cache = $config->cache;
+        
+        $this->_data  = KConfig::unbox($config->data);
     }
     
     /**
@@ -87,10 +89,15 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-            'data' => array()
-        ));   
+            'cache' => $this->getService('anahita:cache', array('name'=>$this->getIdentifier())),
+            'data'  => array()
+        ));
 
         parent::_initialize($config);
+        
+        if ( !$config->cache ) {
+            $config->cache = new ArrayObject();   
+        }
     }
             
 	/**
@@ -188,7 +195,7 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 		
 		//look into the path cache to find the parent
 		//if not then find the parent
-		if ( !isset($this->_internal_cache['parent.'.$_path]) )	
+		if ( !isset($this->_cache['loadParent::'.$_path]) )	
 		{
 			$parent	   = false;
 			
@@ -209,10 +216,10 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 				}
 			}
 			
-			$this->_internal_cache['parent.'.$_path] = $parent;
+			$this->_cache['loadParent::'.$_path] = $parent;
 		} 
 				
-		$parent = $this->_internal_cache['parent.'.$_path];
+		$parent = $this->_cache['loadParent::'.$_path];
 		
 		if ( !$parent ) {
 			throw new KTemplateException("The {$_path} template has no parent");
@@ -289,12 +296,9 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 		$parts    = explode('.', $identifier);
 		$function = array_pop($parts);
 		
-		$helper = implode('.', $parts);
-		
-		if ( !isset($this->_internal_cache['helper.'.$helper]) )
-			$this->_internal_cache['helper.'.$helper] = $this->getHelper($helper);
-			
-		$helper = $this->_internal_cache['helper.'.$helper];
+		$helper = implode('.', $parts); 
+        			
+		$helper = $this->getHelper($helper);
 		
 		//Call the helper function
 		if (!is_callable( array( $helper, $function ) )) {
@@ -339,20 +343,22 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 	 */
 	public function findPath($filename)
 	{
-		if ( !isset($this->_internal_cache[$filename]) )
+        $key = 'filepath::'.$filename;
+        
+		if ( !isset($this->_cache[$key]) )
 		{
 			foreach($this->_paths as $path)
 			{
 				$file = $path.'/'.$filename;
 				if ( $this->findFile($file) ) {
-					$this->_internal_cache[$filename] = $path;
+					$this->_cache[$key] = $path;
 					return $path;
 				}
 			}	
-			$this->_internal_cache[$filename] = false;
+			$this->_cache[$key] = false;
 		}
 		
-		return $this->_internal_cache[$filename];
+		return $this->_cache[$key];
 	}
 
 	/**
@@ -364,18 +370,6 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 	{
 		return $this->_paths;
 	}
-	
-	/**
-	 * Set the paths
-	 * 
-	 * @param  array $paths
-	 * @return void
-	 */
-	public function setPaths($paths)
-	{
-		$this->_internal_cache = array();
-		$this->_paths = (array) $paths;
-	}	
 	
 	/**
 	 * Reset the cached paths. @see KTemplateAbstract::addPath for more detail 
@@ -397,16 +391,14 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 			
 			if ( in_array($path, $this->_paths) )
 				continue;
-				
-			$this->_internal_cache = array();
-			
+							
 			if ( $append )
 				$this->_paths[] = $path;
 			else {
 				array_unshift($this->_paths, $path);
 			}
 		}
-	}
+	}   
 	
 	/**
 	 * Parse the data. If a data has been parsed, it will serve it from the cache
@@ -415,17 +407,20 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 	 */
 	public function parse()
 	{
-		$key = 'content.'.$this->_contents;
-		
-		if ( !isset($this->_internal_cache[$key])) 
-		{
-        	$context = $this->getCommandContext();
-			$context->data = $this->_contents;
-       		$this->getCommandChain()->run(KTemplateFilter::MODE_READ, $context);       		
-	 		$this->_internal_cache[$key] = $context->data;
-		}
-		 		
- 		return $this->_internal_cache[$key];
+		$key  = $this->getPath();
+        
+        if ( !$key ) {
+            $key = md5($this->_contents);
+        }
+        
+        $key = 'parse::'.$key;
+        
+        if ( !isset($this->_cache[$key]) )
+        {
+            $this->_cache[$key] = parent::parse();
+        }
+        
+        return $this->_cache[$key];
 	}
 
 	/**
@@ -458,7 +453,7 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 	 */
 	public function handleError($code, $message, $file = '', $line = 0, $context = array())
 	{
-	    if($file == 'tmpl://koowa:template.stack' || KRequest::get('get.dbg','cmd'))
+	    if($file == 'tmpl://koowa:template.stack')
 	    {
 	        if(ini_get('display_errors')) {
 	            echo '<strong>'.$code.'</strong>: '.$message.' in <strong>'.$file.'</strong> on line <strong>'.$line.'</strong>';

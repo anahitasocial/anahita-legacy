@@ -57,7 +57,7 @@ class ComStoriesTemplateHelperParser extends KTemplateHelperAbstract
 
 		JFactory::getLanguage()->load('com_stories');
 		
-		$this->_template->setPaths( KConfig::unbox($config->paths) );
+		$this->_template->addPath(KConfig::unbox($config->paths), true);
 		
 	}
 	

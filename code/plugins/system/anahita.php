@@ -109,6 +109,7 @@ class PlgSystemAnahita extends JPlugin
             clean_apc_with_prefix('cache_mod');
             clean_apc_with_prefix('cache_com');
             clean_apc_with_prefix('cache_plg');
+            clean_apc_with_prefix('cache_system');
             clean_apc_with_prefix('cache__system');
         }
         
