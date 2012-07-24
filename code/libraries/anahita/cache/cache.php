@@ -63,8 +63,9 @@ class AnCache extends KObject implements ArrayAccess
     */
     protected function _initialize(KConfig $config)
     {
+        $conf =& JFactory::getConfig();
         $config->append(array(
-            'prefix' => 'system',
+            'prefix' => 'system-'.md5($conf->getValue('config.secret')),
             'name'   => 'internal'
         ));
 
