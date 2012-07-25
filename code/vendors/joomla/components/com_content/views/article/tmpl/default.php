@@ -52,24 +52,6 @@ defined('_JEXEC') or die('Restricted access');
 	
 		<?php if ((intval($this->article->modified) !=0 && $this->params->get('show_modify_date')) || ($this->params->get('show_author') && ($this->article->author != "")) || ($this->params->get('show_create_date')) || ($this->params->get('show_pdf_icon') || $this->params->get('show_print_icon') || $this->params->get('show_email_icon'))) : ?>
 		<div class="rt-articleinfo">
-			<?php /** Begin Article Icons **/ if ($this->params->get('show_pdf_icon') || $this->params->get('show_print_icon') || $this->params->get('show_email_icon')) : ?>
-			<div class="rt-article-icons">
-				<?php if ($this->print) :
-					echo RokIcon::print_screen($this->article, $this->params, $this->access);
-				elseif ($this->params->get('show_pdf_icon') || $this->params->get('show_print_icon') || $this->params->get('show_email_icon')) : ?>
-				<?php if ($this->params->get('show_pdf_icon')) :
-					echo RokIcon::pdf($this->article, $this->params, $this->access);
-				endif;
-				if ($this->params->get('show_print_icon')) :
-					echo RokIcon::print_popup($this->article, $this->params, $this->access);
-				endif;
-				if ($this->params->get('show_email_icon')) :
-					echo RokIcon::email($this->article, $this->params, $this->access);
-				endif;
-				endif; ?>
-			</div>
-			<?php /** End Article Icons **/ endif; ?>
-		
 			<?php /** Begin Created Date **/ if ($this->params->get('show_create_date')) : ?>
 			<span class="rt-date-posted">
 				<?php echo JHTML::_('date', $this->article->created, JText::_('DATE_FORMAT_LC2')) ?>

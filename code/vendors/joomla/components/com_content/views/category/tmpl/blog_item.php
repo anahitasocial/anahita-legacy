@@ -39,20 +39,6 @@ defined('_JEXEC') or die('Restricted access');
 			<?php echo $this->item->event->beforeDisplayContent; ?>
 			<?php if ((intval($this->item->modified) !=0 && $this->item->params->get('show_modify_date')) || ($this->item->params->get('show_author') && ($this->item->author != "")) || ($this->item->params->get('show_create_date')) || ($this->item->params->get('show_pdf_icon') || $this->item->params->get('show_print_icon') || $this->item->params->get('show_email_icon'))) : ?>
 			<div class="rt-articleinfo">
-				<?php /** Begin Article Icons **/ if ($this->item->params->get('show_pdf_icon') || $this->item->params->get('show_print_icon') || $this->item->params->get('show_email_icon')) : ?>
-				<div class="rt-article-icons">
-					<?php if ($this->item->params->get('show_pdf_icon')) :
-						echo RokIcon::pdf($this->item, $this->item->params, $this->access);
-					endif;
-					if ($this->item->params->get('show_print_icon')) :
-						echo RokIcon::print_popup($this->item, $this->item->params, $this->access);
-					endif;
-					if ($this->item->params->get('show_email_icon')) :
-						echo RokIcon::email($this->item, $this->item->params, $this->access);
-					endif; ?>
-				</div>
-				<?php /** End Article Icons **/ endif; ?>
-			
 				<?php /** Begin Created Date **/ if ($this->item->params->get('show_create_date')) : ?>
 				<span class="rt-date-posted">
 					<?php echo JHTML::_('date', $this->item->created, JText::_('DATE_FORMAT_LC2')); ?>
