@@ -90,8 +90,13 @@ abstract class ComMediumControllerAbstract extends ComBaseControllerService
 				'actor' => get_viewer()
 			));
 			
-		if( $this->filter == 'leaders' )
-			$entities->where( 'owner.id','IN', $context->viewer->getLeaderIds()->toArray() );
+        if( $this->filter == 'leaders' )
+        {
+           $leaderIds = array();
+           $leaderIds[] = $context->viewer->id;
+           $leaderIds[] = $context->viewer->getLeaderIds()->toArray();
+           $entities->where( 'owner.id','IN', $leaderIds );
+        }
 		elseif( $this->getRepository()->hasBehavior('ownable')  )
 			$entities->where('owner', '=', $data->actor);
 			
