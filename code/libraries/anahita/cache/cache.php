@@ -43,12 +43,10 @@ class AnCache extends KObject implements ArrayAccess
     {
         parent::__construct($config);
         
-        $conf =& JFactory::getConfig();
-        
-        $this->_cache = array();
-        
-        if ( $conf->getValue('config.caching') ) {
+        if (  $config->persist ) {
             $this->_cache = JFactory::getCache($config->prefix.'-'.$config->name, 'output');    
+        } else {
+            $this->_cache = array();
         }
     }
         
@@ -63,10 +61,13 @@ class AnCache extends KObject implements ArrayAccess
     */
     protected function _initialize(KConfig $config)
     {
-        $conf =& JFactory::getConfig();
+        $conf    =& JFactory::getConfig();
+        $handler = $conf->getValue('config.cache_handler','file');
         $config->append(array(
-            'prefix' => 'system-'.md5($conf->getValue('config.secret')),
-            'name'   => 'internal'
+            'persist' => $conf->getValue('config.caching') && 
+                         !empty($handler),
+            'prefix'  => 'system-'.md5($conf->getValue('config.secret')),
+            'name'    => 'internal'
         ));
 
         parent::_initialize($config);
