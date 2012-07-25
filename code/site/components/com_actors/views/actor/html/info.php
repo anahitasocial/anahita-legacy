@@ -5,9 +5,9 @@
 		<?php foreach($values as $label => $value) : ?>
 		<dl>
 			<dt><?= @text($label) ?></dt>
-			<dd><?= @escape(@text($value)) ?></dd>
+			<dd><?= @text($value) ?></dd>
 		</dl>
-		<?php endforeach?>
+		<?php endforeach;?>
 	</div>
 <?php endforeach;?>
 </div>

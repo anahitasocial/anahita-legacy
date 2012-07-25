@@ -46,7 +46,7 @@ class ComActorsViewActorsHtml extends ComBaseViewHtml
 		parent::_initialize($config);
 		
 		$config->append(array(
-		    'template_paths' => array(JPATH_THEMES.'/'.JFactory::getApplication()->getTemplate().'/html/com_actor/actors')
+		    'template_paths' => array(JPATH_THEMES.'/'.JFactory::getApplication()->getTemplate().'/html/com_actors/actors')
 		));
 	}
 }

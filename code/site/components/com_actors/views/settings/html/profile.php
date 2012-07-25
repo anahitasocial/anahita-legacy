@@ -63,7 +63,7 @@
 				<?php endif;?>
 			</div>
 		</div>
-		<?php endforeach?>
+		<?php endforeach;?>
 	</fieldset>
 	<?php endforeach;?>
 	
