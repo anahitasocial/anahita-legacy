@@ -201,28 +201,6 @@ class PlgSystemAnahita extends JPlugin
     		KService::get('com://site/default.filter.string');
 		}	    	
 	}
-		
-	/**
-	 * onAfterRender handler
-	 * 
-	 * @return void
-	 */
-	public function onAfterDispatch()
-	{
-		
-	}
-
-	/**
-	 * Renders the response progressively
-	 *
-	 * @return void
-	 */
-	public function onAfterRender()
-	{
-       //JResponse::setHeader('Transfer-Encoding','chunked');
-       //$chunks = KService::get('com://site/base.template.helper.string')->chunkify(JResponse::getBody());
-       //JResponse::setBody(implode('', $chunks));
-	}
 	
 	/**
 	 * store user method

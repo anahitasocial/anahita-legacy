@@ -51,7 +51,6 @@ class ComStoriesDelegate extends ComAppsDomainDelegateDefault
     {
         $controller = $this->getService('com://site/stories.controller.story');        
         $content    = $controller;
-        //KService::get('com://site/base.template.helper.string')->register($controller);
                                                 
         if ( $mode == 'profile' ) 
         {
