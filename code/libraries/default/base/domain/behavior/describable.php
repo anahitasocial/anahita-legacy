@@ -133,6 +133,10 @@ class LibBaseDomainBehaviorDescribable extends AnDomainBehaviorAbstract
                         'search_result_preview'  => '@col(node.body)'
                     ));
                 else $query->select('@col(body) AS search_result_preview');             
+            } else {
+                //@TODO needs to be fixed later
+                //The query for hte count has ditinct, limit. Doesn't make sense
+                $query->order = null;  
             }
                 
 			foreach($words as $word) 
