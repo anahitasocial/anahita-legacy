@@ -135,7 +135,9 @@ class AnDomainEntitysetDefault extends AnDomainEntityset
 	 */
 	public function getTotal()
 	{
-		return $this->getQuery()->fetchCount();
+        $query = clone $this->getQuery();
+        $query->order = null;
+        return $query->fetchCount();
 	}
 	
 	/**

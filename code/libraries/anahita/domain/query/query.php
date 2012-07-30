@@ -667,7 +667,7 @@ class AnDomainQuery
 		//fetch('{Function Name}(property)'). For example fetchCount => fetchValue('COUNT({property}')
 		elseif ( preg_match('/(fetch|select)(\w+)/',$method, $match) )
 		{
-		    $column   = isset($arguments[0]) ? $arguments[0] : $this->_repository->getDescription()->getIdentityProperty()->getName();
+		    $column   = isset($arguments[0]) ? $arguments[0] : '*';
 		    
 		    $property = $this->_repository->getDescription()->getProperty($column);
 		    
