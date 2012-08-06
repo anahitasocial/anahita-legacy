@@ -101,7 +101,7 @@ class AnHelperImage extends KObject
 		
 		$func = 'image'.strtolower($options['format']);
 		ob_start();	
-		$func($tmp);
+		$func($tmp, NULL, 100);
 		$tmp = ob_get_clean();
 		return $tmp;
 	}
