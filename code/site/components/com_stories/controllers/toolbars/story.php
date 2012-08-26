@@ -26,7 +26,7 @@
  * @link       http://www.anahitapolis.com
  */
 class ComStoriesControllerToolbarStory extends ComBaseControllerToolbarDefault
-{
+{ 
     /**
      * Set the list commands
      *
