@@ -1,0 +1,306 @@
+// Actor Avatar
+img.actor-avatar
+{ 
+	.border-radius(3px);
+	
+	&.square
+	{
+		.square(50px);
+	}
+	 
+	&.default
+	{
+		width: 50px;
+	}
+	
+	&.medium
+	{
+		width: 140px;
+	}
+}
+
+.actor-name
+{
+    text-transform: capitalize;
+}
+
+// ACTORS
+.an-actors
+{
+	margin: 10px 0;
+	
+	.an-entity
+	{
+		.clearfix;
+        margin: 0;
+        padding: 15px 10px;
+		
+		.actor-portrait 
+		{ 
+			.entity-thumbnail; 
+		}
+		
+		.actor-container 
+		{ 
+			.entity-container; 
+		}
+		
+		h3.actor-name 
+		{ 
+			.entity-name; 
+		}
+		
+		.actor-description 
+		{ 
+			.entity-description;
+		}
+	}
+}
+
+// ACTOR MODULES
+.module-content
+{
+    .header-text
+    {
+        .clearfix;   
+    }
+    
+    .an-actors
+    {
+       margin: -5px;
+       
+        .an-entity:first-child
+        {
+            border: 0;
+            padding-top: 0;
+        }
+        
+        .an-entity
+        {
+            margin: 0 5px;
+            padding: 5px 0;
+            
+            .actor-portrait 
+            {
+                img 
+                {
+                    margin: 5px 0;
+                    .square(33px);
+                } 
+            }
+            
+            .actor-container
+            {
+                padding-left: 55px;
+            }
+            
+            h4.actor-name
+            {
+                font-size: @baseFontSize;
+                margin: 5px 0;
+                .entity-name;
+            }
+            
+            .actor-description
+            {
+                .entity-description;
+                font-size: @baseFontSize - 1;
+            }
+        }
+    }
+    
+    .an-actor
+    {
+        .clearfix;
+        
+        .actor-portrait 
+        {
+            .entity-thumbnail;
+            padding: 5px 0;
+            img 
+            {
+                margin: 0;
+                .square(47px);
+            } 
+        }
+        
+        .actor-container
+        {
+            padding-left: 57px;
+            .an-meta 
+            { 
+                padding: 10px 0;
+            }
+        }
+    }
+    
+    .actions
+    {
+        margin-bottom: 0;
+        padding: 10px;
+        ul.an-actions
+        {
+            padding: 0;
+        }
+    }
+    
+    .media-grid
+    {
+        margin: 0 -5px;
+        
+        > div
+        {
+            img 
+            {
+               .square(47px);
+               margin: 5px;
+            }
+        }
+    }
+}
+
+
+
+// ACTOR PROFILE
+.actor-profile-toolbar
+{
+    .clearfix;
+    
+    &.btn-toolbar
+    {
+        margin: 0 0 10px 0;
+        padding: 0;
+    }
+}
+
+
+#actor-profile
+{
+	font-size: @baseFontSize;
+	
+	h2#actor-name
+	{
+		margin: 5px 0;
+		font-size: @baseFontSize + 3; 
+	}
+	
+	#actor-description
+	{
+		padding: 5px 0;
+	}
+	
+	#com-composer-container
+	{
+	   margin-top: 15px;
+	}
+}
+
+// ACTOR GADGET SOCIALGRAPH
+.an-socialgraph-stat
+{
+	.clearfix;
+	margin:  5px 0;
+	padding: 5px;
+	
+	.stat-count
+	{ 
+		list-style: none;
+		float: left;
+		overflow: hidden;
+		min-width: 73px;
+		
+		display: block;
+		font-weight: bold;
+		line-height: 1;
+		font-size: @baseFontSize + 3;
+		
+		.stat-name
+		{
+			.clearfix;
+			display: block;
+			padding: 5px 0;
+			font-size: @baseFontSize;
+			font-weight: normal;
+		}
+	}
+}
+
+// ACTOR GADGET GRID
+.an-gadget-socialgraph
+{	
+	h4
+	{
+		font-size: @baseFontSize;
+		padding: 5px 5px 0 5px;
+	}
+	
+	.media-grid
+	{
+		margin: 0;
+		> div
+		{ 
+			float: left;
+			img 
+			{ 
+				.square(26px);
+				margin: 5px;
+			}
+		}
+	}
+}
+
+.standard-module .an-socialgraph-stat 
+{ 
+	border: 0;
+	margin: 10px 0 0 0;
+	padding: 0;
+}
+
+// ACTOR EXTENDED INFO
+#actor-extended-info
+{
+    .info-container
+    {
+        
+        h4
+        {
+           margin: 20px 0;  
+        }
+        
+        dl
+        {
+            .clearfix;
+            font-size: @baseFontSize;
+            
+            dt
+            {
+                font-weight: bold;
+                text-transform: capitalize;
+                float: left;
+            }
+            dd
+            {
+                padding-left: 150px;
+                margin: 0;
+            }
+        }
+    }
+}
+
+//ACTOR SETTINGS
+.actor-settings
+{
+    h3
+    {
+        margin: 20px 0;
+    }	
+}
+
+.actors-popover
+{
+	.popover-content 
+	{
+		overflow:hidden;
+		max-height:250px;
+	}
+}

@@ -1,0 +1,244 @@
+.icon-americanexpress, .icon-discover, .icon-mastercard, .icon-paypal, .icon-visa{
+	background: url(images/icon-payments.png) no-repeat;
+}
+
+.icon-americanexpress{
+	background-position: -144px 0;
+	width: 32px;
+	height: 32px;
+}
+
+.icon-discover{
+	background-position: -107px 0;
+	width: 32px;
+	height: 32px;
+}
+
+.icon-mastercard{
+	background-position: -71px 0;
+	width: 32px;
+	height: 32px;
+}
+
+.icon-paypal{
+	background-position: -35px 0;
+	width: 32px;
+	height: 32px;
+}
+
+.icon-visa{
+	background-position: 0 0;
+	width: 32px;
+	height: 32px;
+}
+
+#an-entities-wrapper
+{
+	.package
+	{
+		.clearfix;
+		padding: 10px;
+//		border-top: 1px solid @grayLighter;
+		
+		h3.package-title
+        {
+            margin: 10px 0;
+        }
+        
+        .package-info
+        {
+            padding: 10px 0;
+            .clearfix;
+            
+            .key
+            {
+                font-weight: bold;
+                float: left;
+ //             color: @grayLighter;
+            }
+            
+            .value
+            {
+                padding-left: 80px;
+                font-size: @baseFontSize + 6;
+            }
+        }
+        
+        .package-description
+        {
+            padding: 10px 0;
+            
+            ul,ol
+            {
+                padding-left: 20px;
+            }
+        }
+		
+		.action
+		{
+			padding: 10px 0;
+		}
+	}
+}
+
+#transaction
+{
+    .info-container
+    {
+       padding: 0 10px;
+        
+        h3
+        {
+           margin: 20px 0;
+        }
+        
+        dl
+        {   
+            .clearfix;
+            font-size: @baseFontSize;
+            
+            dt
+            {
+                padding: 5px 0;
+                font-weight: bold;
+                float: left;
+//              color: @grayLight;
+            }
+            dd
+            {
+                padding: 5px 0 5px 100px;
+            }
+        }
+    }
+}
+
+#sub-package
+{
+    .clearfix;
+    padding: 10px;
+    
+    h3.package-title
+    {
+        margin-bottom: 10px;
+    }
+    
+    .package-info
+    {
+        padding: 10px 0;
+        .clearfix;
+        
+        .key
+        {
+            font-weight: bold;
+            float: left;
+//          color: @grayLighter;
+        }
+        
+        .value
+        {
+            padding-left: 100px;
+            font-size: @baseFontSize + 6;
+        }
+    }
+    
+    .package-description
+    {
+        padding: 10px 0;
+        
+        ul,ol
+        {
+            padding-left: 20px;
+        }
+    }
+}
+
+#sub-tos
+{
+	
+	h2.tos-title
+	{
+		margin: 10px 0;
+	}
+	
+	.tos-description
+	{
+		margin: 10px 0;
+		padding: 10px;
+		height: 280px;
+		overflow: auto;
+//		border: 1px solid #f2f2f2;
+		.border-radius(3px);
+	}
+	
+	.actions
+	{
+		margin: 10px;
+	}
+}
+
+#payment-selector
+{
+	padding: 10px;
+//	border-top: 1px solid @grayLighter;
+}
+
+#payment-methods-container
+{
+	.paypal-express
+	{
+		background:url("images/icon-paypal.png") 0 0 no-repeat;
+		padding: 5px 5px 5px 40px;
+	}
+	
+	.icon-creditcards
+	{	
+		.clearfix;
+		margin: 20px 0;
+		width: 100%;
+		
+		.visa
+		{
+			background:url("images/icon-visa.png") 0 0 no-repeat;
+			padding: 10px 20px;
+		}
+		
+		.mastercard
+		{
+			background:url("images/icon-mastercard.png") 0 0 no-repeat;
+			padding: 10px 20px;
+		}
+		
+		.american-express
+		{
+			background:url("images/icon-americanexpress.png") 0 0 no-repeat;
+			padding: 10px 20px;
+		}
+		
+		.discover
+		{
+			background:url("images/icon-discover.png") 0 0 no-repeat;
+			padding: 10px 20px;
+		}
+	}
+}
+
+ol.sub-steps
+{
+	margin: 20px 0;
+	.clearfix;
+	
+	> li
+	{
+		display: inline;
+		padding: 5px 10px;
+		margin-right: 10px;
+		.border-radius(3px);
+//		background-color: @grayLighter;
+		
+		&.active
+		{
+//			background-color: @grayDark;
+//			color: @white;
+		}
+	}
+}

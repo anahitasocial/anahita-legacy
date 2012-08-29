@@ -1,0 +1,368 @@
+html
+{   
+    margin-bottom: 1px;
+    height: 100%;
+    overflow-y: scroll;
+    letter-spacing: 0;
+}
+
+body
+{
+    padding-top: 65px;
+    
+    &#tmpl-component
+    {
+        padding: 0;
+    }
+}
+
+a:hover
+{
+    text-decoration: none;  
+}
+
+// Template Grid
+.container
+{
+    margin-bottom: 20px;
+    
+    .block
+    {
+        padding: 10px 0;
+    }
+    
+    .hero-unit
+    {
+        .border-radius(3px);
+        margin-bottom: 20px;
+    }
+}
+
+// BRAND
+.navbar
+{ 
+    .container
+    {
+        a.brand
+        {            
+            &.brand-logo
+            {
+               padding: 12px 10px 12px 60px;
+               background: url(images/logo.png) 10px 5px no-repeat transparent;
+            }
+        }
+        
+        ul.nav
+        {
+            >li
+            {
+               >a
+               {
+                   padding: 13px 10px;
+               }
+            }
+        }
+        
+        span.viewer
+        {
+            float: right;
+            img.actor-avatar
+            {
+                margin: -15px 0;
+                .square(33px);
+            }
+        }
+    }
+}
+
+// NAVPILLS
+// Links rendered as pills
+.nav-pills > li > a {
+  .border-radius(3px);
+}
+
+.nav-pills
+{
+    .nav-header
+    {
+        padding: 10px 15px;
+    }   
+}
+
+// NOTIFICATION POPOVER
+.notifications-popover
+{ 
+    .popover-inner 
+    {
+        width: 320px; 
+    }
+    .popover-content
+    {
+        max-height: 350px;
+        overflow:hidden;    
+    }
+}
+
+.purr-wrapper
+{
+   .alert {
+        margin-bottom: 5px;
+   }
+   margin: 5px;
+}
+
+#container-system-message
+{
+    margin-bottom: 0;   
+}
+
+#container-maintop,
+#container-mainbottom
+{
+    padding: 0 10px;
+    .border-radius(3px);
+    
+    .simple-module
+    {
+        padding: 0;
+        
+        h2.module-title
+        {
+            margin: 0 0 10px 0;
+        }
+        
+        .module-content
+        {
+            margin: 0;
+        }
+    }
+}
+
+#container-main
+{
+    padding: 0 10px;
+    .border-radius(3px);
+}
+
+#bottom-wrapper,
+#footer-wrapper
+{
+    .clearfix;
+    .container
+    {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        
+        .module-title
+        {
+            border-bottom: 0;
+            margin-bottom: 0;
+            margin-top: 0;
+        }
+    }
+}
+
+#row-copyright
+{
+    text-align: center;
+    padding: 20px 0;
+}
+
+// MODULES
+.module-border
+{
+	padding: 5px;
+    .border-radius(3px);
+    
+    .module-title
+    {
+         margin: 0 5px 10px 5px;
+    }
+    
+    .module-content
+    {
+        margin: 5px;
+    }
+}
+
+.module-title
+{
+	font-size: @baseFontSize + 3;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+}
+
+.module-content
+{   
+    ul
+    {
+        margin: 0;
+        padding-left: 15px;
+        
+        &.nav
+        {
+            padding: 0;
+        }
+    }
+    
+    ol
+    {
+        margin: 0;
+        padding-left: 20px;
+    }
+    
+    h1,h2,h3,h4
+    {
+        margin: 10px 0;
+    }
+    
+    .alert
+    {
+        margin: 0;
+    }
+    
+    form
+    {
+        padding: 5px 0;
+        margin: 5px 0;
+        
+        .form-actions
+        {
+            padding: 10px;
+        }
+        
+        .an-privacy-select-box
+        {
+            margin: 5px 0;
+        }
+        
+        &.inline-edit;
+    }
+    
+
+    .an-actors,
+    .an-mediums
+    {
+        .an-entity
+        {
+            border: 0;
+        }
+    }
+}
+
+// MODULE ICONS
+.download h2.module-title
+{
+    padding-left: 25px;
+    background:url("images/icon-download.png") no-repeat scroll 0 10px transparent;
+}
+
+.project h2.module-title
+{
+    padding-left: 25px;    
+    background:url("images/icon-crank.png") no-repeat scroll 0 10px transparent;
+}
+
+.feed h2.module-title
+{
+    padding-left: 25px;
+    background:url("images/icon-rss.png") no-repeat scroll 0 10px transparent;
+}
+
+.promo-premium h2.module-title
+{
+    padding-left: 25px;
+    background:url("images/icon-star.png") no-repeat scroll 0 10px transparent;
+}
+
+.promo-basic h2.module-title
+{
+    padding-left: 25px;
+    background:url("images/icon-star-bw.png") no-repeat scroll 0 10px transparent;
+}
+
+// LOGIN MODULE
+.login-module
+{   
+    form
+    {   
+        .controls
+        {
+            input
+            {
+                width: 97%;
+            }
+        }
+    }
+    
+    .login-avatar
+    {
+        float: left;
+        
+        img.actor-avatar
+        {
+            .square(33px);
+            .border-radius(3px);
+        }
+    }
+    
+    .login-greeting
+    {
+        padding-left: 47px;
+    }
+}
+
+// SOCIALENGINE PROFILE INFO & STORY GADGETS
+#main  
+{ 
+    .an-gadget
+    {
+        border: 0; 
+        padding-left: 0px;
+        padding-right: 0px;
+        
+        .gadget-title
+        {
+            margin-left: 0;
+            margin-right: 0;
+        }
+        
+        .gadget-content
+        {
+            padding: 0 1px;
+            .gadget-entities
+            {
+                margin: 0;
+            }
+            
+            .alert-message
+            {
+                &.alert-block
+                {
+                    margin: 10px 0 0 0;
+                }
+            }
+        }
+    } 
+}
+
+// NAVIGATION MODULE
+#sidebar-a,
+#sidebar-b
+{
+    ul.menu
+    {
+        li
+        {
+            line-height: @baseLineHeight + 2;
+            
+            &.active
+            {
+                a
+                {
+                   text-decoration: underline;
+                }
+            }
+        }
+    }
+}

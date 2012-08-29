@@ -1,0 +1,65 @@
+// MEDIUMS
+.an-medium
+{
+    .clearfix;
+    padding: 10px 0;
+    
+    .medium-portrait 
+    { 
+      .entity-thumbnail; 
+    }
+    
+    .medium-container
+    { 
+        .entity-container; 
+      
+        .medium-description,
+        .medium-excerpt
+        {
+            img
+            {
+                max-width: 540px;
+            }
+        }
+    }
+    
+    .medium-name,
+    .medium-title,
+    {
+        .entity-name;
+    }
+    
+    h1.medium-title,
+    h1.medium-name
+    {
+        font-size: @baseFontSize + 6;
+    }
+    
+    .medium-description,
+    .medium-excerpt 
+    { 
+      .entity-description;
+    }
+    
+    .medium-meta 
+    { 
+      .entity-meta; 
+    }
+    
+    .an-actions
+    {
+       .entity-actions;
+    }
+}
+
+.an-mediums 
+{ 
+	margin: 10px 0;
+	
+	.an-entity
+	{
+		.an-medium;
+		margin: 0;
+	}	
+}
+

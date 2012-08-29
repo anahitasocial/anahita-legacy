@@ -1,0 +1,188 @@
+// GADGET
+.an-gadget 
+{
+	.border-radius(3px);
+	padding: 5px;
+	
+	h2.gadget-title
+	{
+		margin: 0 5px;
+		padding-bottom: 6px;
+		font-size: @baseFontSize + 3;
+		
+		.gadget-action
+		{
+		   float: right;
+		   font-size: @baseFontSize;
+		   font-weight: normal;
+		   margin-top: 2px;
+        }
+	}
+	
+	.gadget-content
+	{
+		.clearfix;
+		overflow: hidden;
+		min-height: 40px;
+		
+		h3
+		{
+			font-size: @baseFontSize + 2;
+			padding: 10px 5px;
+		}
+		
+		.alert
+		{
+			&.alert-block
+			{
+				margin: 5px;
+			}
+		}
+		
+		.gadget-entities 
+		{			
+			.gadget-entity:first-child 
+			{ 
+				border-top: 0;
+			}
+			
+			.gadget-entity:last-child 
+            { 
+                border-bottom: 0;
+            }
+			
+			.gadget-entity
+			{
+				padding: 5px;
+				
+				.entity-thumbnail
+				{		
+					img
+					{
+						.square(26px);
+					}
+				}
+				
+				.entity-container
+				{
+					padding-left: 50px;
+				
+					h4.entity-title 
+					{ 
+						font-size: @baseFontSize + 1;
+						margin: 5px 0;
+					}
+					
+					.entity-excerpt,
+					.entity-description
+					{
+						font-size: @baseFontSize;
+						padding: 5px 0;
+					}
+					
+					.entity-meta
+					{
+						.an-meta
+						{ 
+						  font-size: @baseFontSize - 1;
+						}
+						padding: 5px 0;
+					}
+				}
+			}
+		}
+		
+		.an-portraiables
+		{
+		    padding: 5px 0;
+		    
+		    .an-portraiable
+		    {
+		       padding: 5px;
+		       
+		       .entity-thumbnail
+               {       
+                    img
+                    {
+                        .square(26px);
+                    }
+                }
+		       
+		       .entity-container
+		       {
+		          padding-left: 50px;
+		          
+		          img
+		          {
+		              max-width: 387px;
+		          }
+		          
+		          h4.portraiable-title 
+                  { 
+                     font-size: @baseFontSize + 1;
+                     margin: 5px 0;
+                  }
+                  
+                  .portraiable-description
+                  {
+                      font-size: @baseFontSize;
+                      padding: 5px 0;
+                  }
+                  
+                  .portraiable-meta
+                  {
+                       .an-meta
+                       { 
+                         font-size: @baseFontSize - 1;
+                       }
+                       padding: 5px 0;
+                   }
+		       }
+		       
+		    }
+		}
+		
+		.media-grid
+		{
+			margin: 5px 0 0 0;
+			
+			> div
+			{
+				a
+				{
+					img.thumbnail
+					{
+						.border-radius(3px);
+						.square(62px);
+						margin: 5px;
+						padding: 0;
+						border: 0;
+					}
+				}
+			}
+		}
+		
+		.alert
+		{
+		  &.alert-block
+		  {
+		       margin-top: 10px;
+		  }
+		}
+	}
+	
+	.gadget-app-url
+	{
+		margin: 10px 0;
+		
+		a
+		{
+			display: block;
+			padding: 5px 0;
+			width: 100%;
+			font-weight: bold;
+			text-align: right;
+			font-size: @baseFontSize + 1;
+		}
+	}
+}
