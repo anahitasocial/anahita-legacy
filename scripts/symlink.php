@@ -21,7 +21,6 @@ $symlinks = array(
 joomla_symlinks($symlinks);
 nooku_symlinks($symlinks);
 anahita_symlinks($symlinks);
-gantry_symlinks($symlinks);
 
 foreach($symlinks as $target => $link) 
 {
@@ -88,14 +87,13 @@ function anahita_symlinks(&$links)
         'administrator/components/com_apps',
         'administrator/components/com_bazaar',
         'administrator/language/en-GB/en-GB.com_apps.ini',
+        'administrator/language/en-GB/en-GB.tpl_shiraz.ini',
         'libraries/default/base',
         'libraries/default/people',
         'libraries/default/users',
-        'libraries/default/themes',
+        'libraries/default/theme',
         'site/templates/shiraz',
-        'site/templates/shiraz/en-GB.tpl_shiraz.ini' => 'language/en-GB/en-GB.tpl_shiraz.ini',
-    	'site/templates/shiraz/admin/en-GB.tpl_shiraz.ini' => 'administrator/language/en-GB/en-GB.tpl_shiraz.ini',
-        'site/templates/default',
+        'site/templates/base',
         'site/modules/mod_base',
         'site/modules/mod_viewer',        
         'site/components/com_dashboard',
@@ -109,6 +107,7 @@ function anahita_symlinks(&$links)
         'site/components/com_socialapp',
         'site/components/com_composer',            
         'site/components/com_base',
+        'site/language/en-GB/en-GB.tpl_shiraz.ini',
         'site/language/en-GB/en-GB.com_notifications.ini',
         'site/language/en-GB/en-GB.com_stories.ini',
         'site/language/en-GB/en-GB.com_dashboard.ini',
@@ -126,6 +125,7 @@ function joomla_symlinks(&$links)
          'vendors/joomla/libraries/joomla' => 'libraries/joomla',
          'vendors/joomla/media/system' => 'media/system',
          'vendors/joomla/includes/js'  => 'includes/js',
+         'vendors/joomla/includes/application.php'  => 'includes/application.php',
 		 'vendors/joomla/modules/mod_mainmenu'      => 'modules/mod_mainmenu',
          'vendors/joomla/modules/mod_breadcrumbs'   => 'modules/mod_breadcrumbs',
          'vendors/joomla/administrator/components/com_modules' => 'administrator/components/com_modules',
@@ -136,14 +136,4 @@ function joomla_symlinks(&$links)
          'vendors/joomla/templates/system' => 'templates/system',
     	 'vendors/joomla/components/com_content' => 'components/com_content',                        
     ));    
-}
-
-function gantry_symlinks(&$links)
-{
-	$links = array_merge($links, array(
-		'vendors/gantry/plg_system_gantry/gantry.php' => 'plugins/system/gantry.php',
-		'vendors/gantry/plg_system_gantry/gantry.xml' => 'plugins/system/gantry.xml',
-		'vendors/gantry/site' => 'components/com_gantry',
-		'vendors/gantry/admin' => 'administrator/components/com_gantry'
-	));
 }
