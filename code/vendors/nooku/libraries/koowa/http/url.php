@@ -1,6 +1,6 @@
 <?php
 /**
- * @version     $Id: url.php 4634 2012-05-13 16:00:33Z johanjanssens $
+ * @version     $Id: url.php 4687 2012-06-04 19:50:30Z johanjanssens $
  * @package     Koowa_Http
  * @copyright   Copyright (C) 2007 - 2012 Johan Janssens. All rights reserved.
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
@@ -67,14 +67,14 @@
  *     $url->path[] = 'another';
  *
  *     // and fetch it to a string.
- *     $new_url = $url->getURL();
+ *     $new_url = $url->getUrl();
  *
  *     // the $new_url string is as follows; notice how the format
  *     // is always applied to the last path-element.
  *     // /something/else/entirely/another.php?baz=zab&zim=gir#anchor
  *
  *     // Get the full URL to get the scheme and host
- *     $full_url = $url->getURL(true);
+ *     $full_url = $url->getUrl(true);
  *
  *     // the $full_url string is:
  *     // https://example.com/something/else/entirely/another.php?baz=zab&zim=gir#anchor
