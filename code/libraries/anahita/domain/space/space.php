@@ -258,7 +258,10 @@ class AnDomainSpace extends KObject
 			$property = $description->getProperty($key);
 			$value = $property->serialize($value);
 			$value = implode('', $value);
-			$key   = $key.'=>'.$value;
+            
+            //use the identifier application as the unique context
+			$key   = $entity->getIdentifier()->application.','.$key.','.$value;
+            
 			foreach($classes as $class)
 			{
 				if ( !isset($this->_identity_map[$class]) ) 
@@ -291,9 +294,13 @@ class AnDomainSpace extends KObject
 		        $property = $description->getProperty($key);
 		        $value = $property->serialize($value);
 		        $value = implode('', $value);
-		        $key   = $key.'=>'.$value;
+                                
+                //use the identifier application as the unique context
+		        $key   = $description->getEntityIdentifier()->application.','.$key.','.$value;
+                
 		        if ( isset($this->_identity_map[$class][$key]) )
 		        {
+                    //found an entity
 		            $entity = $this->_identity_map[$class][$key];
 		            //only return an entity if it's still within the space
 		            return $this->_entities->contains($entity) ? $entity : null;

@@ -42,7 +42,7 @@ class LibBaseTemplateHelperController extends KTemplateHelperAbstract
     public function getToolbar()
     {
         $view    = $this->_template->getView();
-        $toolbar = $view->toolbar;
+        $toolbar = $view->getState()->toolbar;
         if ( !$toolbar )
         {
             $controller = $this->getController($view->getName());
@@ -50,9 +50,9 @@ class LibBaseTemplateHelperController extends KTemplateHelperAbstract
             if ( $controller->hasToolbar($toolbar) ) {
                 $toolbar = $controller->getToolbar($toolbar);
             }
-            $view->toolbar = $toolbar;
+            $controller->toolbar = $toolbar;
         }
-        return $view->toolbar;
+        return $view->getState()->toolbar;
     }
         
 	/**
@@ -78,17 +78,21 @@ class LibBaseTemplateHelperController extends KTemplateHelperAbstract
 	        
 	        $entity = clone $identifier;
 	        $entity->path = array('domain','entity');
+            
 	        try
 	        {
 	            $repository = AnDomain::getRepository($entity);
 	            $entity     = $repository->getClone();
-	            register_default(array('identifier'=>$identifier, 'prefix'=>$entity, 'fallback'=>'ComBaseControllerResource'));
+                $default    = array('prefix'=>$entity, 'fallback'=>'ComBaseControllerService'); 	            
 	        }
 	        catch(Exception $e)
 	        {
-	            register_default(array('identifier'=>$identifier, 'default'=>'ComBaseControllerView'));
+                $default = array('default'=>'ComBaseControllerResource');
 	        }
-	        	        	        	        
+	        
+            $default['identifier'] = $identifier;
+            register_default($default);
+            	        	        
 	        $controller = $this->getService($identifier, array('request' => array()));
 	        
 	        self::$_controllers['controller.'.$name] = $controller;

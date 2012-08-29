@@ -25,8 +25,38 @@
  * @license    GNU GPLv3 <http://www.gnu.org/licenses/gpl-3.0.html>
  * @link       http://www.anahitapolis.com
  */
-class ComBaseControllerConfiguration extends ComBaseControllerView
-{        
+class ComBaseControllerConfiguration extends ComBaseControllerResource
+{      
+    /**
+    * Initializes the default configuration for the object
+    *
+    * Called from {@link __construct()} as a first step of object instantiation.
+    *
+    * @param KConfig $config An optional KConfig object with configuration options.
+    *
+    * @return void
+    */
+    protected function _initialize(KConfig $config)
+    {
+        $config->append(array(
+            'toolbars' => array('menubar')
+        ));   
+
+        parent::_initialize($config);
+    }
+    
+    /**
+     * Empty action so the before/after browse is invoked
+     * 
+     * @param KCommandContext $context Context parameter
+     * 
+     * @return void
+     */ 
+    protected function _actionBrowse(KCommandContext $context)
+    {             
+        //empty
+    }
+    
     /**
      * Method to set a view object attached to the controller
      *

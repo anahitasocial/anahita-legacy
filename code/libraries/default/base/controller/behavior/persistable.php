@@ -40,7 +40,7 @@ class LibBaseControllerBehaviorPersistable extends KControllerBehaviorAbstract
 		$state       = KRequest::get('session.'.$identifier, 'raw', array());
 	
 		//Append the data to the request object
-		$this->getRequest()->append($state);
+		$this->getState()->append($state);
 	}
 	
 	/**

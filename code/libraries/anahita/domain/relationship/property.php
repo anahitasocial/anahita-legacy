@@ -99,7 +99,7 @@ abstract class AnDomainRelationshipProperty extends AnDomainPropertyAbstract
      * @param 	object 	An optional KConfig object with configuration options.
      * @return 	void
      */
-	protected function _initialize($config)
+	protected function _initialize(KConfig $config)
 	{
 		$config->append(array(
 			'parent_key'   => 'id',

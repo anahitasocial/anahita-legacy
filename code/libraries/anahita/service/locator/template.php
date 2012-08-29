@@ -51,12 +51,15 @@ class AnServiceLocatorTemplate extends KServiceLocatorAbstract
 	        if ( !$classname )
 	        {
                 $path      = KInflector::implode($identifier->path);
-	            $classes[] = 'LibThemes'.$path.ucfirst($identifier->name);
-                $classes[] = 'LibThemes'.$path.ucfirst($identifier->name).'Default';
-                $classes[] = 'ComBase'.$path.ucfirst($identifier->name);
+                $classes[] = 'TmplBase'.$path.ucfirst($identifier->name);
+                $classes[] = 'TmplBase'.$path.ucfirst($identifier->name).'Default';
+                $classes[] = 'LibTheme'.$path.ucfirst($identifier->name);
+                $classes[] = 'LibTheme'.$path.ucfirst($identifier->name).'Default';                
                 $classes[] = 'LibBase'.$path.ucfirst($identifier->name);
-	            $classes[] = 'K'.$path.ucfirst($identifier->name);            
-                
+                $classes[] = 'LibBase'.$path.ucfirst($identifier->name).'Default';
+	            $classes[] = 'K'.$path.ucfirst($identifier->name);
+                $classes[] = 'K'.$path.ucfirst($identifier->name).'Default';            
+                  
 	            foreach($classes as $class)
 	            {
 	                if ( $this->getService('koowa:loader')->loadClass($class,  $identifier->basepath)) {

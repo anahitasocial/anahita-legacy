@@ -86,7 +86,7 @@ class PlgSystemAnahita extends JPlugin
         define('JPATH_IMAGES', JPATH_ROOT.DS.'images');
         
         //Set exception handler
-        set_exception_handler(array($this, 'exceptionHandler'));
+        set_exception_handler(array(new AnExceptionHandler(), 'exceptionHandler'));
         
         // Koowa : setup
         require_once( JPATH_LIBRARIES.'/anahita/anahita.php');
@@ -174,6 +174,8 @@ class PlgSystemAnahita extends JPlugin
 		    }
 		}
 
+        //set the error document to a decorated
+        //document object
         if ( !JFactory::getApplication()->isAdmin() )
         {
             //set the error document
@@ -191,9 +193,9 @@ class PlgSystemAnahita extends JPlugin
 		}
 		else
 		{
-		    JHTML::script('lib_anahita/js/min/bootstrap.js', 'media/');
-		    JHTML::script('lib_anahita/js/anahita.js?lang='.$tag.'&token='.JUtility::getToken().'&'.uniqid(), 'media/');
-		    JHTML::script('lib_anahita/js/site.js?'.uniqid(), 'media/');
+		    //JHTML::script('lib_anahita/js/min/bootstrap.js', 'media/');
+		    //JHTML::script('lib_anahita/js/anahita.js?lang='.$tag.'&token='.JUtility::getToken().'&'.uniqid(), 'media/');
+		    //JHTML::script('lib_anahita/js/site.js?'.uniqid(), 'media/');
 		}
 		
 		if ( !JFactory::getApplication()->isAdmin() ) 
@@ -238,8 +240,57 @@ class PlgSystemAnahita extends JPlugin
 		$person->save();
 		
 		return true;
+	}	
+    
+	/**
+	 * store user method
+	 *
+	 * Method is called before user data is deleted from the database
+	 *
+	 * @param 	array		holds the user data
+	 */
+	public function onBeforeDeleteUser($user)
+	{							
+		$person = 	KService::get('repos://site/people.person')
+                    ->getQuery()
+                    ->disableChain()
+                    ->userId($user['id'])
+					->fetch();
+					;
+		
+		if(!$person)
+			return;
+
+		$apps = KService::get('repos://site/apps.app')->getQuery()->disableChain()->fetchSet();
+		
+		foreach($apps as $app) 
+		{
+		    KService::get('anahita:event.dispatcher')->addEventSubscriber($app->getDelegate());
+		}
+		
+		$person->destroy();
 	}
-	
+}
+
+/**
+ * Anahita Exception Handler
+ * 
+ * @category   Anahita
+ * @package    Plugins
+ * @author     Arash Sanieyan <ash@anahitapolis.com>
+ * @author     Rastin Mehr <rastin@anahitapolis.com>
+ * @license    GNU GPLv3 <http://www.gnu.org/licenses/gpl-3.0.html>
+ * @link       http://www.anahitapolis.com
+ */
+class AnExceptionHandler
+{
+    /**
+     * Thrown exception
+     * 
+     * @var Exception
+     */
+    protected $_exception;
+    
     /**
      * Catch all exception handler
      *
@@ -286,7 +337,7 @@ class PlgSystemAnahita extends JPlugin
         while(@ob_get_clean());
         
         //Throw json formatted error
-        if( KRequest::format() == 'json')
+        if( KRequest::format() == 'json' || KRequest::type() == 'AJAX' )
         {
             $properties = array(
                 'message' => $error->message,
@@ -317,37 +368,11 @@ class PlgSystemAnahita extends JPlugin
             echo JResponse::toString();
             JFactory::getApplication()->close(0);
         }
-        else JError::customErrorPage($error);
+        else {
+            JError::customErrorPage($error);
+        }
+        
     }
-    
-	/**
-	 * store user method
-	 *
-	 * Method is called before user data is deleted from the database
-	 *
-	 * @param 	array		holds the user data
-	 */
-	public function onBeforeDeleteUser($user)
-	{							
-		$person = 	KService::get('repos://site/people.person')
-                    ->getQuery()
-                    ->disableChain()
-                    ->userId($user['id'])
-					->fetch();
-					;
-		
-		if(!$person)
-			return;
-
-		$apps = KService::get('repos://site/apps.app')->getQuery()->disableChain()->fetchSet();
-		
-		foreach($apps as $app) 
-		{
-		    KService::get('anahita:event.dispatcher')->addEventSubscriber($app->getDelegate());
-		}
-		
-		$person->destroy();
-	}
 }
 
 /**
@@ -397,12 +422,21 @@ class AnDocumentDecorator
         $params->append(array(
             'file' => $this->_document instanceof JDocumentError ? 'error.php' : 'index.php'
         )); 
-               
+		jimport('joomla.filesystem.file');
+        
         $tmpl  = JFile::stripExt(JFile::getName($params['file']));        
-               
+        
+        if ( $tmpl == 'index' ) {
+            $tmpl = 'default';    
+        }
+                
         $data['filename'] = $params['file'];
         
         $document         = $this->_document;
+        
+        $identifier = 'tmpl://site/'.$params['template'].'.dispatcher';
+        
+        $dispatcher   = KService::get($identifier, array('template'=>$tmpl));
         
         if ( $this->_document instanceof JDocumentError )
         {
@@ -414,20 +448,25 @@ class AnDocumentDecorator
                 $error = JError::raiseWarning( 403, JText::_('ALERTNOTAUTH') );    
             }
             
-            $document      = JFactory::getDocument();
+            $this->_document->_error = $error;
             
-            $data['error']     = $error;
-            $data['backtrace'] = $this->_document->renderBacktrace(); 
+        }       
+        else {
+            
+            $item    = JMenu::getInstance('site')->getActive();
+            $option  = KRequest::get('get.option', 'cmd');
+            $view    = KRequest::get('get.view', 'cmd');
+            
+            if ( ($item && $item->alias == 'home') || ($option == 'com_content' && $view == 'frontpage') ) {
+                $dispatcher->content(null);
+            }
+            
+            elseif ( isset($this->_document->_buffer) ) {
+                $dispatcher->content(implode('', $this->_document->_buffer['component']));
+            }
         }
         
-        $identifier = 'tmpl://site/'.$params['template'].'.template';
-        
-        $template   = KService::get($identifier,array(                
-                        'document'      => $document,
-                        'data'          => $data        
-                      ));
-                      
-        return $template->loadTemplate($tmpl)->render();        
+        return $dispatcher->render(array('document'=>$this->_document));                
     }
     
     /**

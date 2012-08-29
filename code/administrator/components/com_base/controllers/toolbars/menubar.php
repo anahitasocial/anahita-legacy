@@ -34,22 +34,16 @@ class ComBaseControllerToolbarMenubar extends ComDefaultControllerToolbarMenubar
      */
     public function onAfterControllerGet(KEvent $event)
     {
+        $this->addParameterCommand();
+        
          //Render the menubar
         $document = JFactory::getDocument();
         $config   = array('menubar' => $this);
-    
+        
         $menubar = $event->getPublisher()->getView()->getTemplate()->getHelper('menubar')->render($config);
         $document->setBuffer($menubar, 'modules', 'submenu');
-    } 
-
-    /**
-     * Push the toolbar into the view
-     * .
-     * @param	KEvent	A event object
-     */
-    public function onAfterControllerBrowse(KEvent $event)
-    {
-        $this->addParameterCommand();        
+        
+        
     }
 
     /**
@@ -59,12 +53,9 @@ class ComBaseControllerToolbarMenubar extends ComDefaultControllerToolbarMenubar
      */
     public function addParameterCommand()
     {
-        $file = JPATH_COMPONENT.DS.'config.xml';
-        $user = JFactory::getUser();
-        if ( file_exists($file) && $user->usertype == 'Super Administrator' )
+        if ( file_exists(JPATH_COMPONENT.DS.'config.xml') && JFactory::getUser()->get('gid') > 22 )
         {
-            if ( count($this->getCommands()) > 0 )
-            {
+            if ( count($this->getCommands()) > 0 ) {
                 $this->addCommand('configurations',
                         array('href'=>JRoute::_('index.php?option=com_'.$this->getIdentifier()->package.'&view=configurations')));                
             }

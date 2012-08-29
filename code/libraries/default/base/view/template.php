@@ -92,6 +92,7 @@ abstract class LibBaseViewTemplate extends LibBaseViewAbstract
         $this->getTemplate()->getFilter('alias')->append(
             array('media://' => (string) $this->_mediaurl.'/'), KTemplateFilter::MODE_READ | KTemplateFilter::MODE_WRITE
         );
+        
     }
 
     /**
@@ -107,7 +108,7 @@ abstract class LibBaseViewTemplate extends LibBaseViewAbstract
         $config->append(array(
             'escape'           => 'htmlspecialchars',
             'template'		   => $this->getName(),
-            'template_filters' => array('shorttag', 'alias', 'variable', 'script', 'style'),
+            'template_filters' => array('shorttag', 'alias', 'variable'),
             'template_paths'   => array(),
             'auto_assign'      => true,
             'media_url'        => '/media',
@@ -224,8 +225,8 @@ abstract class LibBaseViewTemplate extends LibBaseViewAbstract
 		$output = $this->getTemplate()->loadTemplate($template, $data)->render();
         
         return $output;
-	}	
-	
+	}
+        
     /**
      * Return the views output. If a $layout is passed, the layout will be used as identifier
      * to render. Before a layout is displayed, method $self::execute($layout) will be called

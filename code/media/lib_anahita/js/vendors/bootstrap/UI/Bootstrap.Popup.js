@@ -80,7 +80,11 @@ Bootstrap.Popup = new Class({
 
 	show: function(){
 		if (this.visible || this.animating) return;
-		this.element.addEvent('click:relay(.close, .dismiss)', this.bound.hide);
+		var hide = this.bound.hide;
+		this.element.addEvent('click:relay(.close, .dismiss)', function(e){
+			e.stop();
+			hide();
+		});
 		if (this.options.closeOnEsc) document.addEvent('keyup', this.bound.keyMonitor);
 		this._makeMask();
 		this._mask.inject(document.body);

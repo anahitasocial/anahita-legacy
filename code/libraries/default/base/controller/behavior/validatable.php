@@ -32,7 +32,7 @@ class LibBaseControllerBehaviorValidatable extends KControllerBehaviorAbstract
      * 
      * @var string
      */
-    protected $_validator;
+    protected $_validator;    
     
     /**
      * Constructor.
@@ -142,13 +142,13 @@ class LibBaseControllerBehaviorValidatable extends KControllerBehaviorAbstract
 		$key	   = $data->key;
 		$value	   = $data->value;		
 		$method    = 'validate'.ucfirst($key);
-		$result    = true;
-		$output    = '';
-		$result    = $this->getValidator()->$method($value, $output);
+		$result    = true;		
+		$result    = $this->getValidator()->$method($value);
+        $output    = $this->getValidator()->getMessage();
 		if ( $result === false ) 
 		{
 			$context->status = KHttpResponse::PRECONDITION_FAILED;
-			if ( is_string($output) ) 
+			if ( is_string($output)  ) 
 			    $output = array('errorMsg'=>$output);
 			$context->append(array(
 				'headers' => array(

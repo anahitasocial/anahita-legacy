@@ -29,9 +29,16 @@
 abstract class LibBaseViewAbstract extends KObject
 {
     /**
+     * The view state
+     *
+     * @var LibBaseControllerData
+     */    
+    protected $_state;
+        
+    /**
      * The assigned data
      *
-     * @var array
+     * @var LibBaseControllerData
      */
     protected $_data;
     
@@ -61,7 +68,7 @@ abstract class LibBaseViewAbstract extends KObject
 	 * 
 	 * @var string
 	 */
-	public $mimetype = '';
+	public $mimetype = '';    
 	
 	/**
 	 * Constructor
@@ -88,7 +95,9 @@ abstract class LibBaseViewAbstract extends KObject
         $this->setLayout($config->layout);
         
         //set the data
-        $this->_data = KConfig::unbox($config->data);
+        $this->_state = $config->state;
+                 
+        $this->_data  = KConfig::unbox($config->data);
 	}
     	
     /**
@@ -102,6 +111,7 @@ abstract class LibBaseViewAbstract extends KObject
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
+            'state'      => new LibBaseControllerState(),
             'data'       => array(), 
 	    	'output'	 => '',
     		'mimetype'	 => '',
@@ -119,7 +129,7 @@ abstract class LibBaseViewAbstract extends KObject
      * @param 	mixed 	The property value.
      */
  	public function __set($property, $value)
-    {
+    {        
     	$this->_data[$property] = $value;
   	}
   	
@@ -130,12 +140,13 @@ abstract class LibBaseViewAbstract extends KObject
      * @return 	string 	The property value.
      */
     public function __get($property)
-    {
-    	$result = null;
-    	if(isset($this->_data[$property])) {
-    		$result = $this->_data[$property];
-    	} 
-    	
+    {   
+        $result = null;
+        
+        if ( isset($this->_data[$property]) ) {   
+            $result = $this->_data[$property];
+        }
+            	
     	return $result;
     }
         
@@ -156,14 +167,19 @@ abstract class LibBaseViewAbstract extends KObject
     public function __call($method, $args) 
     { 
         //If one argument is passed we assume a setter method is being called
-        if ( !isset($this->_mixed_methods[$method]) && count($args) == 1 ) {
+        if ( !isset($this->_mixed_methods[$method]) && count($args) == 1 ) 
+        {
         	//the methods like set[Value] will remove the set from the method
-        	if ( substr($method, 0, 3) == 'set' ) {
+        	if ( substr($method, 0, 3) == 'set' ) 
+            {  
+                deprecated('using view::__call');
         		$method = KInflector::variablize(substr($method, 3));
         	}
         	
-        	return $this->set($method, $args[0]);
-        } 
+            $this->set(KInflector::underscore($method), $args[0]);
+            
+        	return $this; 
+        }
                 
         return parent::__call($method, $args); 
     }
@@ -191,7 +207,8 @@ abstract class LibBaseViewAbstract extends KObject
         }
         elseif ( '_' != substr($property, 0, 1) ) 
         {
-            if(method_exists($this, 'set'.ucfirst($property)))  {
+            if(method_exists($this, 'set'.ucfirst($property)))  
+            {
                 $this->{'set'.ucfirst($property)}($value);                 
             } else            
             	$this->$property = $value;
@@ -263,6 +280,16 @@ abstract class LibBaseViewAbstract extends KObject
 	    return $this->_baseurl;
 	}	
     
+    /**
+     * Returns the view sata
+     * 
+     * @return AnControllerState
+     */
+    public function getState()
+    {
+        return $this->_state;
+    }
+    
 	/**
 	 * Return the data used in the template 
 	 *
@@ -325,7 +352,7 @@ abstract class LibBaseViewAbstract extends KObject
 	    
 	    return LibBaseHelperUrl::getRoute($parts);
 	}
-		
+    
     /**
      * Execute and return the views output
      *

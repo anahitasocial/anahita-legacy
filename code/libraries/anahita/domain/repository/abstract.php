@@ -696,7 +696,9 @@ abstract class AnDomainRepositoryAbstract extends KCommand
 		//duplicate objects
 		$entity 	 = $this->find($keys, false);
 		
-		if ( $entity ) return $entity;
+		if ( $entity ) {
+            return $entity;
+        }
 
 		$inheritance_column 	= $description->getInheritanceColumn();
 		

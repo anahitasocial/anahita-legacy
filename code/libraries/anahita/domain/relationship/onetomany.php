@@ -85,7 +85,7 @@ class AnDomainRelationshipOnetomany extends AnDomainRelationshipProperty
      * @param 	object 	An optional KConfig object with configuration options.
      * @return 	void
      */
-	protected function _initialize($config)
+	protected function _initialize(KConfig $config)
 	{							
 		$child		 = clone $this->_parent;
 		

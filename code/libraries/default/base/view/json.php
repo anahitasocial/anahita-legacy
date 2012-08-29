@@ -80,18 +80,57 @@ class LibBaseViewJson extends LibBaseViewAbstract
 	 *  @return string 	The output of the view
 	 */
     public function display()
-    {   	
-        $data = array();
+    { 
+        $name  = $this->getName();
         
-    	foreach($this->_data as $key => $value)
-        {
-            if ( !is_object($value) ) {
-                $data[$key] = $value;
-            }
+        $data  = array();
+        
+        //if data is set the just json encode those
+        if ( count($this->_data) ) {
+            $this->output = $this->_data;
         }
         
-    	$this->output = json_encode($data);
+        else if ( KInflector::isPlural($name) ) {
+            $this->output = $this->_getList();
+        }
+        
+        else {
+            $this->output = $this->_getItem();
+        }
+      
+        if (!is_string($this->output)) {
+            $this->output = json_encode($this->output);
+        }
+
+        //Handle JSONP
+        if(!empty($this->_padding)) {
+            $this->output = $this->_padding.'('.$this->output.');';
+        }
         
     	return $this->output;
+    }
+    
+    /**
+     * Return the list
+     * 
+     * @return array
+     */
+    protected function _getList()
+    {
+        if ( $list = $this->_state->getList() ) {
+            return $list->toSerializableArray();
+        }
+    }
+    
+    /**
+     * Return the list
+     * 
+     * @return array
+     */
+    protected function _getItem()
+    {
+        if ( $item = $this->_state->getItem() ) {
+            return $item->toSerializableArray();   
+        }
     }
 }

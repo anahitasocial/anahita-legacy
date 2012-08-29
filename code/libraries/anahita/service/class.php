@@ -120,6 +120,8 @@ class AnServiceClass
                  $path = KInflector::implode($config['identifier']->path);;
                  $config['name'] = array($path.ucfirst($config['identifier']->name), $path.'Default');
              }
+             
+             unset($config['default']);
          }
          
          self::$_identifiers[$strIdentifier] = $config;
@@ -178,7 +180,7 @@ class AnServiceClass
                        $classes[] = $config['fallback'];                      
                    }
                }
-
+               
                foreach($classes as $class) 
                {
                    if ( class_exists($class) )

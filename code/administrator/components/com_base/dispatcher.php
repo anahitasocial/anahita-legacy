@@ -42,12 +42,15 @@ class ComBaseDispatcher extends LibBaseDispatcherDefault
 			{
 			    $repository = AnDomain::getRepository($resource);
 			    $entity     = $repository->getClone();
-			    register_default(array('identifier'=>$this->_controller, 'prefix'=>$entity, 'fallback'=>'ComBaseControllerResource'));			    			    
+                $default    = array('prefix'=>$entity, 'fallback'=>'ComBaseControllerService');		    			    
 			} 
 			catch(Exception $e)
 			{
-			    register_default(array('identifier'=>$this->_controller, 'default'=>array('ComBaseController'.ucfirst($this->_controller->name),'ComBaseControllerView')));
-			}			
+                $default    = array('default'=>array('ComBaseController'.ucfirst($this->_controller->name),'ComBaseControllerResource'));			    
+			}	
+            
+            $default['identifier'] = $this->_controller;
+            register_default($default);
 		}
 	}
 

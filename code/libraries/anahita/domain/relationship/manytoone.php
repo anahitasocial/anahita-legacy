@@ -79,7 +79,7 @@ class AnDomainRelationshipManytoone extends AnDomainRelationshipProperty impleme
 	 * @param 	object 	An optional KConfig object with configuration options.
 	 * @return 	void
 	 */
-	protected function _initialize($config)
+	protected function _initialize(KConfig $config)
 	{
 	    //disable the chain for the belongs to relationship
 	    $config->append(array(	       

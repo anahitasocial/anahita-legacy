@@ -98,6 +98,4 @@ class AnObjectArray extends KObjectArray
     		
     	return $key;    	
     }
-
-//end class
 }

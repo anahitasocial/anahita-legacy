@@ -357,4 +357,8 @@ function anahita_15()
     dbexec($sql);
 }
 
-?>
+function anahita_16()
+{
+	dbexec("DELETE FROM jos_plugins WHERE element = 'gantry'");
+	dbexec("DELETE FROM jos_components WHERE `option`='com_gantry'");
+}

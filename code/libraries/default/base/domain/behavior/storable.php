@@ -183,7 +183,7 @@ class LibBaseDomainBehaviorStorable extends AnDomainBehaviorAbstract
      *
      * @return void
      */
-    protected function _beforeEntityDelete($context)
+    protected function _beforeEntityDelete(KCommandContext $context)
     {
         $entity = $context->entity;
         $entity->removeStorage();

@@ -26,7 +26,42 @@
  * @link       http://www.anahitapolis.com
  */
 class LibBaseControllerBehaviorIdentifiable extends KControllerBehaviorAbstract
-{
+{     
+    /**
+     * Controller Domain Repository
+     *
+     * @var string
+     */
+    protected $_repository;
+        
+    /**
+     * Identifiable key. If this key exists in the request then this behavior
+     * will fetch the entity using this key
+     * 
+     * @return string
+     */
+    protected $_identifiable_key;
+    
+    /** 
+     * Constructor.
+     *
+     * @param KConfig $config An optional KConfig object with configuration options.
+     * 
+     * @return void
+     */ 
+    public function __construct(KConfig $config)
+    {
+        parent::__construct($config);
+        
+        $this->_repository = $config->repository;
+        
+        $config->append(array(
+            'identifiable_key' => $this->getRepository()->getDescription()->getIdentityProperty()->getName()
+        ));        
+        
+        $this->_identifiable_key = $config->identifiable_key;
+    }
+           
     /**
      * Initializes the default configuration for the object
      *
@@ -38,7 +73,8 @@ class LibBaseControllerBehaviorIdentifiable extends KControllerBehaviorAbstract
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-            'priority'   => KCommand::PRIORITY_HIGHEST
+            'repository'    => $config->mixer->getIdentifier()->name ,      
+            'priority'      => KCommand::PRIORITY_HIGHEST
         ));
 
         parent::_initialize($config);
@@ -52,16 +88,110 @@ class LibBaseControllerBehaviorIdentifiable extends KControllerBehaviorAbstract
      * @return  boolean     Can return both true or false.  
      */
     public function execute($name, KCommandContext $context) 
-    {
+    {        
 		$parts = explode('.', $name);
 		
-		if ( $parts[0] == 'before' && !$context->entity_fetched ) 
-		{
-			$context->entity_fetched = true;
+        //for any before if the item has been fetched
+        //then try to fetch it
+		if ( $parts[0] == 'before' ) 
+        {
 			return $this->_mixer->fetchEntity($context);
 		}
     }
     
+    /**
+     * A list of items that are each identifiable
+     * 
+     * @param mixed $list list of resources 
+     * 
+     * @return LibBaseControllerBehaviorIdentifiable
+     */
+    public function setList($list)
+    {
+        $this->_mixer->getState()->setList($list);
+        return $this->_mixer;   
+    }
+    
+    /**
+     * Return the controller list of identifiable objects
+     * 
+     * @return mixed
+     */
+    public function getList()
+    {
+        return $this->_mixer->getState()->getList();
+    }    
+    
+    /**
+     * Set the controller identitable item
+     * 
+     * @param mixed $item The identifiable Item
+     * 
+     * @return LibBaseControllerBehaviorIdentifiable
+     */
+    public function setItem($item)
+    {
+       $this->_mixer->getState()->setItem($item);
+       return $this->_mixer; 
+    }
+    
+    /**
+     * Return the controller identifiable item
+     * 
+     * @return mixed
+     */
+    public function getItem()
+    {
+        return $this->_mixer->getState()->getItem();
+    }
+    
+    /**
+     * Set the controller repository
+     * 
+     * @param string|AnDomainRepositoryAbstract $repository The domain repository
+     * 
+     * @return LibBaseControllerResource
+     */
+    public function setRepository($repository)
+    {
+        if ( !$repository instanceof AnDomainRepositoryAbstract )
+        {
+            $identifier = $repository;
+            
+            if ( strpos($repository,'.') === false ) 
+            {
+                $identifier = clone $this->getIdentifier();
+                $identifier->path = array('domain', 'entity');
+                $identifier->name = $repository;
+            }
+            
+            $repository = $this->getIdentifier($identifier);            
+        }
+              
+        $this->_repository = $repository;
+        
+        return $this;
+    }
+
+    /**
+     * Return the controller repository 
+     * 
+     * @return AnDomainRepositoryAbstract
+     */
+    public function getRepository()
+    {
+        if ( !$this->_repository instanceof AnDomainRepositoryAbstract ) 
+        {
+            if ( !$this->_repository instanceof KServiceIdentifier ) {
+                $this->setRepository($this->_repository);    
+            }
+            
+            $this->_repository = AnDomain::getRepository($this->_repository);
+        }
+        
+        return $this->_repository;
+    }
+        
  	/**
      * Fetches an entity
      *
@@ -73,43 +203,59 @@ class LibBaseControllerBehaviorIdentifiable extends KControllerBehaviorAbstract
     		'identity_scope' => array()
     	));
     	
-    	$request = $this->getRequest();
-    	$data    = $context->data;
-    			
-		$id_key  = $this->getRepository()->getDescription()->getIdentityProperty()->getName();
-		if ( isset($request->$id_key) )
-			$data->append(array('id'=>$request->$id_key));
-		
-		if ( isset($data->$id_key) ) 
-		{
-			$data   = $context->data;
-			
-			$value	= KConfig::unbox($data->$id_key);
-			
-			if ( is_array($value) ) 
-				$mode = AnDomain::FETCH_ENTITY_SET;
-			else
-				$mode = AnDomain::FETCH_ENTITY;
-
-			$scope			= KConfig::unbox($context->identity_scope);			
-			$scope[$id_key] = $value;
-			
-			$entity = $this->getRepository()->fetch($scope, $mode);
+        $identifiable_key = $this->getIdentifiableKey();
+          
+        if ( $values = $this->$identifiable_key ) 
+        {
+            $scope  = KConfig::unbox($context->identity_scope);
             
-			if ( empty($entity) || !count($entity)) {
+            $values = KConfig::unbox($values);
+            
+            $scope[$identifiable_key] = $values;
+            
+            if ( is_array($values) ) 
+                $mode = AnDomain::FETCH_ENTITY_SET;
+            else
+                $mode = AnDomain::FETCH_ENTITY;
+                   
+            $entity = $this->getRepository()->fetch($scope, $mode);
+            
+            if ( empty($entity) || !count($entity)) 
+            {
                 $context->setError(new KHttpException(
-            		'Resource Not Found', KHttpResponse::NOT_FOUND
+                    'Resource Not Found', KHttpResponse::NOT_FOUND
                 ));
-                return false;						
-			}
-			
-			$name = $this->_mixer->getEntity()->name;
-			$data->$name  = $entity;
-			$data->entity = $entity;
-			return $entity;
-		}
-    }	
+                return false;                       
+            }
+            
+            $this->setItem($entity);
+            
+            return $entity;
+        }    	
+    }
 
+    /**
+     * Sets the identifiable key
+     * 
+     * @param string $key The identifiable key
+     * 
+     * @return LibBaseControllerBehaviorIdentifiable
+     */
+    public function setIdentifiableKey($key)
+    {
+        $this->_identifiable_key = $key;
+    }
+    
+    /**
+     * Return the identifiable key
+     * 
+     * @return string
+     */
+    public function getIdentifiableKey()
+    {
+        return $this->_identifiable_key;
+    }
+    
     /**
      * Return the object handle
      * 

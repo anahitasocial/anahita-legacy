@@ -25,8 +25,26 @@
  * @license    GNU GPLv3 <http://www.gnu.org/licenses/gpl-3.0.html>
  * @link       http://www.anahitapolis.com
  */
-class ComAppsControllerApp extends ComBaseControllerResource 
+class ComAppsControllerApp extends ComBaseControllerService
 {	
+    /**
+    * Initializes the default configuration for the object
+    *
+    * Called from {@link __construct()} as a first step of object instantiation.
+    *
+    * @param KConfig $config An optional KConfig object with configuration options.
+    *
+    * @return void
+    */
+    protected function _initialize(KConfig $config)
+    {
+        $config->append(array(
+            'readonly' => true    
+        ));   
+
+        parent::_initialize($config);
+    }
+        
 	/**
 	 * Assign apps to an actor
 	 * 
@@ -37,7 +55,7 @@ class ComAppsControllerApp extends ComBaseControllerResource
 	protected function _actionSave($context)
 	{
 		$data = $context->data;
-		$data->app->assignTo(KConfig::unbox($data->actors));
+		$this->getItem()->assignTo(KConfig::unbox($data->actors));
 		$this->setRedirect('index.php?option=com_apps&view=apps');	
 	}
 		
@@ -51,7 +69,7 @@ class ComAppsControllerApp extends ComBaseControllerResource
 	protected function _actionApply($context)
 	{
 		$data = $context->data;
-		$data->app->assignTo(KConfig::unbox($data->actors));	
+		$this->getItem()->assignTo(KConfig::unbox($data->actors));	
 	}
 	
 	/**
@@ -62,16 +80,15 @@ class ComAppsControllerApp extends ComBaseControllerResource
 	 * @return void
 	 */
 	protected function _actionRead($context)
-	{
-		$data     = $context->data;
-		$entity   = $data->entity;
+	{		
+		$entity   = $this->getItem();
         //can't assign to an always app
         if ( $entity->getAssignmentOption() == ComAppsDomainDelegateDefault::ASSIGNMENT_OPTION_ALWAYS ||
              $entity->getAssignmentOption() == ComAppsDomainDelegateDefault::ASSIGNMENT_OPTION_NEVER
              )
              return false;
-        $this->getService('koowa:loader')->loadIdentifier('com://admin/apps.domain.model.app');
-		$data->actors = ComAppsDomainModelApp::getActorIdentifiers($entity);
+        $this->getService('koowa:loader')->loadIdentifier('com://admin/apps.domain.model.app');        
+		$this->actors = ComAppsDomainModelApp::getActorIdentifiers($entity);
 	}
 	
 	/**
@@ -104,7 +121,7 @@ class ComAppsControllerApp extends ComBaseControllerResource
         
 		//$components
 		$this->getToolbar('app')->setTitle('App Assignments');
-						
-		return $entities;
+		
+        return $entities;
 	}	
 }

@@ -297,7 +297,7 @@ abstract class AnDomainEntityAbstract extends KObject implements ArrayAccess
 	 * 
 	 * @return mixed
 	 */
-	 public function get($name, $default = null)
+	 public function get($name = null, $default = null)
 	 {
 	 	$description = $this->description();
 	 	

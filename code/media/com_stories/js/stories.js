@@ -37,7 +37,7 @@
 	document.addEvents({
 		'click:relay(.an-actions .comment)' : open,
 		'click:relay(.action-comment-overtext)' : open,
-		'click:relay(.connect-service)' : function(e){
+		'click:relay(.connect-service-share a)' : function(e){
 		    e.stop();
 		    e.target.toggleClass('selected');
 		    e.target.getElement('+input').set('checked', e.target.hasClass('selected'));

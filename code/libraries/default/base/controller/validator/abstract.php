@@ -30,7 +30,14 @@
  * @link       http://www.anahitapolis.com
  */
 abstract class LibBaseControllerValidatorAbstract extends KObject
-{
+{    
+    /**
+     * Validation error message
+     * 
+     * @return string
+     */
+    protected $_error_message;
+        
     /**
      * Controller
      * 
@@ -79,5 +86,25 @@ abstract class LibBaseControllerValidatorAbstract extends KObject
     public function getController()
     {
         return $this->_controller;
-    }    
+    }  
+    
+    /**
+     * Set the error message
+     * 
+     * @return void
+     */
+    public function setMessage($string)
+    {
+        $this->_error_message = $string;
+    }
+    
+    /**
+     * Get error message
+     * 
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->_error_message;
+    }
 }

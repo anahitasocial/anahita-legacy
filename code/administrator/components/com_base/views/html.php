@@ -70,8 +70,6 @@ class ComBaseViewHtml extends LibBaseViewHtml
      */
     protected function _layoutForm()
     {
-    	if ( !$this->entity ) {
-    		
-    	}
+    	
     }
 }

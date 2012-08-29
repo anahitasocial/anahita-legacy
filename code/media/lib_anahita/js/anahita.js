@@ -1,29 +1,52 @@
-(function() {	
-	var scripts       = document.getElementsByTagName('script');
-	var src			  = scripts[scripts.length - 1].src.toURI();
-	window.baseuri    = src.toString().replace(/\/media\/.*/,'');
+/**
+ * Initialize Global Behavior and Delegator
+ */
+(function(){
+			
+	Browser.Platform.mobile = Browser.Platform.ios || Browser.Platform.android ||
+							  Browser.Platform.webos || Browser.Platform.name.match(/BlackBerry/i)		
 	
-	window.route	  = function(url) {
-		return baseuri + url;
-	}
+	var style  = new Element('style', { 
+                'type': 'text/css',
+                'text': '#row-main *[data-behavior] {visibility:hidden}'
+    }).inject(document.getElements('script').getLast(),'after');
 	
-	//set the token 
-	Request.token		 = src.getData('token');
-	
+    window.behavior  = new Behavior({breakOnErrors:true});
+    window.delegator = new Delegator({breakOnErrors:true});
+    
+	window.addEvent('domready', function() {
+        window.delegator.attach(document);
+        window.behavior.apply(document.body);
+        style.dispose();
+	});
+        
+	/**
+	 * Refactors request to attach all An.Core.Event.Window instances 
+	 */
+	Class.refactor(Request.HTML, 
+	{
+		onSuccess: function() {
+			this.previous.apply(this, arguments);
+        	window.delegator.attach(document);
+        	window.behavior.apply(document.body);
+		}
+	});	
+})();
+
+//parse language
+(function(){
 	//set the language
-	Locale.define(src.getData('lang'),{});	
-	Locale.use(src.getData('lang'));	
-	window.addEvent('domready', function(){
-		document.getElements('script[type="text/language"]').each(function(lang){
+	var lang = document.getElement('html').get('lang') || 'en-GB';
+	Locale.define(lang,{});
+	Locale.use(lang);	
+	window.addEvent('domready', function() {
+		document.getElements('script[type="text/language"]').each(function(lang) {
 			var lang = JSON.decode(lang.get('text'));
 			Object.each(lang, function(data, set){
 				Locale.define(Locale.getCurrent().name, set, data)
 			});
 		});
 	});
-	
-	Browser.Platform.mobile = Browser.Platform.ios || Browser.Platform.android ||
-							  Browser.Platform.webos || Browser.Platform.name.match(/BlackBerry/i)	
 })();
 
 /**
@@ -116,42 +139,7 @@ String.implement({
 	});
 })();
 
-/**
- * Initialize Global Behavior and Delegator
- */
-(function(){
-    
-   
-    window.behavior  = new Behavior({breakOnErrors:true});
-    window.delegator = new Delegator({breakOnErrors:true});
-            
-    window.applyBehaviors = function(element, klass) {
-    	var elements = document.getElements(element);
-    	elements.each(function(element) {
-    		try {
-    			window.behavior.apply(element);
-    		} catch(e) {}
-    		element.removeClass(klass || 'filterable');
-    	});
-    }
-    
-	window.addEvent('domready', function() {
-        window.delegator.attach(document);
-        window.behavior.apply(document.body);
-	});
-        
-	/**
-	 * Refactors request to attach all An.Core.Event.Window instances 
-	 */
-	Class.refactor(Request.HTML, 
-	{
-		onSuccess: function() {
-			this.previous.apply(this, arguments);
-        	window.delegator.attach(document);
-        	window.behavior.apply(document.body);
-		}
-	});	
-})()
+
 
 
 /**
@@ -549,8 +537,9 @@ Delegator.register(['click'],'Request',
 		
 		if ( uri.getData('submit') || options.submit )
 			request.submit();
-		else 
+		else {
 			request.send();
+		}
 	}
 });
 
@@ -660,8 +649,9 @@ Form.Validator.add('validate-remote', {
 		if ( Form.Validator.getValidator('IsEmpty').test(element) )
 			return true;
 		var request = new Request({
-			url   : props.url || element.form.get('action'),
-			data  : {action:'validate','key':props.key || element.get('name'),'value':element.get('value')},
+			url    : props.url || element.form.get('action'),
+			method : 'post',
+			data   : {action:'validate','key':props.key || element.get('name'),'value':element.get('value')},
 			onRequest : function(){
 			    element.spin();
 			},

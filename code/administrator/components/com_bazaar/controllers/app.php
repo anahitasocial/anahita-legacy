@@ -25,7 +25,7 @@
  * @license    GNU GPLv3 <http://www.gnu.org/licenses/gpl-3.0.html>
  * @link       http://www.anahitapolis.com
  */
-class ComBazaarControllerApp extends ComBaseControllerView 
+class ComBazaarControllerApp extends ComBaseControllerResource 
 {
     /**
      * Downloads an app
@@ -57,12 +57,8 @@ class ComBazaarControllerApp extends ComBaseControllerView
     protected function _actionBrowse(KCommandContext $context)
     {   
         $this->getToolbar('app')->setTitle(JText::_('Bazaar'));
-                     
-        $data = $context->data;
         
-        $data->append(array(
-            'extensions' => ComBazaarDomainModelExtension::getExtensions(),
-             'store'     => new ComBazaarDomainModelStore()
-        ));
+        $this->extensions = ComBazaarDomainModelExtension::getExtensions();
+        $this->store      = new ComBazaarDomainModelStore();        
     }
 }

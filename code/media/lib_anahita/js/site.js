@@ -1,4 +1,10 @@
 /**
+ * @depends min/mootools.js
+ * @depends min/bootstrap.js
+ * @depends anahita.js
+*/
+
+/**
  * Handling displaying ajax message notifications
  */
 Class.refactor(Request.HTML, 

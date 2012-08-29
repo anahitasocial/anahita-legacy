@@ -116,6 +116,7 @@ class AnDomainBehaviorValidatable extends AnDomainBehaviorAbstract
         $this->_mixer->getRepository()->getCommandChain()->disable();
         $this->_mixer->set($property, $value);
         $this->_mixer->getRepository()->getCommandChain()->enable();
+        return $this->_mixer;
     }
     
     /**

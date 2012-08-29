@@ -271,7 +271,7 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 		$path = $this->findPath($file);
 		
 		if ( !$path ) {
-	    	throw new KTemplateException($template.' template not found in '.$this->_paths[ count($this->_paths) - 1]);
+	    	throw new KTemplateException($template.' template not found for '.$this->getIdentifier());
 	    }
 	    
 	    $path = $path.'/'.$file;
@@ -372,9 +372,10 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 	}
 	
 	/**
-	 * Reset the cached paths. @see KTemplateAbstract::addPath for more detail 
+	 * Add a new search path. By the default the path is added to the top of the search path
 	 *
 	 * @param string|array The path(s) to add.
+     * 
 	 * @return  KTemplateAbstract
 	 */
 	public function addPath($paths, $append = false)
@@ -383,12 +384,10 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 		
 		foreach($paths as $path) 
 		{
-			//path is given an idenifier
-			if ( strpos($path, '/') === false ) {
-				//fake a filename to get the list part as a dictory
-				$path = dirname(KLoader::path($path.'.filename'));
-			}
-			
+            if ( empty($path) ) {
+                continue;
+            }
+                
 			if ( in_array($path, $this->_paths) )
 				continue;
 							
@@ -453,8 +452,12 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 	 */
 	public function handleError($code, $message, $file = '', $line = 0, $context = array())
 	{
-	    if($file == 'tmpl://koowa:template.stack')
+	    if($file == 'tmpl://koowa:template.stack' || $code == 1 )
 	    {
+            if ( $file == 'tmpl://koowa:template.stack') {
+                $file = $this->getPath();  
+            }
+            
 	        if(ini_get('display_errors')) {
 	            echo '<strong>'.$code.'</strong>: '.$message.' in <strong>'.$file.'</strong> on line <strong>'.$line.'</strong>';
 	        }

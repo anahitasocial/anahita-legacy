@@ -164,14 +164,18 @@ abstract class AnDomainEntitysetAbstract extends AnObjectSet
     public function __get($column)
     {
     	$return 	 = null;
-    	$description = $this->getRepository()->getDescription();    	
-    	if ( $property = $description->getProperty($column) ) {
-    		if ( $property->isAttribute() && $property->isScalar() ) {
-    			if ( $property->getType() == 'boolean' )
-    				$return = 'boolean';
-    			else
-    				$return = 'array';
-    		}
+    	
+        $description = $this->getRepository()->getDescription();
+        
+    	if ( $property = $description->getProperty($column) ) 
+        {
+    		if ( $property->isAttribute() ) 
+            {
+                if ( $property->isScalar() )
+                {
+                    $return = $property->getType() == 'boolean' ? 'boolean' : 'array';
+                }
+    		}            
     	}
  		return $this->_forward('attribute', $column, array(), $return);
     }		

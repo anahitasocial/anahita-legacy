@@ -38,8 +38,7 @@
      {     
         if ( JDEBUG )
         {
-            $this->getController()->getToolbar('menubar')->addCommand(JText::_('Bazaar'), array('href'=>JRoute::_('index.php?option=com_bazaar&view=apps')));
-            parent::onAfterControllerBrowse($event);    
+            $this->getController()->getToolbar('menubar')->addCommand(JText::_('Bazaar'), array('href'=>JRoute::_('index.php?option=com_bazaar&view=apps')));                
         }
      } 
      

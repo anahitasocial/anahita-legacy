@@ -119,6 +119,8 @@ abstract class AnDomainValidatorAbstract extends KObject
         if ( empty($validations) )        
             $validations = $this->getValidations($property);
         
+        $validations = (array) KConfig::unbox($validations);
+        
         foreach($validations as $validation => $options) 
         {
             if ( is_numeric($validation) ) 
@@ -161,6 +163,8 @@ abstract class AnDomainValidatorAbstract extends KObject
         
         if ( empty($validations) )        
             $validations = $this->getValidations($property);
+        
+        $validations = (array) KConfig::unbox($validations);
         
         foreach($validations as $validation => $options)
         {
@@ -379,7 +383,7 @@ abstract class AnDomainValidatorAbstract extends KObject
             if ( $property->getType() == 'string')
             {
                 //check if the value exists
-                if ( KHelperString::strlen($value) <= 0 ) {
+                if ( KHelperString::strlen($value) <= 0 || ctype_space($value) ) {
                     $entity->setError(sprintf('%s %s can not be empty', $entity->getIdentifier()->name, $property->getName()));
                     return false;
                 }

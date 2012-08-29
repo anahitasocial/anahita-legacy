@@ -96,7 +96,7 @@ abstract class LibBaseDispatcherAbstract extends KDispatcherAbstract
 		parent::setController($controller);
 		
 		if ( !$this->_controller instanceof KControllerAbstract ) {
-			register_default(array('identifier'=>$this->_controller, 'default'=>'LibBaseControllerResource'));
+			register_default(array('identifier'=>$this->_controller, 'default'=>'LibBaseControllerService'));
 		}
 	}
 		

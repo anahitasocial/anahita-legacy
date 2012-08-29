@@ -145,7 +145,7 @@ class LibBaseControllerBehaviorExecutable extends KControllerBehaviorExecutable
         
         if ( in_array($method, $this->_mixer->getMethods()) )
         {
-            $ret = $this->_mixer->$method($context->data);
+            $ret = $this->_mixer->$method();
         } 
                
         return $ret;
