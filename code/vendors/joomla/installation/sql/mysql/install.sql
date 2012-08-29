@@ -79,7 +79,6 @@ INSERT INTO `#__components` VALUES (30, 'Template Manager', '', 0, 0, '', 'Templ
 INSERT INTO `#__components` VALUES (31, 'User Manager', '', 0, 0, '', 'Users', 'com_users', 0, '', 1, 'allowUserRegistration=1\nnew_usertype=Registered\nuseractivation=1\nfrontend_userparams=1\n\n', 1);
 INSERT INTO `#__components` VALUES (32, 'Cache Manager', '', 0, 0, '', 'Cache', 'com_cache', 0, '', 1, '', 1);
 INSERT INTO `#__components` VALUES (33, 'Control Panel', '', 0, 0, '', 'Control Panel', 'com_cpanel', 0, '', 1, '', 1);
-INSERT INTO `#__components` VALUES (34, 'Gantry', '', 0, 0, '', 'Gantry', 'com_gantry', 0, '', 0, '', 1);
 INSERT INTO `#__components` VALUES(36, 'Bazaar', 'option=com_bazaar', 0, 0, 'option=com_bazaar', 'Bazaar', 'com_bazaar', 0, 'js/ThemeOffice/component.png', 1, '', 1);
 INSERT INTO `#__components` VALUES(35, 'Apps', 'option=com_apps', 0, 0, 'option=com_apps', 'Apps', 'com_apps', 0, 'js/ThemeOffice/component.png', 1, '', 1);
 INSERT INTO `#__components` VALUES(37, 'Dashboard', 'option=com_dashboard', 0, 0, '', 'Dashboard', 'com_dashboard', 0, '', 1, '', 1);
@@ -247,7 +246,6 @@ INSERT INTO `#__plugins` VALUES (30, 'System - Cache', 'cache', 'system', 0, 4, 
 INSERT INTO `#__plugins` VALUES (31, 'System - Log', 'log', 'system', 0, 5, 0, 1, 0, 0, '0000-00-00 00:00:00', '');
 INSERT INTO `#__plugins` VALUES (32, 'System - Remember Me', 'remember', 'system', 0, 6, 1, 1, 0, 0, '0000-00-00 00:00:00', '');
 INSERT INTO `#__plugins` VALUES (36, 'System - Anahita', 'anahita', 'system', 0, 1, 1, 1, 0, 0, '0000-00-00 00:00:00', '');
-INSERT INTO `#__plugins` VALUES (37, 'System - Gantry', 'gantry', 'system', 0, 2, 1, 0, 0, 0, '0000-00-00 00:00:00', '');
 INSERT INTO `#__plugins` VALUES (39, 'System - MissionControl Support', 'missioncontrol', 'system', 0, 0, 1, 0, 0, 0, '0000-00-00 00:00:00', 'patching=0\nblacklist=com_virtuemart,com_somethingelse\n\n');
 INSERT INTO `#__plugins` VALUES (40, 'Content - SEF', 'sef', 'content', 0, 5, 1, 0, 0, 0, '0000-00-00 00:00:00', '');
 INSERT INTO `#__plugins` VALUES (41, 'Content Filter - Hyperlink', 'link', 'contentfilter', 0, 0, 1, 0, 0, 0, '0000-00-00 00:00:00', '');

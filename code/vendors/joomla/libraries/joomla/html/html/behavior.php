@@ -50,13 +50,17 @@ class JHTMLBehavior
 		// TODO NOTE: Here we are checking for Konqueror - If they fix thier issue with compressed, we will need to update this
 		$konkcheck = isset($_SERVER['HTTP_USER_AGENT']) ? strpos(strtolower($_SERVER['HTTP_USER_AGENT']), "konqueror") : null;
 
+        if ( JFactory::getApplication()->isAdmin() ) {
+            JHTML::script('lib_anahita/js/min/mootools.js', 'media/', false);
+        }
+        
 		if ($debug || $konkcheck) {
             //JHTML::script('lib_anahita/js/vendors/mootools-core.js', 'media/', false);
             //JHTML::script('lib_anahita/js/vendors/mootools-more.js', 'media/', false);
             //JHTML::script('lib_anahita/js/vendors/clientcide.js', 'media/', false);
-            JHTML::script('lib_anahita/js/min/mootools.js', 'media/', false);
+            //JHTML::script('lib_anahita/js/min/mootools.js', 'media/', false);
 		} else {
-			JHTML::script('lib_anahita/js/min/mootools.js', 'media/', false);
+			//JHTML::script('lib_anahita/js/min/mootools.js', 'media/', false);
 		}
 		
 		$loaded = true;
