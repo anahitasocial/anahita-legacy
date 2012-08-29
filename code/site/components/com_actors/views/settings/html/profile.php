@@ -2,7 +2,7 @@
 
 <h3><?= @text('COM-ACTORS-PROFILE-EDIT-PROFILE-INFORMATION') ?></h3>
 
-<form data-behavior="FormValidator" action="<?=@route($entity->getURL())?>" method="post" enctype="multipart/form-data">		
+<form data-behavior="FormValidator" action="<?=@route($item->getURL())?>" method="post" enctype="multipart/form-data">		
 
 	<fieldset>
 		<legend><?= @text('COM-ACTORS-PROFILE-INFO-BASIC') ?></legend>
@@ -12,17 +12,17 @@
 				<?= @text('COM-ACTORS-NAME') ?>
 			</label>
 			<div class="controls">
-				<input data-validators="required" class="input-input-xxlarge" size="50" maxlength="100" name="name" value="<?=$entity->name?>" type="text" />
+				<input data-validators="required" class="input-input-xxlarge" size="50" maxlength="100" name="name" value="<?=$item->name?>" type="text" />
 			</div>
 		</div>
 		
-		<?php if ( is_person($entity) ) : ?>
+		<?php if ( is_person($item) ) : ?>
 		<div class="control-group">
 			<label class="control-label" for="actor-enabled">
 				<?= @text('COM-ACTORS-PROFILE-GENDER') ?>
 			</label>
 			<div class="controls">
-				<?= @html('select','gender', array('options'=>array('male'=>'Male','female'=>'Female','transgender'=>'Transgender','other'=>'Other'), 'selected'=>$entity->gender)) ?>
+				<?= @html('select','gender', array('options'=>array('male'=>'Male','female'=>'Female','transgender'=>'Transgender','other'=>'Other'), 'selected'=>$item->gender)) ?>
 			</div>
 		</div>
 		<?php endif;?>
@@ -32,17 +32,17 @@
 				<?= @text('COM-ACTORS-BODY') ?>
 			</label>
 			<div class="controls">
-				<textarea data-validators="required maxLength:1000" class="input-xxlarge" name="body" rows="5" cols="5"><?= $entity->body?></textarea>
+				<textarea data-validators="required maxLength:1000" class="input-xxlarge" name="body" rows="5" cols="5"><?= $item->body?></textarea>
 			</div>
 		</div>
 		
-		<?php if ( $entity->isEnableable() ) : ?>
+		<?php if ( $item->isEnableable() ) : ?>
 		<div class="control-group">
 			<label class="control-label" for="actor-enabled">
 				<?= @text('COM-ACTORS-ENABLED') ?>
 			</label>
 			<div class="controls">
-				<?= @html('select','enabled', array('options'=>array(@text('LIB-AN-NO'), @text('LIB-AN-YES')), 'selected'=>$entity->enabled))?>
+				<?= @html('select','enabled', array('options'=>array(@text('LIB-AN-NO'), @text('LIB-AN-YES')), 'selected'=>$item->enabled))?>
 			</div>
 		</div>
 		<?php endif;?>

@@ -1,4 +1,5 @@
 <?php if ( count($composers) ) : ?>
+
 <script src="com_composer/js/composer.js" />
 
 <div id="com-composer-container">

@@ -58,10 +58,9 @@ class ComActorsControllerBehaviorFollowable extends KControllerBehaviorAbstract
      */
     protected function _actionAddrequester(KCommandContext $context)
     {
-        $data = $context->data;
-        $data->entity->addRequester($data->actor);
-        $this->createNotification(array('subject'=>$data->actor,'target'=>$data->entity,'name'=>'actor_request'));
-        return $data->entity;
+        $this->getItem()->addRequester($this->actor);
+        $this->createNotification(array('subject'=>$this->actor,'target'=>$this->getItem(),'name'=>'actor_request'));
+        return $this->getItem();
     }
     
     /**
@@ -73,9 +72,8 @@ class ComActorsControllerBehaviorFollowable extends KControllerBehaviorAbstract
      */
     protected function _actionDeleterequester(KCommandContext $context)
     {
-        $data = $context->data;
-        $data->entity->removeRequester($data->actor);
-        return $data->entity;
+        $this->getItem()->removeRequester($this->actor);
+        return $this->getItem();
     }    
             
 	/**
@@ -86,25 +84,23 @@ class ComActorsControllerBehaviorFollowable extends KControllerBehaviorAbstract
 	 * @return AnDomainEntityAbstract The actor
 	 */
 	protected function _actionAddfollower(KCommandContext $context)
-	{			
-		$data = $context->data;
-		
-		if ( !$data->entity->leading( $data->actor ) )
+	{					
+		if ( !$this->getItem()->leading( $this->actor ) )
 		{
-		    $data->edge = $data->entity->addFollower( $data->actor );
+		    $this->getItem()->addFollower( $this->actor );
 		    
 		    $story = $this->createStory(array(
 		            'name' 		=> 'actor_follow',
-		            'subject'	=> $data->actor,
-		            'owner'		=> $data->actor,
-		            'target'	=> $data->entity
+		            'subject'	=> $this->actor,
+		            'owner'		=> $this->actor,
+		            'target'	=> $this->getItem()
 		    ));
 		    
 		    //if the entity is not an adiminstrable actor (person)
-		    $this->createNotification(array('subject'=>$data->actor, 'target'=>$data->entity,'name'=>'actor_follow'));
+		    $this->createNotification(array('subject'=>$this->actor, 'target'=>$this->getItem(),'name'=>'actor_follow'));
 		}
 			
-		return $data->entity;
+		return $this->getItem();
 	}
 		
 	/**
@@ -116,9 +112,8 @@ class ComActorsControllerBehaviorFollowable extends KControllerBehaviorAbstract
 	 */
 	protected function _actionDeletefollower(KCommandContext $context)
 	{
-		$data = $context->data;
-		$data->entity->removeFollower( $data->actor );
-		return $data->entity;
+		$this->getItem()->removeFollower( $this->actor );
+		return $this->getItem();
 	}
     
     
@@ -131,9 +126,8 @@ class ComActorsControllerBehaviorFollowable extends KControllerBehaviorAbstract
      */
     protected function _actionAddblocked(KCommandContext $context)
     {
-        $data = $context->data;
-        $data->entity->addBlocked($data->actor);        
-        return $data->entity;
+        $this->getItem()->addBlocked($this->actor);        
+        return $this->getItem();
     }
     
     /**
@@ -145,9 +139,8 @@ class ComActorsControllerBehaviorFollowable extends KControllerBehaviorAbstract
      */
     protected function _actionDeleteblocked($context)
     {
-        $data = $context->data;
-        $data->entity->removeBlocked($data->actor);        
-        return $data->entity;
+        $this->getItem()->removeBlocked($this->actor);        
+        return $this->getItem();
     }        
     
     /**
@@ -160,16 +153,14 @@ class ComActorsControllerBehaviorFollowable extends KControllerBehaviorAbstract
     public function getActor(KCommandContext $context)
     {
         $data = $context->data;
-       
-        if ( $data->actor ) 
-        {
-            $ret = $this->getService('repos:actors.actor')->fetch($data->actor);
-        }
+        
+        if ( $data->actor )         
+            $ret = $this->getService('repos:actors.actor')->fetch($data->actor);        
         else 
             $ret = get_viewer();
        
-        $data->actor = $ret;
-        
-        return $data->actor;
-    }    
+        $this->actor = $ret;
+       
+        return $this->actor;
+    }
 }

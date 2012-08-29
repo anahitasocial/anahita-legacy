@@ -52,10 +52,17 @@ class ComStoriesControllerStory extends ComBaseControllerService
      */	
 	protected function _initialize(KConfig $config)
 	{
+        $config->append(array(
+            'behaviors' => array(
+                'ownable' => array('default'=>get_viewer()),
+                'votable'
+            )
+        ));
+        
 		parent::_initialize($config);
 		
 		//reset the commentable behavior
-		AnHelperArray::unsetValues($config->behaviors, 'commentable');		
+		AnHelperArray::unsetValues($config->behaviors, 'commentable');
 		$config->behaviors->append(array('commentable'=>array('publish_comment'=>false)));
 		
 		$config->behaviors->append(array('publisher'));
@@ -70,10 +77,8 @@ class ComStoriesControllerStory extends ComBaseControllerService
 	protected function _actionPost($context)
 	{
 		$data 	 = $context->data;
-		$actor   = $data->actor;
+		$actor   = $this->actor;
 		$viewer	 = get_viewer();
-	
-		$data['body'] = LibBaseTemplateHelperText::truncate($data['body'], array('length'=>STORY_MAX_LIMIT));
 		
 		if ( $data->private_message && is_person($actor) && !$actor->eql($viewer) ) {
 			$name = 'private_message';
@@ -82,32 +87,30 @@ class ComStoriesControllerStory extends ComBaseControllerService
 			
 		$component = $actor->component ;
 		
-		$story = $data->entity = $data->story = $this->createStory(array(
+		$story = $this->setItem($this->createStory(array(
 		    'component' => $component,
 			'name'		=> $name,
 			'subject'	=> get_viewer(),
 			'target'	=> $actor,
 			'owner'		=> $actor,
 			'body'		=> $data['body']
-		));
-;
+		)))->getItem();
+          
+        if ( !$story->sanitizeData('body', array('length'=>STORY_MAX_LIMIT))
+                    ->validateData('body', 'required') ) 
+        
+           return false;
+                
 		if ( $name == 'private_message' ) {
-			$data->story->setAccess(array($actor->id, $viewer->id));
-		}
-    		
-		if ( !preg_match('/\S/', $story->body) ) {
-		    return false;
-		}
+			$this->getItem()->setAccess(array($actor->id, $viewer->id));
+		}    				
 
 		if ( $this->commit($context) === false ) {
 		    return false;
 		}
 				
-		$data->actor = $actor;
-		
-		$this->setView('story')->layout('list');
-
-		$output = $this->render($context);
+		$this->actor = $actor;
+		$output      = $this->setView('story')->layout('list')->display();
 			
 		$helper = clone $this->getView()->getTemplate()->getHelper('parser');
 		
@@ -141,7 +144,7 @@ class ComStoriesControllerStory extends ComBaseControllerService
 	    ))
         ->setType('post', array('new_post'=>true))
 	    ;
-		
+
 		return $output;
 	}
 		
@@ -153,34 +156,41 @@ class ComStoriesControllerStory extends ComBaseControllerService
      * @return void
      */
 	protected function _actionBrowse($context)
-	{
-		$data     = $context->data;
+	{		
 		$query 	  = $this->getRepository()->getQuery()			
 					->limit( $this->start == 0 ?  20 : 20, $this->start );
 
-		if ( $data->actor ) {
-			$query->owner($data->actor);
-		} 
+        
+        if ( $this->filter == 'leaders') 
+        {
+            $ids    = get_viewer()->leaderIds->toArray();
+            $ids[]  = get_viewer()->id;
+            $query->where('owner.id','IN', $ids);            
+        }
 		else {
-			$ids 	= get_viewer()->leaderIds->toArray();
-			$ids[]	= get_viewer()->id;
-			$query->where('owner.id','IN', $ids);
+			$query->owner($this->actor);
 		}
 	
 		$apps 		  =	 $this->getService('repos:apps.app')->fetchSet();
-		$summary_keys =  new KConfig();
-		if ( count($apps ) )
-		foreach($apps as $app) {
-			$context = new KCommandContext();
-			$app->getDelegate()->setStoryOptions($context);
-			$summary_keys->append(array(
-				$app->component => pick($context->summarize, array())
-			));
-		}
+		
+        $summary_keys =  new KConfig();
+		
+        if ( count($apps ) ) 
+        {
+    		foreach($apps as $app) 
+            {
+    			$context = new KCommandContext();
+    			$app->getDelegate()->setStoryOptions($context);
+    			$summary_keys->append(array(
+    				$app->component => pick($context->summarize, array())
+    			));
+    		}
+        }
 		
 		$keys = KConfig::unbox($summary_keys);
-		
-		$data->stories = $data->entities = $query->summerize($keys)->toEntitySet();		
+		        
+        return $this->setList($query->summerize($keys)->toEntitySet())
+                    ->getList();
 	}
 	
 	/**
@@ -190,8 +200,7 @@ class ComStoriesControllerStory extends ComBaseControllerService
 	 */
 	protected function _actionDelete($context)
 	{
-		$data = $context->data;
-		$data->entity->delete();
+		$this->getItem()->delete();
 	}
 	
 	/**
@@ -201,19 +210,18 @@ class ComStoriesControllerStory extends ComBaseControllerService
 	 */
 	public function createStoryCommentNotification(KCommandContext $context)
 	{
-		$data 	= $context->data;
+		$entity = $context->caller->getItem();
+        
+		$owners = array($entity->parent->target->id);
 		
-		$owners = array($data->entity->parent->target->id);
-		
-		if ( $data->entity->parent->isSubscribable() ) 
-		{
-		    $owners[] = $data->entity->parent->subscriberIds->toArray();
+		if ( $entity->parent->isSubscribable() ) {
+		    $owners[] = $entity->parent->subscriberIds->toArray();
 		}
 		
 		$notification = $this->createNotification(array(
 			'name'		      => 'story_comment',
 		    'subscribers'     => $owners,			
-			'comment'	      => $data->comment			
+			'comment'	      => $entity			
 		));
 		
 		$notification->save();

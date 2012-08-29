@@ -35,8 +35,8 @@ class ComBaseControllerBehaviorEnablable extends KControllerBehaviorAbstract
 	 */
 	protected function _actionEnable($context)
 	{
-		$context->data->entity->enabled = 1;
-		return $context->data->entity;
+		$this->getItem()->enabled = 1;
+        return $this->getItem();
 	}
 	
 	/**
@@ -47,7 +47,7 @@ class ComBaseControllerBehaviorEnablable extends KControllerBehaviorAbstract
 	 */
 	protected function _actionDisable($context)
 	{
-		$context->data->entity->enabled = 0;
-		return $context->data->entity;
+		$this->getItem()->enabled = 0;
+        return $this->getItem();		
 	}
 }

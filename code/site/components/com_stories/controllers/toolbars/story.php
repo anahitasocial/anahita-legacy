@@ -29,21 +29,19 @@ class ComStoriesControllerToolbarStory extends ComBaseControllerToolbarDefault
 { 
     /**
      * Set the list commands
-     *
-     * @param KConfig $data Data
-     *
+     * 
      * @return void
      */
-    public function addListCommands(KConfig $data)
+    public function addListCommands()
     {
-        $story = $data->entity;
-        
+        $story = $this->getController()->getItem();
+                
         if ( $story->authorize('vote') )
         {
             $entity = $story->hasObject() ? $story->object : $story;             
         
             if ( !is_array($entity) )
-                $this->addCommand('vote', array('entity'=>$entity));
+                $this->addCommand('vote');
         }
         
         $commentable = $story->authorize('add.comment');
@@ -54,15 +52,15 @@ class ComStoriesControllerToolbarStory extends ComBaseControllerToolbarDefault
         }
         
         if( $commentable ) {
-            $this->addCommand('comment', array('entity'=>$story));
+            $this->addCommand('comment');
         }
         
         if ( $story->numOfComments > 10 ) {
-            $this->addCommand('view', array('entity'=>$story));
+            $this->addCommand('view');
         }
         
         if( $story->authorize('delete') )
-            $this->addCommand('delete', array('entity'=>$story));
+            $this->addCommand('delete');
     }
     
     /**
@@ -74,7 +72,7 @@ class ComStoriesControllerToolbarStory extends ComBaseControllerToolbarDefault
      */
     protected function _commandView($command)
     {
-        $entity = $command->entity;
+        $entity = $this->getController()->getItem();
         $label = sprintf( JText::_('COM-STORIES-VIEW-ALL-COMMENTS'), $entity->getNumOfComments());
         $command->append(array('label'=>$label));
         $command->href($entity->getURL());
@@ -89,7 +87,7 @@ class ComStoriesControllerToolbarStory extends ComBaseControllerToolbarDefault
      */
     protected function _commandComment($command)
     {
-        $entity = $command->entity;
+        $entity = $this->getController()->getItem();
         
         $command->append(array('label'=>JText::_('LIB-AN-ACTION-COMMENT')))
             ->href($entity->getURL())
@@ -106,7 +104,7 @@ class ComStoriesControllerToolbarStory extends ComBaseControllerToolbarDefault
      */
     protected function _commandDelete($command)
     {
-        $entity = $command->entity;
+        $entity = $this->getController()->getItem();
     
         $command->append(array('label'=>JText::_('LIB-AN-ACTION-DELETE')))
         ->href($entity->getStoryURL(true).'&action=delete')

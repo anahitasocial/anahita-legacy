@@ -54,18 +54,20 @@ abstract class ComActorsControllerAbstract extends ComBaseControllerService
      */
     protected function _initialize(KConfig $config)
     {
+        parent::_initialize($config);
+        
         $config->append(array(
             'behaviors' => array(
                 'publisher',
                 'followable',
-                'ownable',
                 'administrable',
-                'identifiable'  
+                'ownable',
+                'privatable',
+                'enablable',
+                'subscribable'                
             )
         ));
-        
-        parent::_initialize($config);
-        
+                
         JFactory::getLanguage()->load('com_actors');
     }
     
@@ -86,33 +88,29 @@ abstract class ComActorsControllerAbstract extends ComBaseControllerService
         
         if ( $this->q ) {
             $query->keyword($this->q);
-        }
-        
-        $data     = $context->data;
+        }        
         
         $key      = KInflector::pluralize($this->getIdentifier()->name);        
         $entities =  $query->limit( $this->limit, $this->start )
                         ->toEntitySet();
             
-        if ( $this->isOwnable() && $data->actor ) 
+        if ( $this->isOwnable() && $this->actor ) 
         {
-            $this->_request->append(array(
+            $this->_state->append(array(
                 'filter' => 'following'
             ));
 
             if ( $this->filter == 'administering' && $this->getRepository()->hasBehavior('administrable') )
             {
-                $entities->where('administrators.id', 'IN', array($data->actor->id));
+                $entities->where('administrators.id', 'IN', array($this->actor->id));
             }
-            else if ( $data->actor->isFollowable() ) 
+            else if ( $this->actor->isFollowable() ) 
             {
-                $entities->where('followers.id','IN', array($data->actor->id));
+                $entities->where('followers.id','IN', array($this->actor->id));
             }
         }
-                                
-        $data->actors = $data->entities = $data->{$key} = $entities;
-        
-        return $entities; 
+                
+        return $this->setList($entities)->getList();
     }
 
     /**
@@ -125,14 +123,9 @@ abstract class ComActorsControllerAbstract extends ComBaseControllerService
     protected function _actionPost(KCommandContext $context)
     {
         $result = parent::_actionPost($context);
-        $data   = $context->data;
         
-        if ( is($result, 'AnDomainEntityAbstract')  ) 
-        {
-            $label[] = strtoupper('COM-'.$this->getIdentifier()->package.'-'.$this->getIdentifier()->name.'-'.$context->action.'ED-MESSAGE');
-            $label[] = sprintf('%s has been %sed succesfully', ucfirst($this->getIdentifier()->name), $context->action);
-            $label   = sprintf(translate($label), $context->data->entity->name);
-            $this->setRedirect( $result->getURL().'&get=settings', $label );
+        if ( is($result, 'AnDomainEntityAbstract')  ) {
+            $this->setRedirect( $result->getURL().'&get=settings');
         }
         
         return $result;
@@ -146,25 +139,24 @@ abstract class ComActorsControllerAbstract extends ComBaseControllerService
      * @return AnDomainEntityAbstract
      */
     protected function _actionEdit(KCommandContext $context)
-    {
-        $data   = $context->data;
-        
+    {        
         $entity = parent::_actionEdit($context);
                 
-        if ( $data->entity->isPortraitable() && KRequest::has('files.portrait') ) {         
+        if ( $entity->isPortraitable() && KRequest::has('files.portrait') ) 
+        {         
             $file = KRequest::get('files.portrait', 'raw'); 
-            $data->entity->setPortraitImage(array('url'=>$file['tmp_name'], 'mimetype'=>$file['type']));
+            $this->getItem()->setPortraitImage(array('url'=>$file['tmp_name'], 'mimetype'=>$file['type']));
             if ( isset($file['size']) ) {
                 $story = $this->createStory(array(
                    'name'   => 'avatar_edit',
-                   'owner'  => $data->entity,
-                   'target' => $data->entity
+                   'owner'  => $entity,
+                   'target' => $entity
                 ));
             }
         }
                         
         if ( $entity->save($context) ) {
-            dispatch_plugin('profile.onSave', array('actor'=>$entity, 'data'=>$data));  
+            dispatch_plugin('profile.onSave', array('actor'=>$entity, 'data'=>$context->data));  
         }
         return $entity;
     }
@@ -176,60 +168,54 @@ abstract class ComActorsControllerAbstract extends ComBaseControllerService
      * 
      * @return AnDomainEntitysetDefault
      */
-    protected function _actionGetgraph($context)
-    {   
-        $context->append(array(
-            'viewer' => get_viewer()
-        ));
-        
-        $data = $context->data;
-        
-        $this->_request->append(array(
+    protected function _actionGetgraph(KCommandContext $context)
+    {      
+        $this->_state->append(array(
             'type' => 'followers'
         ));
+ 
+        $filters  = array();
+        $entities = array();
+        $entity   = $this->getItem();
         
-        $data->entities = null;     
-        $filters = array();
-        
-        if ( $data->entity->isFollowable() )
+        if ( $this->getItem()->isFollowable() )
         {
             if ( $this->type == 'followers') {
-                $data->entities = $data->entity->followers;
-            } elseif ( $this->type == 'blockeds' && $data->entity->authorize('administration')) {
-                $data->entities = $data->entity->blockeds;
+                $entities = $this->getItem()->followers;
+            } elseif ( $this->type == 'blockeds' && $entity->authorize('administration')) {
+                $entities = $this->getItem()->blockeds;
             }
         }
         
-        if ( $data->entity->isLeadable() ) 
+        if ( $this->getItem()->isLeadable() ) 
         {
-            if ( $this->type == 'leaders' ) {
-                $data->entities = $data->entity->leaders;
+            if ( $this->type == 'leaders' ) 
+            {
+                $entities = $this->getItem()->leaders;
             } elseif ( $this->type == 'mutuals' )
-                $data->entities = $data->entity->getMutuals();
+                $entities = $this->getItem()->getMutuals();
             elseif ( $this->type == 'commonleaders' ) {             
-                $data->entities = $data->entity->getCommonLeaders($context->viewer);
+                $entities = $this->getItem()->getCommonLeaders($context->viewer);
             }
         }
         
-        if ( !$data->entities )
+        if ( !$entities )
             return false;
             
-        $xid = (array) KConfig::unbox($this->_request->xid);
+        $xid = (array) KConfig::unbox($this->_state->xid);
         
         if ( !empty($xid) )
-            $data->entities->where('id','NOT IN', $xid);
+            $entities->where('id','NOT IN', $xid);
             
-        $data->entities->limit( $this->limit, $this->start );
+        $entities->limit( $this->limit, $this->start );
         
         if ( $this->q )
-            $data->entities->keyword($this->q);
+            $entities->keyword($this->q);
             
-        $data->{$this->_request->type} = $data->entities;
-        
-        $data->actor = $data->entity;
-        
-        return $data->entities;
-    }        
+        $this->setList($entities)->actor($this->getItem());
+       
+        return $entities;
+    }
         
     /**
      * Set the default Actor View
@@ -262,19 +248,15 @@ abstract class ComActorsControllerAbstract extends ComBaseControllerService
      * 
      * @return AnDomainEntityAbstract
      */
-    protected function _actionDelete($context)
+    protected function _actionDelete(KCommandContext $context)
     {
         $apps = $this->getService('repos:apps.app')->fetchSet();
         
         foreach($apps as $app) {
             $this->getService('anahita:event.dispatcher')->addEventSubscriber($app->getDelegate());
         }
-        
-        $label[] = strtoupper('COM-'.$this->getIdentifier()->package.'-'.$this->getIdentifier()->name.'-DELETED-MESSAGE');
-        $label[] = sprintf('%s has been %sed succesfully', ucfirst($this->getIdentifier()->name), $context->action);   
-        $label   = sprintf(translate($label), $context->data->entity->name);            
-        $result  = parent::_actionDelete($context);
-        $this->setRedirect('index.php?option=com_'.$this->getIdentifier()->package.'&view='.KInflector::pluralize($this->getIdentifier()->name), $label);
+        $result  = parent::_actionDelete($context);        
+        $this->setRedirect('index.php?option=com_'.$this->getIdentifier()->package.'&view='.KInflector::pluralize($this->getIdentifier()->name));
         return $result;
     }
     
@@ -310,7 +292,7 @@ abstract class ComActorsControllerAbstract extends ComBaseControllerService
      * 
      * @see   ComActorsDomainBehaviorPrivatable
      */
-    protected function _actionSetPrivacy($context)
+    protected function _actionSetPrivacy(KCommandContext $context)
     {
         //call the parent privactable behavior
         if ( $this->hasBehavior('privatable') ) {
@@ -326,6 +308,6 @@ abstract class ComActorsControllerAbstract extends ComBaseControllerService
             $data->allowFollowRequest = false;
         }
         
-        $data->entity->allowFollowRequest = (bool)$data->allowFollowRequest;
+        $this->getItem()->allowFollowRequest = (bool)$data->allowFollowRequest;
     }
 }

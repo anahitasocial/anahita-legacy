@@ -14,6 +14,7 @@
  */
  
  $viewer = get_viewer();
+ 
  if ( !$viewer->guest() ) {
    print ModBaseView::getInstance('mod:viewer.html')->params($params)->display();
  }

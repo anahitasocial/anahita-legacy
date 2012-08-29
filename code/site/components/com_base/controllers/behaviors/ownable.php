@@ -28,6 +28,41 @@
 class ComBaseControllerBehaviorOwnable extends KControllerBehaviorAbstract
 {
     /**
+     * Default owner
+     * 
+     * @var mixed
+     */
+    protected $_default;
+    
+    /**
+     * Identifiable key. If this key exists in the request then this behavior
+     * will fetch the actor entity using this key
+     * 
+     * @return string
+     */
+    protected $_identifiable_key;
+        
+    /** 
+     * Constructor.
+     *
+     * @param KConfig $config An optional KConfig object with configuration options.
+     * 
+     * @return void
+     */ 
+    public function __construct(KConfig $config)
+    {
+        parent::__construct($config);
+               
+        $this->_default = $config['default'];
+        
+        //set the default actor
+        $this->setActor($this->_default);
+        
+        //set the identifiable key. By default its set to oid
+        $this->_identifiable_key = $config->identifiable_key;
+    }
+        
+    /**
      * Initializes the default configuration for the object
      *
      * Called from {@link __construct()} as a first step of object instantiation.
@@ -38,7 +73,9 @@ class ComBaseControllerBehaviorOwnable extends KControllerBehaviorAbstract
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-            'priority'   => KCommand::PRIORITY_HIGHEST
+            'identifiable_key' => 'oid',
+            'default'          => get_viewer(),
+            'priority'         => KCommand::PRIORITY_HIGHEST
         ));
 
         parent::_initialize($config);
@@ -54,49 +91,98 @@ class ComBaseControllerBehaviorOwnable extends KControllerBehaviorAbstract
     public function execute($name, KCommandContext $context) 
     {
 		$parts = explode('.', $name);
-		
-		if ( $parts[0] == 'before' ) 
-		{
+        
+		if ( $parts[0] == 'before' ) {
 			return $this->_fetchOwner($context);
 		}
     }
    	
     /**
+     * Set the actor conect
+     * 
+     * @param ComActorsDomainEntiyActor $actor Set the actor context
+     * 
+     * @return ComBaseControllerBehaviorOwnable
+     */
+    public function setActor($actor)
+    {
+       $this->_mixer->actor = $actor;
+       return $this;
+    }
+    
+    
+    /**
+     * Return the actor context
+     * 
+     * @return ComActorsDomainEntiyActor
+     */
+    public function getActor()
+    {
+        return $this->_mixer->actor;
+    }
+    
+    /**
      * Fetches an entity
      *
      * @param KCommandContext $context
+     * 
+     * @return ComActorsDomainEntityActor
      */
     protected function _fetchOwner(KCommandContext $context)
     {
-		$request = $this->getRequest();
-		$data	 = $context->data;
-		
-    	//fetch actor
-		if ( isset($request->oid) ) 
-		{
-			if ( $request->oid == 'viewer' && !get_viewer()->guest() ) 
-			{
-				$actor  = get_viewer(); 
-			}
-			else 
-			{ 
-			    $actor = $this->getService('repos:actors.actor')->fetch((int)$request->oid);
-			}
+        $actor = $this->_default;
+        $value = $this->{$this->getIdentifiableKey()};
         
-			//actor not found
-			if ( !$actor ) {
-                $context->setError(new KHttpException(
-            		'Owner Not Found', KHttpResponse::NOT_FOUND
-                ));
-                return false;
-			}
-			
-			$data->owner = $data->actor = $actor;
-			
-			return $actor;
-		}
+        if ( $value ) 
+        {
+            if ( $value == 'viewer' )  {
+                $actor = get_viewer();
+            } else {
+                $actor = $this->getService('repos://site/actors.actor')->fetch((int)$value);
+            }
+        }
+        
+        //guest actor can never be a context actor                
+        if ( is_person($actor) && $actor->guest() ) {
+            $actor = null;   
+        }
+        
+        //actor not found
+        if ( !$actor ) {
+            $context->setError(new KHttpException(
+                'Owner Not Found', KHttpResponse::NOT_FOUND
+            ));
+            return false;
+        }
+        
+        //set the data owner to actor.
+        $context->data['owner'] = $actor;
+        
+        $this->setActor($actor);
     }
-    	       	
+    	    
+    /**
+     * Sets the identifiable key
+     * 
+     * @param string $key The identifiable key
+     * 
+     * @return LibBaseControllerBehaviorIdentifiable
+     */
+    public function setIdentifiableKey($key)
+    {
+        $this->_identifiable_key = $key;
+    }
+    
+    /**
+     * Return the identifiable key
+     * 
+     * @return string
+     */
+    public function getIdentifiableKey()
+    {
+        return $this->_identifiable_key;
+    }
+                   	
     /**
      * Return the object handle
      * 

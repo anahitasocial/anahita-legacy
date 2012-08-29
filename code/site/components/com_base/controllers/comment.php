@@ -53,7 +53,7 @@ class ComBaseControllerComment extends ComBaseControllerService
 	protected function _initialize(KConfig $config)
 	{
 		$config->append(array(
-		    'behaviors' => array('publisher'),
+		    'behaviors' => array('publisher','parentable','votable'),
 			'publish_comment'  => KRequest::format() == 'html'			
 		));
 	
@@ -70,8 +70,7 @@ class ComBaseControllerComment extends ComBaseControllerService
 	{
 		$data = $context->data;
 		$body = $data->body;
-		$data->comment = $data->entity = $data->parent->addComment($body);
-		return $data->entity;
+		$this->setItem($this->parent->addComment($body))->getItem();
 	}
 	
 	/**
@@ -81,9 +80,8 @@ class ComBaseControllerComment extends ComBaseControllerService
 	 * @return boolean
 	 */
 	protected function _actionDelete($context)
-	{
-		$data = $context->data;
-		$data->entity->delete();
+	{		
+		$this->getItem()->delete();
 	}
 	
 	/**
@@ -94,9 +92,9 @@ class ComBaseControllerComment extends ComBaseControllerService
 	 */
 	protected function _actionEdit($context)
 	{
-		$data = $context->data;		
-		$data->comment->body = $data->body;
-		return $data->entity;
+		$data = $context->data;
+		$this->getItem()->body = $data->body;
+		return $this->getItem();
 	}	
 	
 	/**
@@ -128,15 +126,13 @@ class ComBaseControllerComment extends ComBaseControllerService
      * @return boolean
 	 */
 	public function canExecute(KCommandContext $context)
-	{
-        $data    = $context->data;
-		$parent  = $data->parent;				
-		$comment = $data->entity;		
+	{        
+		$parent  = $this->getParent();
+		
+        $comment = $this->getItem();		
 		//either one of them has to exists
 		if ( !pick($parent, $comment) )
-			return false;
-			
-		$data->parent = $parent = $parent ? $parent : $comment->parent;
+			return false;		
 		
 		if ( !$parent->allows(get_viewer() , 'access')) {
 			return false;
@@ -147,43 +143,31 @@ class ComBaseControllerComment extends ComBaseControllerService
     
 	/**
 	 * Returns whether a comment can be added
-	 * 
-	 * @param KConfig $data Data
 	 *
 	 * @return boolean
 	 */
-	public function canAdd(KConfig $data)
+	public function canAdd()
 	{
-	    $parent = $data->parent;
-	    
-	    return $parent->authorize('add.comment');
+	    return $this->parent->authorize('add.comment');
 	}
 
 	/**
 	 * Returns whether a comment can be added
-	 *
-	 * @param KConfig $data Data
-	 *
+     * 
 	 * @return boolean
 	 */
-	public function canEdit(KConfig $data)
-	{
-	    $comment = $data->comment;
-	   
-	    return $comment->authorize('edit');
+	public function canEdit()
+	{	   
+	    return $this->getItem()->authorize('edit');
 	}
 		
 	/**
 	 * Returns whether a comment can be added
-	 * 
-	 * @param KConfig $data Data
 	 *
 	 * @return boolean
 	 */
-	public function canDelete(KConfig $data)
-	{
-	    $comment = $data->comment;
-	    
-	    return $comment->authorize('delete');
+	public function canDelete()
+	{	    
+	    return $this->getItem()->authorize('delete');
 	}
 }

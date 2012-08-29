@@ -27,6 +27,28 @@
  */
 class ComActorsControllerBehaviorAdministrable extends KControllerBehaviorAbstract
 {	
+    /** 
+     * Constructor.
+     *
+     * @param KConfig $config An optional KConfig object with configuration options.
+     * 
+     * @return void
+     */ 
+    public function __construct(KConfig $config)
+    {
+        parent::__construct($config);
+        
+        $this->registerCallback(
+                array('before.confirmrequester','before.ignorerequester'), 
+                array($this, 'fetchRequester')
+        );
+        
+        $this->registerCallback(
+                array('before.addadmin','before.removeadmin'), 
+                array($this, 'fetchAdmin')
+        );
+    }
+        
 	/**
 	 * Remove admin
 	 * 
@@ -36,9 +58,7 @@ class ComActorsControllerBehaviorAdministrable extends KControllerBehaviorAbstra
 	 */
 	protected function _actionRemoveadmin(KCommandContext $context)
 	{
-        $data = $context->data;
-        if ( $data->admin )
-		  $data->entity->removeAdministrator($data->admin);
+        $this->getItem()->removeAdministrator($this->admin);          
 	}
 
 	/**
@@ -50,9 +70,7 @@ class ComActorsControllerBehaviorAdministrable extends KControllerBehaviorAbstra
 	 */
 	protected function _actionAddadmin(KCommandContext $context)
 	{
-        $data = $context->data;
-		if ( $data->admin )
-		    $data->entity->addAdministrator($data->admin);
+        $this->getItem()->addAdministrator($this->admin);		    
 	}
 
 	/**
@@ -66,14 +84,13 @@ class ComActorsControllerBehaviorAdministrable extends KControllerBehaviorAbstra
 		if ( $this->format != 'html' )
 		{
 			$data = $context->data;
-			$canditates = $data->entity->getAdminCanditates();
+			$canditates = $this->getItem()->getAdminCanditates();
 			$canditates->keyword($this->value)->limit(10);
 			$people = array();
 		    foreach($canditates as $key => $person) {
 				$people[$key] = array('id'=>$person->id, 'value'=>$person->name);
 			}
-			$context->data = $people;
-			return $this->render($context);
+            return $this->getView()->set($people)->display();            
 		}
 	}
 		
@@ -86,22 +103,22 @@ class ComActorsControllerBehaviorAdministrable extends KControllerBehaviorAbstra
 	 */
 	protected function _actionGetsettings(KCommandContext $context)
 	{
-		$data = $context->data;
-			
-		$this->getToolbar('actorbar')->setActor($data->entity);
-		$this->getToolbar('actorbar')->setTitle(sprintf(JText::_('COM-ACTORS-PROFILE-HEADER-EDIT'), $data->entity->name));
+        $entity = $this->getItem();
+        			
+		$this->getToolbar('actorbar')->setActor($entity);
+		$this->getToolbar('actorbar')->setTitle(sprintf(JText::_('COM-ACTORS-PROFILE-HEADER-EDIT'), $entity->name));
 		
 		
-		$data->apps = $this->getService('repos:apps.app')->getQuery()
-			->actor($data->entity)
+		$this->apps = $this->getService('repos:apps.app')->getQuery()
+			->actor($entity)
 			->access(ComAppsDomainEntityApp::ACCESS_OPTIONAL)
 			->fetchSet();
         
         $dispatcher = $this->getService('anahita:event.dispatcher');
         
-        $data->apps->registerEventDispatcher($dispatcher);
+        $this->apps->registerEventDispatcher($dispatcher);
         
-        $dispatcher->addEventListener('onSettingDisplay', $this->_mixer);              
+        $dispatcher->addEventListener('onSettingDisplay', $this->_mixer);                       
 	}
     
 	/**
@@ -115,8 +132,8 @@ class ComActorsControllerBehaviorAdministrable extends KControllerBehaviorAbstra
 	{
 		$data 	   = $context->data;
 		$app	   = $this->getService('repos:apps.app')->fetch(array('component'=>$data->app));
-		if ( $app && $app->authorize('install', array('actor'=>$data->entity))) {
-		    $app->addToProfile($data->entity);
+		if ( $app && $app->authorize('install', array('actor'=>$this->getItem()))) {
+		    $app->addToProfile($this->getItem());
 		}
 	}
 	
@@ -132,7 +149,7 @@ class ComActorsControllerBehaviorAdministrable extends KControllerBehaviorAbstra
 		$data 	   = $context->data;
 		$app	   = $this->getService('repos:apps.app')->fetch(array('component'=>$data->app));
 		if ( $app ) {
-			$app->removeFromProfile($data->entity);
+			$app->removeFromProfile($this->getItem());
 		}		
 	} 
     
@@ -145,11 +162,9 @@ class ComActorsControllerBehaviorAdministrable extends KControllerBehaviorAbstra
      */
     protected function _actionConfirmrequester(KCommandContext $context)
     {
-        $data      = $context->data;
-        
         //add the requester as a follower
         //the rest is take care of
-        $data->entity->addFollower($data->requester);
+        $this->getItem()->addFollower($this->getState()->requester);
     }
     
     /**
@@ -161,11 +176,42 @@ class ComActorsControllerBehaviorAdministrable extends KControllerBehaviorAbstra
      */
     protected function _actionIgnorerequester(KCommandContext $context)
     {
-        $data      = $context->data;
-        
         //add the requester as a follower
         //the rest is take care of
-        $data->entity->removeRequester($data->requester);
+        $this->getItem()->removeRequester($this->getState()->requester);
     }
-          
+    
+    /**
+     * Fetches the requester
+     * 
+     * @param KCommandContext $context Context parameter
+     * 
+     * @return void
+     */
+    public function fetchRequester(KCommandContext $context)
+    {
+        $data = $context->data;
+        
+        if ( $this->getItem() ) 
+        {            
+            $this->getState()->requester = $this->getItem()->requesters->fetch($data->requester);   
+        }              
+    } 
+    
+    /**
+     * Fetches the requester
+     * 
+     * @param KCommandContext $context Context parameter
+     * 
+     * @return void
+     */
+    public function fetchAdmin(KCommandContext $context)
+    {
+        $data = $context->data;
+        
+        if ( $this->getItem() ) 
+        {
+            $this->getState()->admin = $this->getService('repos://site/people.person')->fetch($data->adminid);   
+        } 
+    }
 }

@@ -35,21 +35,12 @@ class ComBaseControllerBehaviorIdentifiable extends LibBaseControllerBehaviorIde
      * @return AnDomainEntityAbstract The identified entity
      */
     public function fetchEntity(KCommandContext $context)
-    {    	
-    	$data   = $context->data;
-    	
-    	if ( $this->getRepository()->isOwnable() && $data->actor ) {
-    		$context->identity_scope = array('owner'=>$data->actor); 
-    	}
-
+    {
     	$entity = parent::fetchEntity($context);
     	
-    	//if entity is ownable add the owner as actor if not already set
-    	if ( $entity && $entity->isOwnable() ) 
-    	{
-    		$data->append(array(
-    			'actor' => $entity->owner
-    		));
+    	//set the entity owner as the context actor of the controller
+    	if ( $entity && $this->getRepository()->isOwnable() && $this->isOwnable() ) {
+            $this->setActor($entity->owner);
     	}
     	
     	return $entity;

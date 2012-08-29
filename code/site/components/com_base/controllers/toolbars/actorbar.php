@@ -58,12 +58,11 @@ class ComBaseControllerToolbarActorbar extends ComBaseControllerToolbarMenubar
 	 */
 	public function onBeforeControllerGet(KEvent $event)
 	{
-	    $this->getController()->getView()->actorbar = $this;
-	    
-	    $data = $event->data;
+	    $this->getController()->actorbar = $this;
+	    	    
 	    //set the actor by default to the data actor or viewer
-	    if ( $this->getController()->isOwnable() && $data->actor ) {
-	        $this->setActor( $data->actor );
+	    if ( $this->getController()->isOwnable() && $this->getController()->actor ) {
+	        $this->setActor( $this->getController()->actor );
 	    }
 	}
 		

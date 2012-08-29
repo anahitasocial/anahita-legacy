@@ -47,9 +47,9 @@ class ComBaseControllerBehaviorPublisher extends KControllerBehaviorAbstract
                         'story' => array(
                                 'component' => 'com_'.$this->getIdentifier()->package,
                                 'name' 		=> $name,
-                                'owner'		=> $data->actor,
-                                'object'	=> pick($data->entity, $data->{$this->_mixer->getIdentifier()->name}),
-                                'target'	=> $data->actor	,
+                                'owner'		=> $this->actor,
+                                'object'	=> $this->getItem(),
+                                'target'	=> $this->actor	,
                                 'comment'	=> $this->isCommentable() ? $data->comment : null
                                 )
                                 ));

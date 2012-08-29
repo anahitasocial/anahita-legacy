@@ -37,16 +37,7 @@ class ComPeopleControllerPerson extends ComActorsControllerDefault
      * @return void
      */
 	protected function _initialize(KConfig $config)
-	{
-		if ( $config->request->view != 'people' && KRequest::method() == 'GET' )
-		{
-		    $config->append(array(
-		            'request'	 => array(
-		                    'id' => get_viewer()->id
-		            )
-		    ));		    
-		}
-	
+	{	
 		$config->append(array(
 		      'behaviors' => array('validatable')     
 		));
@@ -54,6 +45,16 @@ class ComPeopleControllerPerson extends ComActorsControllerDefault
 		parent::_initialize($config);
 		
 		AnHelperArray::unsetValues($config->behaviors, 'ownable');
+        
+        //if it's a person view , set the default id to person
+        if ( $config->request->view == 'person' )
+        {
+            $config->append(array(
+                    'request'    => array(
+                            'id' => get_viewer()->id
+                    )
+            ));
+        }
 	}
 	
     /**
@@ -80,9 +81,9 @@ class ComPeopleControllerPerson extends ComActorsControllerDefault
         
         $this->commit($context);
         
-        JFactory::getUser($context->data->entity->userId)->delete();     
+        JFactory::getUser($this->getItem()->userId)->delete();     
         
-        $this->getService('com:people.helper.person')->logout($context->data->entity, array('message'=>JText::_('COM-PEOPLE-PERSON-DELETED-MESSAGE')));               
+        $this->getService('com:people.helper.person')->logout($this->getItem(), array('message'=>JText::_('COM-PEOPLE-PERSON-DELETED-MESSAGE')));               
     }
     
     /**
@@ -94,14 +95,16 @@ class ComPeopleControllerPerson extends ComActorsControllerDefault
      */
     protected function _actionEdit(KCommandContext $context)
     {
-        parent::_actionEdit($context);
-        $person = $context->data->entity;
+        $person = parent::_actionEdit($context);
+              
         if ( $person->modifications()->name )
         {
             $user = JFactory::getUser($person->userId);
-            $user->name = $context->data->entity->name;
+            $user->name = $person->name;
             $user->save();           
-        }       
+        }
+         
+        return $person;      
     }
      
     /**

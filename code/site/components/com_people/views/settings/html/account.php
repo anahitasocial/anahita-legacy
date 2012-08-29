@@ -3,7 +3,7 @@
 <h3><?= @text('COM-PEOPLE-PROFILE-EDIT-ACCOUNT-INFORMATION') ?></h3>
 
 <?php
-    $user = JFactory::getUser($entity->userId);
+    $user = JFactory::getUser($item->userId);
 ?>
 
 <div>
@@ -47,7 +47,7 @@
             </div>
         </div>
         <?php        
-            $user   = JFactory::getUser($entity->userId);
+            $user   = JFactory::getUser($item->userId);
             $params = $user->getParameters(true)->renderToArray();        
         ?>                
         <div class="control-group">
@@ -68,7 +68,7 @@
         <input type="hidden" name="option" value="com_user" />
         <input type="hidden" name="task" value="save" />
         
-        <input type="hidden" name="return" value="<?=base64_encode(@route($entity->getURL().'&get=settings&edit=account'))?>" />
+        <input type="hidden" name="return" value="<?=base64_encode(@route($item->getURL().'&get=settings&edit=account'))?>" />
         <?php print JHTML::_( 'form.token' ); ?>
         </form>
 

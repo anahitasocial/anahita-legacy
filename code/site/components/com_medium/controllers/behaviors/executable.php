@@ -30,18 +30,17 @@ class ComMediumControllerBehaviorExecutable extends LibBaseControllerBehaviorExe
 	/**
 	 * Authorize Browse
 	 * 
-	 * @param KConfig $data Data
-	 * 
 	 * @return boolean
 	 */
-	public function canBrowse(KConfig $data)
+	public function canBrowse()
 	{		    		
 		$viewer = get_viewer();
-		if ( $this->isOwnable() && $data->actor ) 
+        
+		if ( $this->isOwnable() && $this->actor ) 
 		{
 			//a viewer can't see  ownable items coming from another actor's leaders
 			if ( $this->filter == 'leaders' ) {
-				if ( $viewer->id != $data->actor->id )
+				if ( $viewer->id != $this->actor->id )
 					return false;
 			}
 		}
@@ -51,13 +50,11 @@ class ComMediumControllerBehaviorExecutable extends LibBaseControllerBehaviorExe
 	/**
 	 * Authorize Read
 	 * 
-	 * @param KConfig $data Data
-	 * 
 	 * @return boolean
 	 */
-	public function canRead(KConfig $data)
+	public function canRead()
 	{
-		$actor		= pick($data->actor, get_viewer());
+		$actor		= pick($this->actor, get_viewer());
         
 		$action 	= 'com_'.$this->_mixer->getIdentifier()->package.':'.$this->_mixer->getIdentifier()->name.':add';
         
@@ -65,24 +62,22 @@ class ComMediumControllerBehaviorExecutable extends LibBaseControllerBehaviorExe
 		if ( $this->getRepository()->isOwnable() && in_array($this->layout, array('add', 'edit', 'form','composer')))
 			return $actor->authorize('action', $action);
 				
-        if ( !$data->entity )
+        if ( !$this->getItem() )
             return false;
         
         //check if an entiy authorize access       
-        return $data->entity->authorize('access');
+        return $this->getItem()->authorize('access');
 	}
 	
 	/**
 	 * Authorize if viewer can add
 	 *
-	 * @param KConfig $data Data
-	 * 
 	 * @return boolean
 	 */
-	public function canAdd(KConfig $data)
+	public function canAdd()
 	{
-	    $actor     = $data->actor;
-	    
+        $actor = $this->actor;
+        
 	    if ( $actor )
 	    {
 	        $action  = 'com_'.$this->_mixer->getIdentifier()->package.':'.$this->_mixer->getIdentifier()->name.':add';
@@ -95,15 +90,14 @@ class ComMediumControllerBehaviorExecutable extends LibBaseControllerBehaviorExe
 	/**
 	 * Authorize Read
 	 * 
-	 * @param KConfig $data Data
-	 * 
 	 * @return boolean
 	 */
-	public function canEdit(KConfig $data)
+	public function canEdit()
 	{
-		if($data->entity && $data->entity->authorize('edit'))
-			return true;
-		
+        if ( $this->getItem() ) {
+            return $this->getItem()->authorize('edit');
+        }   
+        		
 		return false;
 	}
 	
@@ -115,8 +109,7 @@ class ComMediumControllerBehaviorExecutable extends LibBaseControllerBehaviorExe
      * @return boolean
 	 */
 	public function canExecute(KCommandContext $context)
-	{
-        $data   = $context->data;
+	{       
 	    $viewer = get_viewer();
         
 	    if ( KRequest::method() != 'GET' && $viewer->guest() ) {
@@ -124,8 +117,8 @@ class ComMediumControllerBehaviorExecutable extends LibBaseControllerBehaviorExe
 	    }
         
 		//check if viewer has access to actor
-		if ( $this->isOwnable() && $data->actor )  {
-            if ( $data->actor->authorize('access') === false ) 
+		if ( $this->isOwnable() && $this->actor )  {
+            if ( $this->actor->authorize('access') === false ) 
                 return false;			
 		}
         

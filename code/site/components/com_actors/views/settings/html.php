@@ -57,7 +57,7 @@ class ComActorsViewSettingsHtml extends ComBaseViewHtml
 	{
 		$this->profile = new KConfig();
 		
-		dispatch_plugin('profile.onEdit', array('actor'=>$this->entity, 'profile'=>$this->profile));				
+		dispatch_plugin('profile.onEdit', array('actor'=>$this->_state->getItem(), 'profile'=>$this->profile));				
 	}
 	
 	/**
@@ -77,11 +77,11 @@ class ComActorsViewSettingsHtml extends ComBaseViewHtml
 		$this->apps = $apps;
 		foreach($this->apps as $app) 
 		{
-            $assignment  = $app->getAssignment($this->entity);
+            $assignment  = $app->getAssignment($this->_state->getItem());
 		    
 		    //if the app assignment is set to always or has been
 		    //enabled then show the permission tab
-		    if ( $assignment == ComAppsDomainEntityApp::ACCESS_GLOBAL || $app->enabled($this->entity))
+		    if ( $assignment == ComAppsDomainEntityApp::ACCESS_GLOBAL || $app->enabled($this->_state->getItem()))
 		    {
     			$resources = KConfig::unbox($app->getDelegate()->getResources());
     			
@@ -130,16 +130,16 @@ class ComActorsViewSettingsHtml extends ComBaseViewHtml
             'label' => JText::_('COM-ACTORS-PROFILE-EDIT-TAB-PERMISSIONS'),            
 		));
         
-        if ( $this->entity->isFollowable() && $this->entity->followRequesterIds->count() > 0 )
+        if ( $this->_state->getItem()->isFollowable() && $this->_state->getItem()->followRequesterIds->count() > 0 )
         {
                     
             $tabs->insert('requests', array(
-                'label' => JText::_('COM-ACTORS-PROFILE-EDIT-TAB-REQUESTS').'<span class="pull-right badge badge-important">'.$this->entity->followRequesterIds->count().'</span>',
+                'label' => JText::_('COM-ACTORS-PROFILE-EDIT-TAB-REQUESTS').'<span class="pull-right badge badge-important">'.$this->_state->getItem()->followRequesterIds->count().'</span>',
             ));            
         }
         
 	
-		if ( $this->entity->isAdministrable() ) {
+		if ( $this->_state->getItem()->isAdministrable() ) {
 		    $tabs->insert('admins', array(
 		        'label' 	=> JText::_('COM-ACTORS-PROFILE-EDIT-TAB-ADMINS'),
 		    ));
@@ -149,9 +149,9 @@ class ComActorsViewSettingsHtml extends ComBaseViewHtml
 		//addable/removable apps
 		$enablable_apps = array();
 		
-		foreach($this->apps as $app)
+		foreach($this->_state->apps as $app)
 		{
-		    $assignment  = $app->getAssignment($this->entity);
+		    $assignment  = $app->getAssignment($this->_state->getItem());
 		    
 		    if ( $assignment == ComAppsDomainEntityApp::ACCESS_OPTIONAL ) {
 		        $enablable_apps[] = $app;
@@ -166,13 +166,14 @@ class ComActorsViewSettingsHtml extends ComBaseViewHtml
     		));
 		
 		
-		$this->getService('anahita:event.dispatcher')->dispatchEvent('onSettingDisplay', array('actor'=>$this->entity, 'tabs'=>$tabs));
+		$this->getService('anahita:event.dispatcher')
+            ->dispatchEvent('onSettingDisplay', array('actor'=>$this->_state->getItem(), 'tabs'=>$tabs));
 		
         $tabs->insert('delete', array(
                 'label'     => JText::_('COM-ACTORS-PROFILE-EDIT-TAB-DELETE'),
         ));
                 			
-		$url        = $this->entity->getURL().'&get=settings&edit=';		
+		$url        = $this->_state->getItem()->getURL().'&get=settings&edit=';		
 		$active_tab = $tabs['profile'];;
 		foreach($tabs as $tab) 
 		{
@@ -192,7 +193,7 @@ class ComActorsViewSettingsHtml extends ComBaseViewHtml
 		}
 		elseif ( $active_tab->controller )  
 		{
-			 $this->content = $this->getService($active_tab->controller)->oid($this->entity->id)->display();			  
+			 $this->content = $this->getService($active_tab->controller)->oid($this->_state->getItem()->id)->display();			  
 		}        
 		else $this->content	= $this->load(pick($active_tab->layout, $active_tab->name), array('url'=>$url));
 	}		

@@ -31,35 +31,37 @@ class ComPeopleControllerValidatorPerson extends LibBaseControllerValidatorDefau
      * Validates an email
      *
      * @param string $email   Email to validate
-     * @param string $message Message to pass
-     *
+     * 
      * @return boolean
      */
-    public function validateEmail($email, &$message)
+    public function validateEmail($email)
     {
-        $user = $this->getService('repos:users.user')->find(array('email'=>$email));
+        $user = $this->getService('repos://site/users.user')->find(array('email'=>$email));
         
-        if ( $user && $user->id != JFactory::getUser()->id )
-            $message = 'Email is already in use';
+        if ( $user && $user->id != JFactory::getUser()->id ) {
+            $this->setMessage('Email is already in use');
+            return false;
+        }
     
-        return empty($message);
+        return true;
     }
     
     /**
      * Validates a username
      *
-     * @param string $email   Email to validate
-     * @param string $message Message to pass
+     * @param string $email   Email to validate     * 
      *
      * @return boolean
      */
-    public function validateUsername($username, &$message)
+    public function validateUsername($username)
     {
-        $user = $this->getService('repos:users.user')->find(array('username'=>$username));
+        $user = $this->getService('repos://site/users.user')->find(array('username'=>$username));
         
-        if ( $user && $user->id != JFactory::getUser()->id )
-            $message = 'Username is already in use';
+        if ( $user && $user->id != JFactory::getUser()->id ) {
+            $this->setMessage('Username is already in use');
+            return false;
+        }
     
-        return empty($message);
+        return true;
     }
 }

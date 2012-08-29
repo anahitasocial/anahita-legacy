@@ -3,15 +3,15 @@
 
 <h3><?= @text('COM-ACTORS-PROFILE-EDIT-ADMINS') ?></h3>
 
-<form id="an-entities-search" class="well" action="<?= @route($entity->getURL()) ?>" method="post">
+<form id="an-entities-search" class="well" action="<?= @route($item->getURL()) ?>" method="post">
 	<input type="hidden" name="action" value="addadmin" />
 	<input type="hidden" name="adminid" value="" />
 	<p><?= @text('COM-ACTORS-MANAGE-ADMINSTRATORS-DESCIRPTION')?></p>
-	<input class="search-query input-large" type="text" data-behavior="FollowerAutoComplete"  data-autocomplete-url="<?= @route($entity->getURL().'&get=candidates') ?>"/>
+	<input class="search-query input-large" type="text" data-behavior="FollowerAutoComplete"  data-autocomplete-url="<?= @route($item->getURL().'&get=candidates') ?>"/>
 </form>
 
 <div id="an-actors" class="an-entities an-actors">
-	<?php foreach($entity->administrators as $actor ) : ?>
+	<?php foreach($item->administrators as $actor ) : ?>
 	<div class="an-entity an-record">
 		<div class="actor-portrait">
 			<?= @avatar($actor) ?>
@@ -23,7 +23,7 @@
 			<div class="an-meta">
 				<?= $actor->followerCount ?>
 				<span class="stat-name"><?= @text('COM-ACTORS-SOCIALGRAPH-FOLLOWERS') ?></span> 
-				/ <?= $entity->leaderCount ?>
+				/ <?= $item->leaderCount ?>
 				<span class="stat-name"><?= @text('COM-ACTORS-SOCIALGRAPH-LEADERS') ?></span>
 			</div>
 			
@@ -32,8 +32,8 @@
 			</div>
 				
 			<div class="an-actions">
-                <?php if ( $entity->authorize('remove.admin', array('admin'=>$actor)) ) : ?>
-				<button data-trigger="Submit" data-submit-options="{'promptMsg':'Are you sure you want to remove admin'}" href="<?= @route($entity->getURL().'&action=removeadmin&adminid='.$actor->id) ?>" class="btn btn-danger"><?= @text('LIB-AN-ACTION-REMOVE') ?></button>
+                <?php if ( $item->authorize('remove.admin', array('admin'=>$actor)) ) : ?>
+				<button data-trigger="Submit" data-submit-options="{'promptMsg':'Are you sure you want to remove admin'}" href="<?= @route($item->getURL().'&action=removeadmin&adminid='.$actor->id) ?>" class="btn btn-danger"><?= @text('LIB-AN-ACTION-REMOVE') ?></button>
                 <?php endif; ?>
 			</div>
 		</div>

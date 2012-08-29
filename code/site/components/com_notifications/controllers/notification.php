@@ -65,9 +65,8 @@ class ComNotificationsControllerNotification extends ComBaseControllerService
      */
     protected function _actionGetcount(KCommandContext $context)
     {
-        $data  = $context->data;
-        $count = $data->actor->numOfNewNotifications();
-        return $this->getView()->new_notifications($count)->display();
+        $count = $this->actor->numOfNewNotifications();
+        return $this->getView()->newNotifications($count)->display();
     }
     
 	/**
@@ -78,19 +77,17 @@ class ComNotificationsControllerNotification extends ComBaseControllerService
 	 * @return AnDomainEntitysetDefault
 	 */
 	protected function _actionBrowse($context)
-	{
-		$data	= $context->data;
-         
-        $data->actor->resetNotifications();
+	{         
+        $this->actor->resetNotifications();
               
-        if ( $data->actor->eql(get_viewer()) ) 
+        if ( $this->actor->eql(get_viewer()) ) 
             $title = JText::_('COM-NOTIFICATIONS-ACTORBAR-YOUR-NOTIFICATIONS');  
         else 
-            $title = sprintf(JText::_('COM-NOTIFICATIONS-ACTORBAR-ACTOR-NOTIFICATIONS'), $data->actor->name);
+            $title = sprintf(JText::_('COM-NOTIFICATIONS-ACTORBAR-ACTOR-NOTIFICATIONS'), $this->actor->name);
         
         $this->getToolbar('actorbar')->setTitle($title);
                 
-		$context->query = $data->actor->getNotifications()->getQuery();
+		$context->query = $this->actor->getNotifications()->getQuery();
         
         $set = parent::_actionBrowse($context)->order('createdOn','DESC');
           
@@ -100,12 +97,12 @@ class ComNotificationsControllerNotification extends ComBaseControllerService
         
         //only zero the notifications if the viewer is the same as the 
         //actor. prevents from admin zeroing others notifications
-        if ( $set->count() > 0 && get_viewer()->eql($data->actor) ) 
+        if ( $set->count() > 0 && get_viewer()->eql($this->actor) ) 
         {
             //set the number of notification, since it's going to be 
             //reset by the time it gets to the mod_viewer 
-            KService::setConfig('mod://site/viewer.html', array('data'=>array('num_notifications'=>$data->actor->numOfNewNotifications())));            
-            $this->registerCallback('after.get', array($data->actor,'viewedNotifications'), $set->toArray());
+            KService::setConfig('mod://site/viewer.html', array('data'=>array('num_notifications'=>$this->actor->numOfNewNotifications())));            
+            $this->registerCallback('after.get', array($this->actor,'viewedNotifications'), $set->toArray());
         }
         
 		return $set;
@@ -120,9 +117,8 @@ class ComNotificationsControllerNotification extends ComBaseControllerService
 	 */
 	protected function _actionDelete($context)
 	{
-        $data = $context->data;
-        $data->actor->removeNotification($data->entity);
-		return $data->entity;
+        $this->actor->removeNotification($this->getItem());
+		return $this->getItem();
 	}
     
     /**
@@ -133,20 +129,18 @@ class ComNotificationsControllerNotification extends ComBaseControllerService
      * @return boolean
      */
     public function canExecute(KCommandContext $context)
-    {
-        $data = $context->data;
-        
-        if ( !$data->actor )
+    {       
+        if ( !$this->actor )
             return false;
         
-        if ( !$data->actor->isNotifiable() )
+        if ( !$this->actor->isNotifiable() )
             return false;
         
-        if ( $data->actor->authorize('access') === false ) {
+        if ( $this->actor->authorize('access') === false ) {
             return false;
         }
         
-        if ( $data->actor->authorize('administration') === false )
+        if ( $this->actor->authorize('administration') === false )
             return false;
             
         return $this->__call('canExecute', array($context));    

@@ -14,7 +14,7 @@ $editor = !isset($editor) ? false : $editor;
 		<?php if (isset($comment)) : ?>
 		<?= @avatar($comment->author)  ?>
 		<?php else : ?>
-		<?= @avatar($viewer)  ?>
+		<?= @avatar(get_viewer())  ?>
 		<?php endif;?>
 		</div>
 	

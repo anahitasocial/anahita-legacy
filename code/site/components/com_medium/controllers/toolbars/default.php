@@ -35,82 +35,74 @@ class ComMediumControllerToolbarDefault extends ComBaseControllerToolbarDefault
      * @return void
      */
     public function onAfterControllerBrowse(KEvent $event)
-    {
-        $data   = $event->data;
-        $actor  = $data->actor;
+    {                
         $filter = $this->getController()->filter;
         
-        if ( $this->getController()->canAdd($data) && $filter != 'leaders' ) 
+        if ( $this->getController()->canAdd() && $filter != 'leaders' ) 
         {
-            $this->addCommand('new', array('actor'=>$actor));
+            $this->addCommand('new');
         }        
     }
         
     /**
      * Set the toolbar commands
-     *
-     * @param KConfig $data Data
-     *  
+     * 
      * @return void
      */
-    public function addToolbarCommands(KConfig $data)
+    public function addToolbarCommands()
     {
-        $entity = $data['entity'];
+        $entity = $this->getController()->getItem();
         
         if ( $entity->authorize('vote') )
-            $this->addCommand('vote', array('entity'=>$entity));
+            $this->addCommand('vote');
                 
         if(	$entity->authorize('subscribe') || ( $entity->isSubscribable() && $entity->subscribed(get_viewer())))
-            $this->addCommand('subscribe', array('entity'=>$entity));
+            $this->addCommand('subscribe');
                 
         if ( $entity->authorize('edit') )
-            $this->addCommand('edit', array('entity'=>$entity));
+            $this->addCommand('edit');
         
         if ( $entity->isOwnable() && $entity->owner->authorize('administration') )
-            $this->addAdministrationCommands($data);       
+            $this->addAdministrationCommands();       
         
         if ( $entity->authorize('delete') )
-            $this->addCommand('delete', array('entity'=>$entity));        
+            $this->addCommand('delete');        
     }
      
     /**
      * Called before list commands
-     *
-     * @param KConfig $data Data
-     *
+     * 
      * @return void
      */
-    public function addListCommands(KConfig $data)
+    public function addListCommands()
     {
-        $entity = $data->entity;
+        $entity = $this->getController()->getItem();
         
         if ( $entity->authorize('vote') ) {
-            $this->addCommand('vote', array('entity'=>$entity));
+            $this->addCommand('vote');
         }
         
         if ( $entity->authorize('delete') ) {
-            $this->addCommand('delete', array('entity'=>$entity));
+            $this->addCommand('delete');
         }
     } 
 
     /**
      * Add Admin Commands for an entity
-     *
-     * @param KConfig $data Data
-     *  
+     * 
      * @return void
      */
-    public function addAdministrationCommands(KConfig $data)
+    public function addAdministrationCommands()
     {
-        $entity = $data->entity;
+        $entity = $this->getController()->getItem();
         
         if ( $entity->isOwnable() && $entity->owner->authorize('administration') )
         {
             if ( $entity->isEnablable() )
-                $this->addCommand('enable', array('entity'=>$entity));
+                $this->addCommand('enable');
     
             if ( $entity->isCommentable() )
-                $this->addCommand('commentstatus', array('entity'=>$entity));
+                $this->addCommand('commentstatus');
         }
     }
 
@@ -123,7 +115,7 @@ class ComMediumControllerToolbarDefault extends ComBaseControllerToolbarDefault
      */
     protected function _commandNew($command)
     {
-        $actor  = $command->actor;
+        $actor  = $this->getController()->actor;
         $name   = $this->getController()->getIdentifier()->name;
         $labels = array();
         $labels[] = strtoupper('com-'.$this->getIdentifier()->package.'-toolbar-'.$name.'-new');

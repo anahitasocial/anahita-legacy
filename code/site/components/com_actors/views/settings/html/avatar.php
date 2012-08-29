@@ -2,9 +2,9 @@
 	
 <h3><?= @text('COM-ACTORS-PROFILE-EDIT-AVATAR') ?></h3>
 	
-<form id="actor-avatar" action="<?=@route($entity->getURL().'&edit=avatar')?>" method="post" target="hidden" enctype="multipart/form-data" >		
+<form id="actor-avatar" action="<?=@route($item->getURL().'&edit=avatar')?>" method="post" target="hidden" enctype="multipart/form-data" >		
 	
-	<p><?= @avatar($entity, 'medium') ?></p>
+	<p><?= @avatar($item, 'medium') ?></p>
 	
 	<p><?= @text('LIB-AN-AVATAR-SELECT-IMAGE-ON-YOUR-COMPUTER') ?></p>
 	
@@ -13,7 +13,7 @@
 			<input class="input-file" type="file" name="portrait" onchange="this.form.spin(); this.form.submit(); window.refresh=true" />
 		</div>
 	</div>
-	<?php if ( $entity->portraitSet() ) : ?>
+	<?php if ( $item->portraitSet() ) : ?>
 	<div class="form-actions">
 		<button onclick="this.form.spin();this.form.submit();window.refresh=true" class="btn btn-danger"><?= @text('LIB-AN-AVATAR-REMOVE-AVATAR') ?></button>
 	</div>

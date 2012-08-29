@@ -23,7 +23,7 @@
 			<a href="<?= @route($comment->parent->getURL().'#permalink='.$comment->id) ?>">#</a>
 		</div>
 		
-		<?= @helper('ui.commands', @commands('list', array('entity'=>$comment))) ?>
+		<?= @helper('ui.commands', @commands('list')) ?>
 		
 		<div id="vote-count-wrapper-<?= $comment->id ?>">
 			<?= @helper('ui.voters', $comment); ?>

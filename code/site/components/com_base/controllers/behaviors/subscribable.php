@@ -35,10 +35,8 @@ class ComBaseControllerBehaviorSubscribable extends KControllerBehaviorAbstract
      * @return void
      */    
     protected function _actionTogglesubscription($context)
-    {
-        $entity = $context->data->entity;
-        
-        if ( $entity->subscribed(get_viewer()) )
+    {        
+        if ( $this->getItem()->subscribed(get_viewer()) )
         {  
             $ret = $this->_mixer->execute('unsubscribe', $context);       
         } 
@@ -59,8 +57,7 @@ class ComBaseControllerBehaviorSubscribable extends KControllerBehaviorAbstract
 	 */
 	protected function _actionSubscribe($context)
 	{
-		$entity = $context->data->entity;
-		$entity->addSubscriber(get_viewer());
+		$this->getItem()->addSubscriber(get_viewer());
 	}
 	
 	/**
@@ -72,8 +69,7 @@ class ComBaseControllerBehaviorSubscribable extends KControllerBehaviorAbstract
 	 */
 	protected function _actionUnsubscribe($context)
 	{
-		$entity = $context->data->entity;
-		$entity->removeSubscriber(get_viewer());
+		$this->getItem()->removeSubscriber(get_viewer());
 	}
 }
 

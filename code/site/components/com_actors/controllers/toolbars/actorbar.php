@@ -39,15 +39,16 @@ class ComActorsControllerToolbarActorbar extends ComBaseControllerToolbarActorba
     public function onBeforeControllerGet(KEvent $event)
     {
         parent::onBeforeControllerGet($event);
-    
+        
         $data 	= $event->data;
         $viewer = get_viewer();
-        $actor	= pick($data->actor, $viewer);
+        $actor	= pick($this->getController()->actor, $viewer);
+        $entity = $this->getController()->getItem();
         $layout = pick($this->getController()->layout, 'default');
         $name	= $this->getController()->getIdentifier()->name;
     
         //if vieweing one actor
-        if ( $this->getController()->isIdentifiable() && $data->entity && $data->entity->isDescribable() )
+        if ( $this->getController()->isIdentifiable() && $entity && $entity->isDescribable() )
         {
             $this->setActor(null);
             
@@ -56,19 +57,19 @@ class ComActorsControllerToolbarActorbar extends ComBaseControllerToolbarActorba
             {
                 $types = array();
     
-                if ( $data->entity->isFollowable() ) {
+                if ( $entity->isFollowable() ) {
                     $types[] = 'Followers';
                 }
     
-                if ( $data->entity->isLeadable() ) {
+                if ( $entity->isLeadable() ) {
                     $types[] = 'Leaders';
                     $types[] = 'Mutuals';
-                    if ( !$data->entity->eql( get_viewer() ) ) {
+                    if ( !$entity->eql( get_viewer() ) ) {
                         $types[] = 'CommonLeaders';
                     }
                 }
     
-                if ( $data->entity->authorize('administration', array('strict'=>true)) ) {
+                if ( $entity->authorize('administration', array('strict'=>true)) ) {
                     $types[] = 'Blockeds';
                 }
 
@@ -78,20 +79,20 @@ class ComActorsControllerToolbarActorbar extends ComBaseControllerToolbarActorba
                     $label[] = 'COM-ACTORS-NAV-LINK-SOCIALGRAPH-'.strtoupper($type);
                     $cmd	 = strtolower($this->getController()->sanitize($type, 'cmd'));
                     $this->addNavigation('navbar-'.$cmd,translate($label),
-                            $data->entity->getURL().'&get=graph&type='.$cmd,
+                            $entity->getURL().'&get=graph&type='.$cmd,
                             $this->getController()->type == $cmd);
                 }
     
                 $title  	= array(strtoupper('COM-'.$this->getIdentifier()->package.'-NAV-TITLE-SOCIALGRAPH'));
                 $title[] = 'COM-ACTORS-NAV-TITLE-SOCIALGRAPH';
-                $this->setTitle(sprintf(translate($title), $data->entity->name));
-                $this->setActor($data->entity);
+                $this->setTitle(sprintf(translate($title), $entity->name));
+                $this->setActor($entity);
             }
             else
-                $this->setTitle($data->entity->getName());
+                $this->setTitle($entity->getName());
         }
         //if viewing a list of actors related to another actor
-        elseif ( $this->getController()->isOwnable() && $data->actor )
+        elseif ( $this->getController()->isOwnable() && $this->getController()->actor )
         {
             $filters = array('following');
     
@@ -99,7 +100,7 @@ class ComActorsControllerToolbarActorbar extends ComBaseControllerToolbarActorba
                 $filters[] = 'administering';
             }
     
-            $this->setActor($data->actor);
+            $this->setActor($this->getController()->actor);
     
             $type  		= ucfirst(KInflector::pluralize($this->getController()->getIdentifier()->name));
             foreach($filters as $filter)
@@ -112,7 +113,7 @@ class ComActorsControllerToolbarActorbar extends ComBaseControllerToolbarActorba
                     $label[] = 'Administering';
                 }
                 $this->addNavigation('navbar-'.$filter,translate($label),
-                        array('option'=>$this->getController()->option,'view'=>$this->getController()->view,'oid'=>$data->actor->id,'filter'=>$filter),
+                        array('option'=>$this->getController()->option,'view'=>$this->getController()->view,'oid'=>$this->getController()->actor->id,'filter'=>$filter),
                         $this->getController()->filter == $filter);
             }
     
@@ -125,7 +126,7 @@ class ComActorsControllerToolbarActorbar extends ComBaseControllerToolbarActorba
                 $title[] = $type.'COM-GROUPS-NAV-TITLE-ADMINISTERING';
             }
     
-            $this->setTitle(sprintf(translate($title), $data->actor->name));
+            $this->setTitle(sprintf(translate($title), $this->getController()->actor->name));
         }
     }    
 }

@@ -60,13 +60,13 @@ class ComBaseTemplateFilterModule extends KTemplateFilterAbstract implements KTe
             $modules = array();
             foreach($matches[0] as $key => $match)
             {
-                $text     	= str_replace($match, '', $text);
+                $text           = str_replace($match, '', $text);
                                 
                 $attributes = array(
-                    'style' 	=> 'component',
-                    'params'	=> '',
-                    'title'		=> '',
-                    'class'		=> '',
+                    'style'     => 'default',
+                    'params'    => '',
+                    'title'             => '',
+                    'class'             => '',
                     'prepend'   => true
                 );
                 
@@ -77,18 +77,18 @@ class ComBaseTemplateFilterModule extends KTemplateFilterAbstract implements KTe
                     $attributes['params'] .= ' moduleclass_sfx= '.$attributes['class'];
                 }
                 
-                $module   	       = new KObject();
+                $module                = new KObject();
                 $module->id        = uniqid();
                 $module->content   = $matches[2][$key];               
                 $module->position  = $attributes['position'];
                 $module->params    = $attributes['params'];
                 $module->showtitle = !empty($attributes['title']);
-                $module->title	   = $attributes['title'];                
-                $module->name	   = $attributes['position'];
+                $module->title     = $attributes['title'];                
+                $module->name      = $attributes['position'];
                 $module->attribs   = $attributes;
                 $module->user      = 0;
                 $module->module    = 'mod_dynamic';                
-                $modules[] 		   = $module;
+                $modules[]                 = $module;
             }
                         
             $mods =& JModuleHelper::_load();

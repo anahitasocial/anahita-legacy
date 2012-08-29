@@ -43,8 +43,6 @@ class ComBaseViewHtml extends LibBaseViewHtml
 		            '@listItemView()'=>'$this->getHelper(\'controller\')->getView(\''.$config->list_item_view.'\')'
 		    ));
 		}
-				
-		$this->set('viewer',   $config->viewer);
 	}
 		
     /**
@@ -62,10 +60,9 @@ class ComBaseViewHtml extends LibBaseViewHtml
        	
 		$config->append(array(
 		    'template_filters' => array('module'),
-			'template_paths'   => $paths,
-			'viewer' 		   => get_viewer()
+			'template_paths'   => $paths			
 		));
 				
 		parent::_initialize($config);
-	}	
+	}
 }

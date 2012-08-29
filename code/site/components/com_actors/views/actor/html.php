@@ -57,7 +57,7 @@ class ComActorsViewActorHtml extends ComBaseViewHtml
 	{
 		$context = new KCommandContext();
 		$context->gadgets 		= new LibBaseTemplateObjectContainer();
-		$context->actor	  		= $this->entity;
+		$context->actor	  		= $this->_state->getItem();
 		$context->composers     = new LibBaseTemplateObjectContainer();
 		$context->commands 		= $this->getTemplate()->renderHelper('toolbar.commands', 'toolbar');
 		$context->profile       = new KConfig();
@@ -67,18 +67,18 @@ class ComActorsViewActorHtml extends ComBaseViewHtml
                 'title_url'		=> $context->actor->getURL().'&get=graph&type=followers'
         ));
 				
-        if ( $this->entity->authorize('access') )
+        if ( $this->_state->getItem()->authorize('access') )
         {
             $apps  = $this->getService('repos:apps.app')
                     ->getQuery()
-                    ->actor($this->entity)
+                    ->actor($this->_state->getItem())
                     ->order('ordering','ASC')->fetchSet();
             
             $apps->registerEventDispatcher($this->getService('anahita:event.dispatcher'));
                         
             $this->getService('anahita:event.dispatcher')->dispatchEvent('onProfileDisplay', $context);
             
-            dispatch_plugin('profile.onDisplay', array('actor'=>$this->entity, 'profile'=>$context->profile));
+            dispatch_plugin('profile.onDisplay', array('actor'=>$this->_state->getItem(), 'profile'=>$context->profile));
             
             $this->profile = $context->profile;
             
@@ -90,7 +90,11 @@ class ComActorsViewActorHtml extends ComBaseViewHtml
         }
                 
         $context->gadgets->rearrange(array('stories','information'));                
-        
-		$this->set(array('commands'=>$context->commands, 'gadgets'=>$context->gadgets,'composers'=>$context->composers));
+                     
+		$this->set(array(
+            'commands'  => $context->commands, 
+            'gadgets'   => $context->gadgets,
+            'composers' => $context->composers            
+        ));
 	}
 }

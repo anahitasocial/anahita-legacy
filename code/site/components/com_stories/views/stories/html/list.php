@@ -9,7 +9,7 @@
 
 <div id="an-stories" class="an-entities an-stories" >
 <?php foreach($stories as $story) : ?>
-	<?= $view->entity($story) ?>
+	<?= $view->item($story) ?>
 <?php endforeach; ?>
 </div>
 

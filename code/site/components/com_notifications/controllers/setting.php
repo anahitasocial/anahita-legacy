@@ -25,7 +25,7 @@
  * @license    GNU GPLv3 <http://www.gnu.org/licenses/gpl-3.0.html>
  * @link       http://www.anahitapolis.com
  */
-class ComNotificationsControllerSetting extends ComBaseControllerView
+class ComNotificationsControllerSetting extends ComBaseControllerResource
 {
 
     /**
@@ -40,7 +40,7 @@ class ComNotificationsControllerSetting extends ComBaseControllerView
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-            'behaviors' => array('ownable','executable')
+            'behaviors' => array('ownable')
         ));
         
         parent::_initialize($config);
@@ -59,9 +59,9 @@ class ComNotificationsControllerSetting extends ComBaseControllerView
         
         $viewer  = get_viewer();
         
-        $setting = $this->getService('repos:notifications.setting')->findOrCreate(array(
+        $setting = $this->getService('repos://site/notifications.setting')->findOrCreate(array(
             'person' => $viewer,
-            'actor'	 => $data->actor
+            'actor'	 => $this->actor
         ));
        
         $setting->setValue('posts', null, $data->email);
@@ -74,22 +74,24 @@ class ComNotificationsControllerSetting extends ComBaseControllerView
      *
      * @return boolean
      */
-    public function canPost(KConfig $data)
-    {         
+    public function canPost()
+    {
          $viewer  = get_viewer();
          
-         if ( !$data->actor )
+         $actor   = $this->actor;
+         
+         if ( !$actor )
              return false;
          
-         if ( $viewer->eql($data->actor) )
+         if ( $viewer->eql($actor) )
              return false;
              
-         if ( !$data->actor->isFollowable() )
+         if ( !$actor->isFollowable() )
              return false;
          
-         if ( !$data->actor->isSubscribable() )
+         if ( !$actor->isSubscribable() )
              return false;
          
-         return $viewer->following( $data->actor );         
+         return $viewer->following( $actor );         
     }
 }

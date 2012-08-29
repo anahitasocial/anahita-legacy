@@ -3,16 +3,16 @@
 
 <?php @listItemView()->layout('list')->set($options) ?>
 
-<?php if(count($entities)) :?>
+<?php if(count($items)) :?>
 <div id="an-actors" class="an-entities an-actors">
-	<?php foreach($entities as $entity ) : ?>
-		<?= @listItemView()->entity($entity)?>
+	<?php foreach($items as $item ) : ?>
+		<?= @listItemView()->item($item)?>
 	<?php endforeach; ?>
 </div>
 
 <?php if ( !isset($pagination) || $pagination !== false ) : ?>
 <div id="an-more-records" class="an-more-records">
-<?= empty($pagination) ? @pagination($entities, array('url'=>@route('layout=list'))) : $pagination?>
+<?= empty($pagination) ? @pagination($items, array('url'=>@route('layout=list'))) : $pagination?>
 </div>
 <?php endif;?>
 

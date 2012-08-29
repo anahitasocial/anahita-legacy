@@ -39,12 +39,7 @@ abstract class ComMediumControllerAbstract extends ComBaseControllerService
 		parent::__construct($config);
 		
 		$this->registerCallback(array('after.add'), array($this, 'createStory'));
-		
-		$this->_request->append(array(
-			'filter'=>'',
-			'grid'=>0
-		));
-        
+	
         //add the anahita:event.command        
         $this->getCommandChain()
             ->enqueue( $this->getService('anahita:command.event'), KCommand::PRIORITY_LOWEST);        
@@ -62,8 +57,22 @@ abstract class ComMediumControllerAbstract extends ComBaseControllerService
 	protected function _initialize(KConfig $config)
 	{
 	    $config->append(array(
-	        'behaviors'         => array('composable','publisher')
-	    ));
+            'state' => array(
+                'viewer' => get_viewer(),
+             ),
+             'request'  => array(
+                'grid'      => '',
+                'filter'    => ''
+             ),
+	        'behaviors' => array(
+                'composable',
+                'publisher',
+                'commentable',
+                'ownable' => array('default'=>get_viewer()),
+                'votable',
+                'privatable',
+                'subscribable'
+        )));
 	
 	    parent::_initialize($config);
 	}
@@ -76,31 +85,20 @@ abstract class ComMediumControllerAbstract extends ComBaseControllerService
 	 * @return AnDomainQuery
 	 */
 	protected function _actionBrowse($context)
-	{		
-		$context->append(array(
-			'viewer' => get_viewer()
-		));
-		
-		$entities = parent::_actionBrowse($context);
-		
-		$data	  = $context->data;
-		
-		if ( $this->getRepository()->hasBehavior('ownable') )
-			$data->append(array(
-				'actor' => get_viewer()
-			));
-			
+	{		                  		
+		$entities = parent::_actionBrowse($context);		
+
         if( $this->filter == 'leaders' )
         {
            $leaderIds = array();
-           $leaderIds[] = $context->viewer->id;
-           $leaderIds[] = $context->viewer->getLeaderIds()->toArray();
+           $leaderIds[] = $this->viewer->id;
+           $leaderIds[] = $this->viewer->getLeaderIds()->toArray();
            $entities->where( 'owner.id','IN', $leaderIds );
         }
 		elseif( $this->getRepository()->hasBehavior('ownable')  )
-			$entities->where('owner', '=', $data->actor);
-			
-		return $entities;
+			$entities->where('owner', '=', $this->actor);
+	    
+        return $entities;
 	}
 		
 	/** 
@@ -111,13 +109,9 @@ abstract class ComMediumControllerAbstract extends ComBaseControllerService
 	 * @return void
 	 */
 	protected function _actionDelete(KCommandContext $context)
-	{
-		$data         = $context->data;
-		
-		$redirect_url = array('view'=>KInflector::pluralize($this->getIdentifier()->name), 'oid'=>$data->entity->owner->id);
-		
+	{		
+		$redirect_url = array('view'=>KInflector::pluralize($this->getIdentifier()->name), 'oid'=>$this->getItem()->owner->id);		
 		parent::_actionDelete($context);
-				
 		$this->setRedirect($redirect_url);
 	}
 	

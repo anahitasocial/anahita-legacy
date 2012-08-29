@@ -34,6 +34,13 @@ class ComComposerControllerBehaviorComposable extends KControllerBehaviorAbstrac
      */
     protected function _renderComposedStory($story)
     {
-        return (string)$this->getService('com://site/stories.view.story.html')->layout('list')->entity($story);
+        $controller = $this->getService('com://site/stories.controller.story')
+                            ->layout('list')
+                            ->setItem($story);
+        
+        //manually set the toolbar
+        $controller->toolbar = $controller->getToolbar('story');
+        
+        return  $controller->getView()->display();
     }
 }

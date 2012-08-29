@@ -27,19 +27,5 @@
  */
 class ComBaseViewJson extends LibBaseViewJson
 {	
-	/**
-	 * Return the views output
- 	 *
-	 *  @return string 	The output of the view
-	 */
-    public function display()
-    {
-    	//looks for a data named after the view path
-    	$entity		  = pick($this->entity, $this->entities);
-        
-    	if ( $entity && $entity->isSerializable() ) 
-            $this->_data = $entity->toSerializableArray();
-    	
-    	return parent::display();
-    }
+
 }

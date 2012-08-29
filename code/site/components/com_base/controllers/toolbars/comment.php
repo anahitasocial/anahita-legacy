@@ -30,22 +30,20 @@ class ComBaseControllerToolbarComment extends ComBaseControllerToolbarDefault
     /**
      * Called before list commands
      *
-     * @param KConfig $data Data
-     *
      * @return void
      */
-    public function addListCommands(KConfig $data)
+    public function addListCommands()
     {
-        $comment = $data->comment;
+        $comment = $this->getController()->getItem();
         
 		if ( $comment->authorize('vote'))
-			 $this->addCommand('vote', array('entity'=>$comment));
+			 $this->addCommand('vote');
 		
 		if ( $comment->authorize('edit') ) 
 		{
 			$url = $comment->getURL().'&comment[layout]=form';
 			
-			if ( $data->editor ) {
+			if ( $this->getController()->editor ) {
 				$url = $url.'&comment[editor]=1';
 			}
 			
@@ -62,6 +60,6 @@ class ComBaseControllerToolbarComment extends ComBaseControllerToolbarDefault
 			    ->getCommand('deletecomment')
 			    ->href($comment->getURL().'&action=delete')
 				->setAttribute('data-trigger','Remove');
-		}		
+		}
 	}	
 }

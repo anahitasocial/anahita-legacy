@@ -1,16 +1,16 @@
 <?php defined('KOOWA') or die; ?>
 
 <h3><?= @text('COM-ACTORS-PROFILE-EDIT-PERMISSIONS') ?></h3>
-<form action="<?=@route($entity->getURL())?>" method="post">
+<form action="<?=@route($item->getURL())?>" method="post">
 <div class="control-group">
 	<label class="control-label"  for="actor-privacy">
 		<?= @text('COM-ACTORS-PRIVACY') ?>
 	</label>
 	<div class="controls">
-		<?= @helper('ui.privacy',array('auto_submit'=>false, 'entity'=>$entity))?>
-        <?php if ( $entity->isFollowable() ) : ?>
+		<?= @helper('ui.privacy',array('auto_submit'=>false, 'entity'=>$item))?>
+        <?php if ( $item->isFollowable() ) : ?>
         <label class="checkbox">
-            <input type="checkbox" name="allowFollowRequest" value="1" <?= $entity->allowFollowRequest ? 'checked' : ''?> >
+            <input type="checkbox" name="allowFollowRequest" value="1" <?= $item->allowFollowRequest ? 'checked' : ''?> >
             <?= @text('COM-ACTORS-PERMISSION-CAN-SEND-FOLLOW-REQUEST') ?>
         </label>
         <script data-inline>
@@ -39,7 +39,7 @@
 			<div class="control-group">
 				<label class="control-label" ><?= $label ?></label>
 				<div class="controls">
-					<?= @helper('ui.privacy',array('entity'=>$entity, 'name'=>$operation,'auto_submit'=>false))?>
+					<?= @helper('ui.privacy',array('entity'=>$item, 'name'=>$operation,'auto_submit'=>false))?>
 				</div>
 			</div>
 		<?php endforeach;?>

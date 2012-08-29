@@ -36,9 +36,8 @@ class ComMediumControllerToolbarActorbar extends ComBaseControllerToolbarActorba
      */
     public function onBeforeControllerGet(KEvent $event)
     {
-       $data = $event->data;
-       
-       if ( $this->getController()->isOwnable() && !$data->actor ) {
+       if ( $this->getController()->isOwnable() && !$this->getController()->actor ) 
+       {
             $this->setActor(get_viewer());
        }
        

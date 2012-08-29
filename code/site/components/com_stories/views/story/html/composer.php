@@ -23,7 +23,7 @@
                 ?>    	        
     			<?php if ( count($sessions) > 0 ) : ?>
     			<div class="story-action">
-    			    <div class="connect-service-share">			        
+    			    <div class="connect-service-share">
     			    <?php foreach($sessions as $session) : ?>
     			        <a data-behavior="BS.Twipsy" title="<?= sprintf(@text('COM-CONNECT-SHARE-STORY'), ucfirst($session->api->getName()))?>">
     			            <?= @helper('com://site/connect.template.helper.service.icon', $session->api->getName())?>

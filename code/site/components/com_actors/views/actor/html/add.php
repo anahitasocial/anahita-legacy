@@ -1,6 +1,6 @@
 <?php defined('KOOWA') or die ?>
 
-<module position="sidebar-b" style="basic"></module>
+<module position="sidebar-b" style="none"></module>
 <?php $entity = empty($entity) ?@controller($this->getView()->getName())->getRepository()->getEntity()->reset() : $entity; ?>
 <form data-behavior="FormValidator" action="<?= @route($entity->getURL()) ?>" method="post" enctype="multipart/form-data">		
 

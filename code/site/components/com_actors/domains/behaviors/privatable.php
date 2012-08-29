@@ -40,8 +40,9 @@ class ComActorsDomainBehaviorPrivatable extends LibBaseDomainBehaviorPrivatable
         $config 	= pick($query->privacy, new KConfig());
            
         $config->append(array(
-            'viewer'             => get_viewer(),
-            'graph_check'		 => true
+            'visible_to_leaders'  => true,
+            'viewer'              => get_viewer(),
+            'graph_check'		  => true
         ));
       
         $where = $this->_createWhere('@col(id)', $config, '@col(access)');

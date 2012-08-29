@@ -18,13 +18,13 @@
         <?= @helper('ui.commands', $commands)?>
         
         
-        <div id="<?= 'story-comments-'.$entity->id?>" class="story-comments">
+        <div id="<?= 'story-comments-'.$item->id?>" class="story-comments">
             <?php if ( !empty($comments) || $can_comment ) : ?>
             <?= @helper('ui.comments', $story, array('comments'=>$comments, 'can_comment'=>$can_comment, 'pagination'=>false, 'show_guest_prompt'=>false, 'truncate_body'=>array('consider_html'=>true, 'read_more'=>true))) ?>
             <?php endif;?>
             <?php if( !empty($comments) && $can_comment ): ?>
             <div class="comment-overtext-box">  
-                <span class="action-comment-overtext" storyid="<?=$entity->id?>">
+                <span class="action-comment-overtext" storyid="<?=$item->id?>">
                     <?= @text('COM-STORIES-ADD-A-COMMENT') ?>
                 </span>
             </div>

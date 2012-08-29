@@ -35,14 +35,13 @@ class ComStoriesViewStoryHtml extends ComBaseViewHtml
 	protected function _layoutList()
 	{	  
 	    $preloaded_nodes = $this->getService('repos:stories.story')->getLoadedNodes();
-		$story  = $this->entity;
+		$story  = $this->_state->getItem();
 		$helper = $this->getTemplate()->getHelper('parser');		
 		$data   = $helper->parse($story, $this->actor);
 	
 		$data['subject'] 	= $story->subject;
 		$data['timestamp']	= $story->creationTime;
-		$data['story']		= $story;
-		$data['entity']     = $story;
+		
 		$viewer 			= get_viewer();
 		
 		//setup the comments
@@ -76,7 +75,7 @@ class ComStoriesViewStoryHtml extends ComBaseViewHtml
 			$comments->order('creationTime', 'DESC');
 			$tmp = $comments->getRepository()->fetch($comments->getQuery(), AnDomain::FETCH_ENTITY_LIST);
 			$comments->reset();
-			$comments = array_reverse($tmp);			
+			$comments = array_reverse($tmp);
 		}
 
  		$data['commands']  = $this->getTemplate()->renderHelper('toolbar.commands', 'list');
@@ -92,7 +91,7 @@ class ComStoriesViewStoryHtml extends ComBaseViewHtml
      */
     protected function _layoutDefault()
     {
-        $story  = $this->entity;
+        $story  = $this->_state->getItem();        
         $helper = $this->getTemplate()->getHelper('parser');        
         $data   = $helper->parse($story, $this->actor);
     

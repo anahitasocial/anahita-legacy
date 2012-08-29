@@ -25,22 +25,8 @@
  * @license    GNU GPLv3 <http://www.gnu.org/licenses/gpl-3.0.html>
  * @link       http://www.anahitapolis.com
  */
-class ComDashboardControllerDashboard extends ComBaseControllerView
-{
-	/**
-	 * Constructor.
-	 *
-	 * @param 	object 	An optional KConfig object with configuration options
-	 */	
-	public function __construct(KConfig $config)
-	{					
-		$config->append(array(
-		    'behaviors'  => array('executable'),			
-		));
-		
-		parent::__construct($config);
-	}
-	
+class ComDashboardControllerDashboard extends ComBaseControllerResource
+{	
 	/**
 	 * Check if Get is allowed
 	 *

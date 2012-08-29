@@ -44,9 +44,8 @@ class ComBaseControllerBehaviorCommentable extends KControllerBehaviorAbstract
 	{		
 		 if ($this->permalink && KRequest::type() != 'AJAX' ) 
 		 {
-			$data   = $context->data;
-			$cid	= (int)preg_replace('/[^\d]+/', '', $this->permalink);
-			$offset = $data->entity->getCommentOffset( $cid );
+            $cid	= (int)preg_replace('/[^\d]+/', '', $this->permalink);
+			$offset = $this->getItem()->getCommentOffset( $cid );
 			$start  = (int)($offset / $this->limit) * $this->limit;
 			$url	= KRequest::url();
 			$query  = $url->getQuery(true);
@@ -54,7 +53,7 @@ class ComBaseControllerBehaviorCommentable extends KControllerBehaviorAbstract
 				$query  = array_merge($query, array('start'=>$start));				
 			}
 			unset($query['permalink']);							
-			$url->setQuery($query);			
+			$url->setQuery($query);
 			$this->setRedirect($url.'#scroll='.$this->permalink);
 			return;
 		} 
@@ -69,7 +68,7 @@ class ComBaseControllerBehaviorCommentable extends KControllerBehaviorAbstract
 	 */
 	public function execute($name, KCommandContext $context)
 	{		
-		$parts = explode('.', $name);		
+		$parts = explode('.', $name);
 		if ( $parts[0] == 'before' && KRequest::has('request.comment') ) 
 		{
 			$data 	= KRequest::has('post.comment') ? KRequest::get('post.comment', 'raw') : array();
@@ -77,7 +76,7 @@ class ComBaseControllerBehaviorCommentable extends KControllerBehaviorAbstract
 			$action = pick($cntx->data->action, $context->action, KRequest::method());
 			$context->result = $this->getCommentController()->execute($action, $cntx);
 			if ( $action == 'post' ) {
-				$context->result = $this->getCommentController()->execute('get', $cntx);
+				$context->result = $this->getCommentController()->display();
 			}
 			return false;
 		}
@@ -128,15 +127,16 @@ class ComBaseControllerBehaviorCommentable extends KControllerBehaviorAbstract
      */
     public function createCommentStory(KCommandContext $context)
 	{
-	    $data     = $context->data;
-	    $parent   = $data->comment->parent;
+        //called by the comment controller as as callback
+	    $entity   = $context->caller->getItem();
+	    $parent   = $entity->parent;
+        
 	    //dn't make a comment story for commenting on a story
-	    if ( $parent->getIdentifier()->name == 'story' ) 
-	    {
+	    if ( $parent->getIdentifier()->name == 'story' ) {
 	        return;
 	    }
         
-        $owner = $data->comment->author;
+        $owner = $entity->author;
         	    
 	    if ( $parent->isOwnable() ) {
 	        $owner  = $parent->owner;
@@ -145,7 +145,7 @@ class ComBaseControllerBehaviorCommentable extends KControllerBehaviorAbstract
 	    $data = array(
 			'name' 		=> $parent->getIdentifier()->name.'_comment',
 			'component'	=> $parent->component,
-			'comment'	=> $data->comment,
+			'comment'	=> $entity,
 			'object'	=> $parent,
 			'owner'		=> $owner,
 			'target'	=> $parent->isOwnable()  ? $parent->owner : null	    			
@@ -178,7 +178,7 @@ class ComBaseControllerBehaviorCommentable extends KControllerBehaviorAbstract
 	protected function _actionCommentstatus($context)
 	{
 		$data = $context->data;
-		$data->entity->openToComment = (bool)$data->status;
+		$this->getItem()->openToComment = (bool)$data->status;
 	}		
 }
 

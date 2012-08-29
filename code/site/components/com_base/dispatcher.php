@@ -60,31 +60,34 @@ class ComBaseDispatcher extends LibBaseDispatcherDefault
 	    parent::_initialize($config);
 	}	
 		
-	/**
-	 * {@inheritdoc}
-	 * 
-	 * Guess the controller name based on the entity type
-	 */
-	public function setController($controller)
-	{
-		parent::setController($controller);
-			
-		if ( !$this->_controller instanceof KControllerAbstract ) 
-		{
-			$resource = clone $this->_controller;
-			$resource->path = array('domain','entity');
-			try 
-			{
-			    $repository = AnDomain::getRepository($resource);
-			    $entity     = $repository->getClone();
-			    register_default(array('identifier'=>$this->_controller, 'prefix'=>$entity, 'fallback'=>'ComBaseControllerService'));			    
-			} 
-			catch(Exception $e)
-			{
-			    register_default(array('identifier'=>$this->_controller, 'default'=>'ComBaseControllerView'));
-			}
-		}
-	}
+    /**
+     * {@inheritdoc}
+     * 
+     * Guess the controller name based on the entity type
+     */
+    public function setController($controller)
+    {
+        parent::setController($controller);
+            
+        if ( !$this->_controller instanceof KControllerAbstract ) 
+        {
+            $resource = clone $this->_controller;
+            $resource->path = array('domain','entity');
+            try 
+            {
+                $repository = AnDomain::getRepository($resource);
+                $entity     = $repository->getClone();
+                $default    = array('prefix'=>$entity, 'fallback'=>'ComBaseControllerService');                         
+            } 
+            catch(Exception $e)
+            {
+                $default    = array('default'=>array('ComBaseControllerResource'));               
+            }
+            
+            $default['identifier'] = $this->_controller;
+            register_default($default);
+        }
+    }
 
   	/**
   	 * Dispatch Action

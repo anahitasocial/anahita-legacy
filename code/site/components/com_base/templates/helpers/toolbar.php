@@ -51,11 +51,8 @@ class ComBaseTemplateHelperToolbar extends KTemplateHelperAbstract
                         
             $method  = 'add'.ucfirst($name).'Commands';
             
-            if ( method_exists($toolbar, $method) )
-            {
-                $data    = array_merge($this->_template->getView()->getData(), $data);
-                $data    = new KConfig($data);
-                $toolbar->$method($data);
+            if ( method_exists($toolbar, $method) ) {
+                $toolbar->$method();
             }
         
             return $toolbar->getCommands();

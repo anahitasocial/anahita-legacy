@@ -36,7 +36,7 @@ class ComBaseControllerToolbarMenubar extends ComBaseControllerToolbarAbstract
      */
     public function onBeforeControllerGet(KEvent $event)
     {
-        $this->getController()->getView()->menubar = $this;
+        $this->getController()->menubar = $this;
         
         $title[] = strtoupper('COM-'.$this->getController()->getIdentifier()->package.'-'.$this->getController()->getIdentifier()->name.'-PAGE-HEADER');
         $title[] = strtoupper('COM-'.$this->getController()->getIdentifier()->package.'-HEADER');

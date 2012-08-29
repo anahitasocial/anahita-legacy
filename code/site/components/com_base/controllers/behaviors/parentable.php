@@ -27,7 +27,50 @@
  */
 class ComBaseControllerBehaviorParentable extends KControllerBehaviorAbstract
 {
-   
+    /**
+     * Identifiable key. If this key exists in the request then this behavior
+     * will fetch the actor entity using this key
+     * 
+     * @return string
+     */
+    protected $_identifiable_key;
+    
+    /** 
+     * Constructor.
+     *
+     * @param KConfig $config An optional KConfig object with configuration options.
+     * 
+     * @return void
+     */ 
+    public function __construct(KConfig $config)
+    {
+        parent::__construct($config);
+        
+        //nullify the parent
+        $this->setParent(null);
+        
+        //set the identifiable key. By default its set to pid
+        $this->_identifiable_key = $config->identifiable_key;
+    }
+        
+    /**
+     * Initializes the default configuration for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param   object  An optional KConfig object with configuration options.
+     * @return void
+     */
+    protected function _initialize(KConfig $config)
+    {
+        $config->append(array(
+            'identifiable_key' => 'pid',
+            'priority'         => KCommand::PRIORITY_HIGHEST
+        ));
+
+        parent::_initialize($config);
+    }
+           
     /**
      * Command handler
      * 
@@ -39,45 +82,44 @@ class ComBaseControllerBehaviorParentable extends KControllerBehaviorAbstract
     {
 		$parts = explode('.', $name);
 		
-		if ( $parts[0] == 'before' && !$context->parent_fetched ) 
+		if ( $parts[0] == 'before' ) 
 		{
-			$context->parent_fetched = true;
-			
-			$request = $this->getRequest();
-			
-			$data	 = $context->data;
-			
-			if ( !array_key_exists('pid', KConfig::unbox($data)) &&
-				 !array_key_exists('pid', KConfig::unbox($request)) 
-			){
-				$request->append(array(
-					'pid' => $data->pid
-				));				
-				return;
+            $value = $this->{$this->getIdentifiableKey()};
+						
+			if ( $value) 
+            {
+                $parent = $this->getParentRepository()->fetch($value);
+                
+                $this->setParent($parent);
+                
+                $context->data['parent'] = $parent;
 			}
-			
-			$request->append(array(
-				'pid' => $data->pid
-			));
-			
-			$parent  = $this->getParent();
-			$data	 = $context->data;
-			
-			//reserve parent 
-			$data->parent = null;
-			
-			if ( $request->pid && $parent ) 
-			{
-				$repository = $this->getParentRepository();
-				$scope		= array('id'=>$request->pid);
-				if ( $repository->hasBehavior('ownable') && $data->actor ) 
-					$scope['owner'] = $data->actor;
-				$data->{$parent->name} = $data->parent = $repository->fetch($scope);
-			}
-		
-			
 		}
     } 
+    
+    /**
+     * Set the parent
+     * 
+     * @param AnDomainEntityDefault $parent Set the parent entity
+     * 
+     * @return ComBaseControllerBehaviorParentable
+     */
+    public function setParent($parent)
+    {
+       $this->_mixer->parent = $parent;
+       return $this;
+    }
+    
+    
+    /**
+     * Return the parent entity
+     * 
+     * @return AnDomainEntityDefault
+     */
+    public function getParent()
+    {
+        return $this->_mixer->parent;
+    }
     
     /**
      * Return the parent repository
@@ -86,20 +128,32 @@ class ComBaseControllerBehaviorParentable extends KControllerBehaviorAbstract
      */
     public function getParentRepository()
     {
-        $parent 	= $this->getIdentifier($this->getParent());
+        $parent = $this->getRepository()->getDescription()->getProperty('parent');
+        $parent 	= $this->getIdentifier($parent->getParent());
         return AnDomain::getRepository($parent);        
     }
     
     /**
-     * Return the parent identifier
+     * Sets the identifiable key
      * 
-     * @return string 
+     * @param string $key The identifiable key
+     * 
+     * @return LibBaseControllerBehaviorIdentifiable
      */
-    public function getParent()
+    public function setIdentifiableKey($key)
     {
-    	$parent = $this->getRepository()->getDescription()->getProperty('parent');
-    	return $parent->getParent();
+        $this->_identifiable_key = $key;
     }
+    
+    /**
+     * Return the identifiable key
+     * 
+     * @return string
+     */
+    public function getIdentifiableKey()
+    {
+        return $this->_identifiable_key;
+    }    
 	    
     /**
      * Return the object handle

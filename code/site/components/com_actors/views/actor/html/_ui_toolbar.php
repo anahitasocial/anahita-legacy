@@ -12,9 +12,9 @@
 <?php if ( $command = $commands->extract('edit') ) : ?>
     <?= @helper('ui.command', $command->class('btn admin')) ?> 
 <?php endif; ?>
-<?php if ( $commands->count() > 0 || !$viewer->eql($entity) ) : ?>
+<?php if ( $commands->count() > 0 || !$viewer->eql($item) ) : ?>
     <div class="btn-group pull-right">
-        <?php if ( !$viewer->eql($entity) && $entity->authorize('access') ) : ?>
+        <?php if ( !$viewer->eql($item) && $item->authorize('access') ) : ?>
         <?php JFactory::getLanguage()->load('com_notifications');  ?>
         <a data-trigger="BS.showPopup" data-bs-showpopup-target="!body #notification-modal" class="btn small notification">
             <i class="icon-exclamation-sign"></i>

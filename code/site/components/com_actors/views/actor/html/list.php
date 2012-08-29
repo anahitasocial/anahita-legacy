@@ -4,24 +4,24 @@
 
 <div class="an-entity an-record dropdown-actions" data-behavior="BS.Dropdown">
 	<div class="actor-portrait">
-		<?= @avatar($entity) ?>
+		<?= @avatar($item) ?>
 	</div>
 	
 	<div class="actor-container">
-		<h3 class="actor-name"><?= @name($entity) ?></h3>
+		<h3 class="actor-name"><?= @name($item) ?></h3>
 		
 		<div class="an-meta">
-			<?= $entity->followerCount ?>
+			<?= $item->followerCount ?>
 			<span class="stat-name"><?= @text('COM-ACTORS-SOCIALGRAPH-FOLLOWERS') ?></span> 
 			
-			<?php if($entity->isLeadable()): ?>
-			/ <?= $entity->leaderCount ?>
+			<?php if($item->isLeadable()): ?>
+			/ <?= $item->leaderCount ?>
 			<span class="stat-name"><?= @text('COM-ACTORS-SOCIALGRAPH-LEADERS') ?></span>
 			<?php endif; ?>
 		</div>
 		
 		<div class="actor-description">
-			<?= @helper('text.truncate',strip_tags($entity->description), array('length'=>200)); ?>
+			<?= @helper('text.truncate',strip_tags($item->description), array('length'=>200)); ?>
 		</div>
 				
 		<?php if ( count($commands) ) : ?>

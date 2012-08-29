@@ -38,11 +38,9 @@ class ComStoriesControllerToolbarActorbar extends ComBaseControllerToolbarActorb
     {
         parent::onBeforeControllerGet($event);
         
-        $data = $event->data;
-        
-        if ( $this->getController()->isOwnable() && $data->actor ) 
+        if ( $this->getController()->isOwnable() && $this->getController()->actor ) 
         {
-            $actor = pick($data->actor, get_viewer());
+            $actor = pick($this->getController()->actor, get_viewer());
             $this->setTitle(sprintf(JText::_('COM-STORIES-HEADER-STORIES'), $actor->name));
             $this->setActor( $actor );
         }

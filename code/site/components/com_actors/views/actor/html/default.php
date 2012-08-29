@@ -2,16 +2,16 @@
 
 <div id="actor-profile">
 
-<module position="sidebar-b">
+<module position="sidebar-b" style="simple">
 	<?= @helper('ui.gadget', $gadgets->extract('socialgraph')) ?>	
 </module>
 
-<module position="sidebar-a">
-<?= @avatar($entity, 'medium', false) ?>
+<module position="sidebar-a" style="simple">
+<?= @avatar($item, 'medium', false) ?>
 </module>
 
 <?php if ( count($gadgets) > 1 ) : ?>
-<module position="sidebar-a">	
+<module position="sidebar-a" style="simple">	
 	<ul class="nav nav-pills nav-stacked sidelinks" data-behavior="BS.Tabs" data-bs-tabs-options="{'smooth':true,'tabs-selector':'.profile-tab-selector a','sections-selector':'! * .profile-tab-content'}">
 		<?php foreach($gadgets as $index=>$gadget) : ?>
 			<li class="profile-tab-selector <?= ($index == 'stories') ? 'active' : ''; ?>">
@@ -22,11 +22,11 @@
 </module>
 <?php endif; ?>
 
-<h2 id="actor-name"><?= @name($entity, false) ?></h2>
+<h2 id="actor-name"><?= @name($item, false) ?></h2>
 
-<?php if(!empty($entity->body)): ?>
+<?php if(!empty($item->body)): ?>
 <div id="actor-description">
-	<?= @helper('text.truncate', @escape($entity->body), array('length'=>250, 'read_more'=>true)); ?>
+	<?= @helper('text.truncate', @escape($item->body), array('length'=>250, 'read_more'=>true)); ?>
 </div>
 <?php endif; ?>
 <?= @helper('com://site/composer.template.helper.ui.composers', $composers) ?>

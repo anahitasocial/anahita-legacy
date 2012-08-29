@@ -27,43 +27,39 @@
  */
 class ComBaseControllerBehaviorVotable extends KControllerBehaviorAbstract 
 {
-
 	/**
 	 * Renders ComBaseTemplateHelperUi::vote()
 	 *
-	 * @param  KCommandContext $context
+	 * @param  KCommandContext $context Context parameter
+     * 
 	 * @return string
 	 */	
 	protected function _actionGetvoters($context)
 	{
-		$context->append(array(
-			'viewer' => get_viewer()
-		));
-        
-		$data = $context->data;
-        
 		$this->commit($context);
         
 		if ( $this->format == 'html' ) 
         {
-            return $this->getView()->getTemplate()->renderHelper('ui.voters', $data->entity, array('avatars'=>$this->avatars));			
+            return $this->getView()
+                ->getTemplate()
+                ->renderHelper('ui.voters', $this->getItem(), array('avatars'=>$this->avatars));			
         }
 	}
 		
 	/**
 	 * Subscribe the viewer to the subscribable object
 	 *
-	 * @param KCommandContext $context
+	 * @param KCommandContext $context Context parameter
+     * 
 	 * @return void
 	 */
 	protected function _actionVote($context)
-	{
-		$data = $context->data;		
-		$data->entity->voteup( get_viewer() );
+	{				
+		$this->getItem()->voteup( get_viewer() );
 		$notification = $this->_mixer->createNotification(array(
 			'name' 		=> 'voteup',
-			'object'	=> $data->entity,
-		    'component' => $data->entity->component
+			'object'	=> $this->getItem(),
+		    'component' => $this->getItem()->component
 		));
 		return $this->_mixer->execute('getvoters', $context);
 	}
@@ -71,13 +67,13 @@ class ComBaseControllerBehaviorVotable extends KControllerBehaviorAbstract
 	/**
 	 * Remove the viewer's subscription from the subscribable object
 	 *
-	 * @param KCommandContext $context
+	 * @param KCommandContext $context Context parameter
+     * 
 	 * @return void
 	 */
 	protected function _actionUnvote($context)
 	{
-		$data = $context->data;
-		$data->entity->unvote( get_viewer() );
+		$this->getItem()->unvote( get_viewer() );
 		return $this->_mixer->execute('getvoters', $context);
 	}
 }

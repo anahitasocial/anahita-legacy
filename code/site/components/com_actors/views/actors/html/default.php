@@ -1,6 +1,6 @@
 <?php defined('KOOWA') or die; ?>
 
-<module position="sidebar-b"></module>
+<module position="sidebar-b" style="none"></module>
 
 <?= @helper('ui.searchbox', @route('layout=list'))?>
 

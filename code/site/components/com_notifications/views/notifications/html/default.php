@@ -3,4 +3,5 @@
 <div id="an-entities-wrapper">
     <?= @template('list') ?>
 </div>
-<module position="sidebar-a"></module>
+
+<module position="sidebar-b" style="none"></module>

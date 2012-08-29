@@ -53,76 +53,33 @@ class ComBaseControllerResource extends LibBaseControllerResource
 	protected function _initialize(KConfig $config)
 	{
 		$config->append(array(		    
-		    'language'      => 'com_'.$this->getIdentifier()->package ,
-		    'toolbars'      => array($this->getIdentifier()->name,'menubar','actorbar'),		        
-		    'behaviors'		=> array('loggable','executable','validatable'),
-			'request'		=> array(
-				'limit' 	=> 20,
-				'offset'	=> 0				
-			)
+		    'language'      => 'com_'.$this->getIdentifier()->package
 		));
 				
 		parent::_initialize($config);
 		
 	}
-    		
-	/** 
-	 * Service Browse
-	 * 
-	 * @param KCommandContext $context Context parameter
-	 * 
-	 * @return AnDomainQuery
-	 */	
-	protected function _actionBrowse($context)
-	{
-		$data  = $context->data;
-		
-		$context->append(array(
-			'query' => $this->getRepository()->getQuery() 
-		));
-		
-		$query = $context->query;
-		
-		if ( $this->q ) {
-			$data->search_keyword = $query->keyword = explode(' OR ', $this->q);			
-		}
-		
-		if ( $this->hasBehavior('parentable') && $data->parent ) {
-			$query->parent($data->parent);
-		}
-		
-		//do some sorting
-		if ( $this->sort ) {
-			$dir = $this->_request->get('direction','asc');
-			$query->order($this->sort, $dir);
-		}
-		
-		$query->limit( $this->limit , $this->start );
-		$data->{KInflector::pluralize($this->getIdentifier()->name)} =
-		$data->entities = $query->toEntitySet();
-		return $data->entities;
-	}	
-
-	/**
-	 * Get a toolbar by identifier
-	 *
-	 * @return KControllerToolbarAbstract
-	 */
-	public function getToolbar($toolbar, $config = array())
-	{
-	    if ( is_string($toolbar) )
-	    {
-	        //if actorbar or menu alawys default to the base
-	        if ( in_array($toolbar, array('actorbar','menubar','comment')) )
-	        {
-	            $identifier       = clone $this->getIdentifier();
-	            $identifier->path = array('controller','toolbar');
-	            $identifier->name = $toolbar;	            
+    
+    /**
+     * Get a toolbar by identifier
+     *
+     * @return KControllerToolbarAbstract
+     */
+    public function getToolbar($toolbar, $config = array())
+    {
+        if ( is_string($toolbar) )
+        {
+            //if actorbar or menu alawys default to the base
+            if ( in_array($toolbar, array('actorbar','menubar')) )
+            {
+                $identifier       = clone $this->getIdentifier();
+                $identifier->path = array('controller','toolbar');
+                $identifier->name = $toolbar;               
                 register_default(array('identifier'=>$identifier, 'default'=>'ComBaseControllerToolbar'.ucfirst($toolbar)));                
-	            $toolbar = $identifier;
-	        }
-	    }
-	
-	    return parent::getToolbar($toolbar, $config);
-	}	
+                $toolbar = $identifier;
+            }
+        }
+    
+        return parent::getToolbar($toolbar, $config);
+    }    	
 }

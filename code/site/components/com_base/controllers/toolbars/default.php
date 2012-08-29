@@ -36,8 +36,43 @@ class ComBaseControllerToolbarDefault extends ComBaseControllerToolbarAbstract
      */
     public function onBeforeControllerGet(KEvent $event)
     {
-        $this->getController()->getView()->toolbar = $this;
+        $this->getController()->toolbar = $this;
     }
+    
+    /**
+     * Render the toolbars after the controller GET
+     *
+     * @param KEvent $event
+     *
+     * @return void
+     */
+    public function onAfterControllerGet(KEvent $event)
+    {
+        $event->result;
+        
+        $can_render = is_string($event->result)  && 
+                      $this->getController()->isDispatched() &&
+                      KRequest::type()   == 'HTTP' &&
+                      KRequest::format() == 'html';
+        
+        if ( $can_render ) 
+        {
+            $ui     = $this->getController()->getView()->getTemplate()->getHelper('ui');
+            
+            $data = array(
+               'menubar'  => $this->getController()->menubar,
+               'actorbar' => $this->getController()->actorbar,
+               'toolbar'  => $this->getController()->toolbar    
+            );
+            
+            $filter = $this->getController()->getView()->getTemplate()->getFilter('module');
+            
+            if ( $filter ) {          
+                $module = '<module position="toolbar" style="none">'.$ui->header($data).'</module>';
+                $filter->write($module);
+            }
+        }
+    }    
            
     /**
      * Edit Command for an entity
@@ -48,7 +83,7 @@ class ComBaseControllerToolbarDefault extends ComBaseControllerToolbarAbstract
      */
     protected function _commandEdit($command)
     {
-        $entity = $command->entity;
+        $entity = $this->getController()->getItem();
         $layout = pick($command->layout, 'edit');
     
         $command->append(array('label'=>JText::_('LIB-AN-ACTION-EDIT')))
@@ -65,7 +100,7 @@ class ComBaseControllerToolbarDefault extends ComBaseControllerToolbarAbstract
      */
     protected function _commandDelete($command)
     {
-        $entity = $command->entity;
+        $entity = $this->getController()->getItem();
     
         $command->append(array('label'=>JText::_('LIB-AN-ACTION-DELETE')))
         ->href($entity->getURL().'&action=delete')
@@ -81,7 +116,7 @@ class ComBaseControllerToolbarDefault extends ComBaseControllerToolbarAbstract
      */
     protected function _commandVote($command)
     {
-        $entity = $command->entity;
+        $entity = $this->getController()->getItem();
     
         $command->append(array('label'=>JText::_('LIB-AN-ACTION-VOTE')));
     
@@ -128,7 +163,7 @@ class ComBaseControllerToolbarDefault extends ComBaseControllerToolbarAbstract
      */
     protected function _commandSubscribe($command)
     {
-        $entity = $command->entity;
+        $entity = $this->getController()->getItem();
     
     
         $label 	= JText::_('LIB-AN-ACTION-'.strtoupper($entity->subscribed(get_viewer()) ? 'unsubscribe' : 'subscribe'));
@@ -150,7 +185,7 @@ class ComBaseControllerToolbarDefault extends ComBaseControllerToolbarAbstract
      */
     protected function _commandCommentstatus($command)
     {
-        $entity = $command->entity;
+        $entity = $this->getController()->getItem();
     
         $label  = $entity->openToComment ? JTEXT::_('LIB-AN-ACTION-CLOSE-COMMENTING') : JTEXT::_('LIB-AN-ACTION-OPEN-COMMENTING');
     
@@ -168,12 +203,12 @@ class ComBaseControllerToolbarDefault extends ComBaseControllerToolbarAbstract
      */
     protected function _commandEnable($command)
     {
-        $entity = $command->entity;
+        $entity = $this->getController()->getItem();
     
         $label 	= JText::_('LIB-AN-ACTION-'.strtoupper($entity->enabled ? 'disable' : 'enable'));
     
         $command->append(array('label'=>$label))
         ->href($entity->getURL().'&action='.($entity->enabled ? 'disable' : 'enable'))
         ->setAttribute('data-trigger','Submit');
-    }    
+    }
 }

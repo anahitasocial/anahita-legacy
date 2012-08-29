@@ -3,7 +3,7 @@
 <h3><?= @text('COM-ACTORS-PROFILE-EDIT-REQUESTS') ?></h3>
 
 <div id="an-actors" class="an-entities an-actors">
-    <?php foreach($entity->requesters as $actor ) : ?>
+    <?php foreach($item->requesters as $actor ) : ?>
     <div class="an-entity an-record">
         <div class="actor-portrait">
             <?= @avatar($actor) ?>
@@ -15,7 +15,7 @@
             <div class="an-meta">
                 <?= $actor->followerCount ?>
                 <span class="stat-name"><?= @text('COM-ACTORS-SOCIALGRAPH-FOLLOWERS') ?></span> 
-                / <?= $entity->leaderCount ?>
+                / <?= $item->leaderCount ?>
                 <span class="stat-name"><?= @text('COM-ACTORS-SOCIALGRAPH-LEADERS') ?></span>
             </div>
             
@@ -24,13 +24,13 @@
             </div>
                 
             <div class="an-actions">
-                <button data-trigger="Submit" href="<?= @route($entity->getURL().'&action=addblocked&actor='.$actor->id) ?>" class="btn">
+                <button data-trigger="Submit" href="<?= @route($item->getURL().'&action=addblocked&actor='.$actor->id) ?>" class="btn">
                     <i class="icon-ban-circle"></i>&nbsp;<?= @text('COM-ACTORS-SOCIALGRAPH-BLOCK') ?>
                 </button>
-                <button data-trigger="Submit" href="<?= @route($entity->getURL().'&action=ignorerequester&requester='.$actor->id) ?>" class="btn">
+                <button data-trigger="Submit" href="<?= @route($item->getURL().'&action=ignorerequester&requester='.$actor->id) ?>" class="btn">
                     <i class="icon-remove"></i>&nbsp;<?= @text('LIB-AN-ACTION-REMOVE') ?>
                 </button>            
-                <button data-trigger="Submit" href="<?= @route($entity->getURL().'&action=confirmrequester&requester='.$actor->id) ?>" class="btn">
+                <button data-trigger="Submit" href="<?= @route($item->getURL().'&action=confirmrequester&requester='.$actor->id) ?>" class="btn">
                     <i class="icon-ok"></i>&nbsp;<?= @text('LIB-AN-ACTION-CONFIRM') ?>
                 </button>                            
             </div>

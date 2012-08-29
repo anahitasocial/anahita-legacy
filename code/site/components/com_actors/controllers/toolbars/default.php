@@ -50,34 +50,27 @@ class ComActorsControllerToolbarDefault extends ComBaseControllerToolbarDefault
      */
     public function onAfterControllerBrowse(KEvent $event)
     {
-        $data   = $event->data;
-        $actor  = $data->actor;
+        $actor  = $this->getController()->actor;
         $filter = $this->getController()->filter;
         
-        if ( $this->getController()->canAdd($data) && $filter != 'leaders' ) 
+        if ( $this->getController()->canAdd() && $filter != 'leaders' ) 
         {
             $this->addCommand('new', array('actor'=>$actor));
-        }        
+        }
     }
     
     /**
      * Called before list commands
-     *
-     * @param KConfig $data
      * 
      * @return void
      */
-    public function addListCommands(KConfig $data)
+    public function addListCommands()
     {
         //the context actor
-        $actor1  = $data->actor;
+        $actor1  = $this->getController()->actor;
         
         //the actor entity that the actions are being evaluated against
-        $actor2 = $data->entity;
-        //$this->_use_post = true;
-        if ( $data->actorid && !$actor ) {
-            $actor1 = $this->getService('repos:actors.actor')->fetch($data->actorid);
-        }
+        $actor2 = $this->getController()->getItem();
                 
         //if actor is not available, then all the against are with respect 
         //to the viewer
@@ -135,18 +128,16 @@ class ComActorsControllerToolbarDefault extends ComBaseControllerToolbarDefault
 
     /**
      * Called before toolbar commands
-     *
-     * @param KConfig $data
      * 
      * @return void
      */
-    public function addToolbarCommands(KConfig $data)
-    {
-        $actor = $data->entity;
-    
+    public function addToolbarCommands()
+    {        
+        $actor = $this->getController()->getItem();
+        
         $this->_use_post = true;
     
-        $this->addListCommands($data);
+        $this->addListCommands();
     
         if ($actor->authorize('administration'))
         {
