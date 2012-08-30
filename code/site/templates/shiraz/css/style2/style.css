@@ -4129,7 +4129,7 @@ input[type="submit"].btn.btn-mini {
   left: 0;
   z-index: 1010;
   display: none;
-  width: 236px;
+  min-width: 236px;
   padding: 1px;
   background-color: #fff;
   -webkit-background-clip: padding-box;
@@ -4757,11 +4757,7 @@ a:hover {
 }
 .navbar .container a.brand.brand-logo {
   padding: 12px 10px 12px 60px;
-<<<<<<< .working
-  background: url(/anahita/branches/development/site/templates/shiraz/css/style2/../../../base/css/images/logo/logo.png) 10px 5px no-repeat transparent;
-=======
   background: url(../../../base/css/images/logo.png) 10px 5px no-repeat transparent;
->>>>>>> .merge-right.r15506
 }
 .navbar .container ul.nav >li >a {
   padding: 13px 10px;
@@ -5151,6 +5147,7 @@ form.inline-edit .form-actions {
 }
 .entity-name {
   font-size: 14px;
+  line-height: 20px;
 }
 .entity-description {
   font-size: 12px;
@@ -5492,6 +5489,7 @@ img.actor-avatar.medium {
 }
 .an-actors .an-entity h3.actor-name {
   font-size: 14px;
+  line-height: 20px;
 }
 .an-actors .an-entity .actor-description {
   font-size: 12px;
@@ -5559,6 +5557,7 @@ img.actor-avatar.medium {
   font-size: 12px;
   margin: 5px 0;
   font-size: 14px;
+  line-height: 20px;
 }
 .module-content .an-actors .an-entity .actor-description {
   font-size: 12px;
@@ -5781,10 +5780,11 @@ img.actor-avatar.medium {
   clear: both;
 }
 .an-apps .an-app .app-container {
-  padding-left: 110px;
+  padding-left: 130px;
 }
 .an-apps .an-app .app-container h4.app-title {
   font-size: 14px;
+  line-height: 20px;
 }
 .an-apps .an-app .app-container .app-description {
   font-size: 12px;
@@ -5940,6 +5940,7 @@ form.an-comment-form .comment-form-container .comment-actions {
 }
 .an-portraiable h3.portraiable-title {
   font-size: 14px;
+  line-height: 20px;
   margin: 5px 0;
 }
 .an-portraiable img.portraiable-image {
@@ -5994,6 +5995,7 @@ form.an-comment-form .comment-form-container .comment-actions {
 }
 .an-portraiables .portraiable-entity h3.portraiable-title {
   font-size: 14px;
+  line-height: 20px;
   margin: 5px 0;
 }
 .an-portraiables .portraiable-entity img.portraiable-image {
@@ -6351,7 +6353,7 @@ ul.an-toolbar li {
 .an-medium .medium-name,
 .an-medium .medium-title {
   font-size: 14px;
-  margin: 4px 0 6px 0;
+  line-height: 20px;
 }
 .an-medium h1.medium-title,
 .an-medium h1.medium-name {
@@ -6458,7 +6460,7 @@ ul.an-toolbar li {
 .an-mediums .an-entity .medium-name,
 .an-mediums .an-entity .medium-title {
   font-size: 14px;
-  margin: 4px 0 6px 0;
+  line-height: 20px;
 }
 .an-mediums .an-entity h1.medium-title,
 .an-mediums .an-entity h1.medium-name {
@@ -6799,6 +6801,9 @@ ul.autocompleter-choices span.autocompleter-queried {
 .an-story .story-avatar {
   float: left;
 }
+.an-story .story-avatar img {
+  margin: 10px 0;
+}
 .an-story .story-container {
   padding-left: 65px;
 }
@@ -6949,6 +6954,9 @@ ul.autocompleter-choices span.autocompleter-queried {
 }
 .story-list-item .story-avatar {
   float: left;
+}
+.story-list-item .story-avatar img {
+  margin: 10px 0;
 }
 .story-list-item .story-container {
   padding-left: 65px;
@@ -7406,31 +7414,23 @@ ul.autocompleter-choices span.autocompleter-queried {
 .icon-paypal,
 .icon-visa {
   background: url(../../../base/css/images/icon-payments.png) no-repeat;
+  padding: 6px 16px;
+  margin: 4px;
 }
 .icon-americanexpress {
   background-position: -144px 0;
-  width: 32px;
-  height: 32px;
 }
 .icon-discover {
   background-position: -107px 0;
-  width: 32px;
-  height: 32px;
 }
 .icon-mastercard {
   background-position: -71px 0;
-  width: 32px;
-  height: 32px;
 }
 .icon-paypal {
   background-position: -35px 0;
-  width: 32px;
-  height: 32px;
 }
 .icon-visa {
   background-position: 0 0;
-  width: 32px;
-  height: 32px;
 }
 #an-entities-wrapper .package {
   *zoom: 1;
@@ -7446,7 +7446,8 @@ ul.autocompleter-choices span.autocompleter-queried {
   clear: both;
 }
 #an-entities-wrapper .package h3.package-title {
-  margin: 10px 0;
+  font-size: 14px;
+  line-height: 20px;
 }
 #an-entities-wrapper .package .package-info {
   padding: 10px 0;
@@ -7470,11 +7471,35 @@ ul.autocompleter-choices span.autocompleter-queried {
   font-size: 18px;
 }
 #an-entities-wrapper .package .package-description {
-  padding: 10px 0;
+  font-size: 12px;
+  padding: 5px 0;
+  word-wrap: break-word;
 }
-#an-entities-wrapper .package .package-description ul,
-#an-entities-wrapper .package .package-description ol {
-  padding-left: 20px;
+#an-entities-wrapper .package .package-description ol,
+#an-entities-wrapper .package .package-description ul {
+  padding-left: 30px;
+}
+#an-entities-wrapper .package .package-description code {
+  padding: 10px;
+}
+#an-entities-wrapper .package .package-description h1 {
+  font-size: 19px;
+}
+#an-entities-wrapper .package .package-description h2 {
+  font-size: 15px;
+}
+#an-entities-wrapper .package .package-description h3 {
+  font-size: 14px;
+}
+#an-entities-wrapper .package .package-description h4 {
+  font-size: 13px;
+}
+#an-entities-wrapper .package .package-description img {
+  max-width: 620px;
+  margin: 10px 0;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
 }
 #an-entities-wrapper .package .action {
   padding: 10px 0;
@@ -7520,7 +7545,8 @@ ul.autocompleter-choices span.autocompleter-queried {
   clear: both;
 }
 #sub-package h3.package-title {
-  margin-bottom: 10px;
+  font-size: 14px;
+  line-height: 20px;
 }
 #sub-package .package-info {
   padding: 10px 0;
@@ -7544,14 +7570,39 @@ ul.autocompleter-choices span.autocompleter-queried {
   font-size: 18px;
 }
 #sub-package .package-description {
-  padding: 10px 0;
+  font-size: 12px;
+  padding: 5px 0;
+  word-wrap: break-word;
 }
-#sub-package .package-description ul,
-#sub-package .package-description ol {
-  padding-left: 20px;
+#sub-package .package-description ol,
+#sub-package .package-description ul {
+  padding-left: 30px;
+}
+#sub-package .package-description code {
+  padding: 10px;
+}
+#sub-package .package-description h1 {
+  font-size: 19px;
+}
+#sub-package .package-description h2 {
+  font-size: 15px;
+}
+#sub-package .package-description h3 {
+  font-size: 14px;
+}
+#sub-package .package-description h4 {
+  font-size: 13px;
+}
+#sub-package .package-description img {
+  max-width: 620px;
+  margin: 10px 0;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
 }
 #sub-tos h2.tos-title {
-  margin: 10px 0;
+  font-size: 14px;
+  line-height: 20px;
 }
 #sub-tos .tos-description {
   margin: 10px 0;
@@ -7563,14 +7614,17 @@ ul.autocompleter-choices span.autocompleter-queried {
   border-radius: 3px;
 }
 #sub-tos .actions {
-  margin: 10px;
+  padding: 10px 0;
 }
 #payment-selector {
   padding: 10px;
 }
 #payment-methods-container .paypal-express {
-  background: url("images/icon-paypal.png") 0 0 no-repeat;
-  padding: 5px 5px 5px 40px;
+  background: url(../../../base/css/images/icon-payments.png) no-repeat;
+  padding: 6px 16px;
+  margin: 4px;
+  background-position: -35px 0;
+  width: 100px;
 }
 #payment-methods-container .icon-creditcards {
   *zoom: 1;
@@ -7587,20 +7641,28 @@ ul.autocompleter-choices span.autocompleter-queried {
   clear: both;
 }
 #payment-methods-container .icon-creditcards .visa {
-  background: url("images/icon-visa.png") 0 0 no-repeat;
-  padding: 10px 20px;
+  background: url(../../../base/css/images/icon-payments.png) no-repeat;
+  padding: 6px 16px;
+  margin: 4px;
+  background-position: 0 0;
 }
 #payment-methods-container .icon-creditcards .mastercard {
-  background: url("images/icon-mastercard.png") 0 0 no-repeat;
-  padding: 10px 20px;
+  background: url(../../../base/css/images/icon-payments.png) no-repeat;
+  padding: 6px 16px;
+  margin: 4px;
+  background-position: -71px 0;
 }
 #payment-methods-container .icon-creditcards .american-express {
-  background: url("images/icon-americanexpress.png") 0 0 no-repeat;
-  padding: 10px 20px;
+  background: url(../../../base/css/images/icon-payments.png) no-repeat;
+  padding: 6px 16px;
+  margin: 4px;
+  background-position: -144px 0;
 }
 #payment-methods-container .icon-creditcards .discover {
-  background: url("images/icon-discover.png") 0 0 no-repeat;
-  padding: 10px 20px;
+  background: url(../../../base/css/images/icon-payments.png) no-repeat;
+  padding: 6px 16px;
+  margin: 4px;
+  background-position: -107px 0;
 }
 ol.sub-steps {
   margin: 20px 0;
@@ -7839,13 +7901,13 @@ ul.autocompleter-choices li.autocompleter-selected span.autocompleter-queried {
   border-top: 1px solid #333;
 }
 #an-entities-wrapper .package .package-info .key {
-  color: #333;
+  color: #555;
 }
 #transaction .info-container dl dt {
   color: #333;
 }
 #sub-package .package-info .key {
-  color: #999;
+  color: #555;
 }
 #sub-tos .tos-description {
   border: 1px solid #333;
