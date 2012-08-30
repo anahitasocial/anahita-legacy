@@ -6799,6 +6799,9 @@ ul.autocompleter-choices span.autocompleter-queried {
 .an-story .story-avatar {
   float: left;
 }
+.an-story .story-avatar img {
+  margin: 10px 0;
+}
 .an-story .story-container {
   padding-left: 65px;
 }
@@ -6949,6 +6952,9 @@ ul.autocompleter-choices span.autocompleter-queried {
 }
 .story-list-item .story-avatar {
   float: left;
+}
+.story-list-item .story-avatar img {
+  margin: 10px 0;
 }
 .story-list-item .story-container {
   padding-left: 65px;
@@ -7656,9 +7662,11 @@ ol.sub-steps > li {
 }
 #bottom-wrapper {
   background-color: #555;
+  border-bottom: 1px solid #999;
 }
 #footer-wrapper {
   background-color: #333;
+  border-bottom: 1px solid #999;
 }
 #footer-wrapper .module-title {
   color: #fff;
