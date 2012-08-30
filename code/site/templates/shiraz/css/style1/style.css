@@ -7412,31 +7412,23 @@ ul.autocompleter-choices span.autocompleter-queried {
 .icon-paypal,
 .icon-visa {
   background: url(../../../base/css/images/icon-payments.png) no-repeat;
+  padding: 6px 16px;
+  margin: 4px;
 }
 .icon-americanexpress {
   background-position: -144px 0;
-  width: 32px;
-  height: 32px;
 }
 .icon-discover {
   background-position: -107px 0;
-  width: 32px;
-  height: 32px;
 }
 .icon-mastercard {
   background-position: -71px 0;
-  width: 32px;
-  height: 32px;
 }
 .icon-paypal {
   background-position: -35px 0;
-  width: 32px;
-  height: 32px;
 }
 .icon-visa {
   background-position: 0 0;
-  width: 32px;
-  height: 32px;
 }
 #an-entities-wrapper .package {
   *zoom: 1;
@@ -7452,7 +7444,8 @@ ul.autocompleter-choices span.autocompleter-queried {
   clear: both;
 }
 #an-entities-wrapper .package h3.package-title {
-  margin: 10px 0;
+  font-size: 14px;
+  line-height: 20px;
 }
 #an-entities-wrapper .package .package-info {
   padding: 10px 0;
@@ -7476,11 +7469,35 @@ ul.autocompleter-choices span.autocompleter-queried {
   font-size: 18px;
 }
 #an-entities-wrapper .package .package-description {
-  padding: 10px 0;
+  font-size: 12px;
+  padding: 5px 0;
+  word-wrap: break-word;
 }
-#an-entities-wrapper .package .package-description ul,
-#an-entities-wrapper .package .package-description ol {
-  padding-left: 20px;
+#an-entities-wrapper .package .package-description ol,
+#an-entities-wrapper .package .package-description ul {
+  padding-left: 30px;
+}
+#an-entities-wrapper .package .package-description code {
+  padding: 10px;
+}
+#an-entities-wrapper .package .package-description h1 {
+  font-size: 19px;
+}
+#an-entities-wrapper .package .package-description h2 {
+  font-size: 15px;
+}
+#an-entities-wrapper .package .package-description h3 {
+  font-size: 14px;
+}
+#an-entities-wrapper .package .package-description h4 {
+  font-size: 13px;
+}
+#an-entities-wrapper .package .package-description img {
+  max-width: 620px;
+  margin: 10px 0;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
 }
 #an-entities-wrapper .package .action {
   padding: 10px 0;
@@ -7526,7 +7543,8 @@ ul.autocompleter-choices span.autocompleter-queried {
   clear: both;
 }
 #sub-package h3.package-title {
-  margin-bottom: 10px;
+  font-size: 14px;
+  line-height: 20px;
 }
 #sub-package .package-info {
   padding: 10px 0;
@@ -7550,14 +7568,39 @@ ul.autocompleter-choices span.autocompleter-queried {
   font-size: 18px;
 }
 #sub-package .package-description {
-  padding: 10px 0;
+  font-size: 12px;
+  padding: 5px 0;
+  word-wrap: break-word;
 }
-#sub-package .package-description ul,
-#sub-package .package-description ol {
-  padding-left: 20px;
+#sub-package .package-description ol,
+#sub-package .package-description ul {
+  padding-left: 30px;
+}
+#sub-package .package-description code {
+  padding: 10px;
+}
+#sub-package .package-description h1 {
+  font-size: 19px;
+}
+#sub-package .package-description h2 {
+  font-size: 15px;
+}
+#sub-package .package-description h3 {
+  font-size: 14px;
+}
+#sub-package .package-description h4 {
+  font-size: 13px;
+}
+#sub-package .package-description img {
+  max-width: 620px;
+  margin: 10px 0;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
 }
 #sub-tos h2.tos-title {
-  margin: 10px 0;
+  font-size: 14px;
+  line-height: 20px;
 }
 #sub-tos .tos-description {
   margin: 10px 0;
@@ -7569,14 +7612,17 @@ ul.autocompleter-choices span.autocompleter-queried {
   border-radius: 3px;
 }
 #sub-tos .actions {
-  margin: 10px;
+  padding: 10px 0;
 }
 #payment-selector {
   padding: 10px;
 }
 #payment-methods-container .paypal-express {
-  background: url("images/icon-paypal.png") 0 0 no-repeat;
-  padding: 5px 5px 5px 40px;
+  background: url(../../../base/css/images/icon-payments.png) no-repeat;
+  padding: 6px 16px;
+  margin: 4px;
+  background-position: -35px 0;
+  width: 100px;
 }
 #payment-methods-container .icon-creditcards {
   *zoom: 1;
@@ -7593,20 +7639,28 @@ ul.autocompleter-choices span.autocompleter-queried {
   clear: both;
 }
 #payment-methods-container .icon-creditcards .visa {
-  background: url("images/icon-visa.png") 0 0 no-repeat;
-  padding: 10px 20px;
+  background: url(../../../base/css/images/icon-payments.png) no-repeat;
+  padding: 6px 16px;
+  margin: 4px;
+  background-position: 0 0;
 }
 #payment-methods-container .icon-creditcards .mastercard {
-  background: url("images/icon-mastercard.png") 0 0 no-repeat;
-  padding: 10px 20px;
+  background: url(../../../base/css/images/icon-payments.png) no-repeat;
+  padding: 6px 16px;
+  margin: 4px;
+  background-position: -71px 0;
 }
 #payment-methods-container .icon-creditcards .american-express {
-  background: url("images/icon-americanexpress.png") 0 0 no-repeat;
-  padding: 10px 20px;
+  background: url(../../../base/css/images/icon-payments.png) no-repeat;
+  padding: 6px 16px;
+  margin: 4px;
+  background-position: -144px 0;
 }
 #payment-methods-container .icon-creditcards .discover {
-  background: url("images/icon-discover.png") 0 0 no-repeat;
-  padding: 10px 20px;
+  background: url(../../../base/css/images/icon-payments.png) no-repeat;
+  padding: 6px 16px;
+  margin: 4px;
+  background-position: -107px 0;
 }
 ol.sub-steps {
   margin: 20px 0;

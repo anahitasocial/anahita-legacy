@@ -1,35 +1,37 @@
-.icon-americanexpress, .icon-discover, .icon-mastercard, .icon-paypal, .icon-visa{
+.icon-americanexpress, 
+.icon-discover, 
+.icon-mastercard, 
+.icon-paypal, 
+.icon-visa
+{
 	background: url(images/icon-payments.png) no-repeat;
+    padding: 6px 16px;
+    margin: 4px;
 }
 
-.icon-americanexpress{
+.icon-americanexpress
+{
 	background-position: -144px 0;
-	width: 32px;
-	height: 32px;
 }
 
-.icon-discover{
+.icon-discover
+{
 	background-position: -107px 0;
-	width: 32px;
-	height: 32px;
 }
 
-.icon-mastercard{
+.icon-mastercard
+{
 	background-position: -71px 0;
-	width: 32px;
-	height: 32px;
 }
 
-.icon-paypal{
+.icon-paypal
+{
 	background-position: -35px 0;
-	width: 32px;
-	height: 32px;
 }
 
-.icon-visa{
+.icon-visa
+{
 	background-position: 0 0;
-	width: 32px;
-	height: 32px;
 }
 
 #an-entities-wrapper
@@ -42,7 +44,7 @@
 		
 		h3.package-title
         {
-            margin: 10px 0;
+            .entity-name;
         }
         
         .package-info
@@ -66,17 +68,12 @@
         
         .package-description
         {
-            padding: 10px 0;
-            
-            ul,ol
-            {
-                padding-left: 20px;
-            }
+            .entity-description;
         }
 		
 		.action
 		{
-			padding: 10px 0;
+			.entity-actions;
 		}
 	}
 }
@@ -119,7 +116,7 @@
     
     h3.package-title
     {
-        margin-bottom: 10px;
+        .entity-name;
     }
     
     .package-info
@@ -143,12 +140,7 @@
     
     .package-description
     {
-        padding: 10px 0;
-        
-        ul,ol
-        {
-            padding-left: 20px;
-        }
+        .entity-description;
     }
 }
 
@@ -157,7 +149,7 @@
 	
 	h2.tos-title
 	{
-		margin: 10px 0;
+		.entity-name;
 	}
 	
 	.tos-description
@@ -172,7 +164,7 @@
 	
 	.actions
 	{
-		margin: 10px;
+		.entity-actions;
 	}
 }
 
@@ -186,8 +178,8 @@
 {
 	.paypal-express
 	{
-		background:url("images/icon-paypal.png") 0 0 no-repeat;
-		padding: 5px 5px 5px 40px;
+		.icon-paypal;
+		width: 100px;
 	}
 	
 	.icon-creditcards
@@ -198,26 +190,22 @@
 		
 		.visa
 		{
-			background:url("images/icon-visa.png") 0 0 no-repeat;
-			padding: 10px 20px;
+			.icon-visa;
 		}
 		
 		.mastercard
 		{
-			background:url("images/icon-mastercard.png") 0 0 no-repeat;
-			padding: 10px 20px;
+			.icon-mastercard;
 		}
 		
 		.american-express
 		{
-			background:url("images/icon-americanexpress.png") 0 0 no-repeat;
-			padding: 10px 20px;
+			.icon-americanexpress;
 		}
 		
 		.discover
 		{
-			background:url("images/icon-discover.png") 0 0 no-repeat;
-			padding: 10px 20px;
+			.icon-discover;
 		}
 	}
 }
