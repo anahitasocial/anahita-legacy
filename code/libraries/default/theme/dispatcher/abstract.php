@@ -150,7 +150,7 @@ abstract class LibThemeDispatcherAbstract extends LibBaseControllerAbstract
             }
             
             $config = array(
-                'base_url'  => preg_replace('{/$}', '', JURI::base()),
+                'base_url'  => KRequest::base(),
                 'media_url' => 'base://media',
                 'params'    => $this->getParams()                
             );
