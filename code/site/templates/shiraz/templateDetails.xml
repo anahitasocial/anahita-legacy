@@ -115,9 +115,7 @@
             <param name="feature" type="row" default="12" label="Feature" description="Select the number of columns and their ratio from the list for this row." />
             <param name="utility" type="row" default="12" label="Utility" description="Select the number of columns and their ratio from the list for this row." />
             <param name="maintop" type="row" default="4,4,4" label="Main Top" description="Select the number of columns and their ratio from the list for this row." />
-            <param name="content-top" type="row" default="4,4,4" label="Content Top" description="Select the number of columns and their ratio from the list for this row." />
-            <param name="content-bottom" type="row" default="6,6" label="Content Bottom" description="Select the number of columns and their ratio from the list for this row." />
-            <param name="mainbottom" type="row" default="4,4,4" label="Main Bottom" description="Select the number of columns and their ratio from the list for this row." />    
+            <param name="mainbottom" type="row" default="6,6" label="Main Bottom" description="Select the number of columns and their ratio from the list for this row." />    
             <param name="bottom" type="row" default="4,4,4" label="Bottom" description="Select the number of columns and their ratio from the list for this row." /> 
             <param name="footer" type="row" default="4,4,4" label="Footer" description="Select the number of columns and their ratio from the list for this row." />
         </params>
