@@ -195,7 +195,7 @@ abstract class ComActorsControllerAbstract extends ComBaseControllerService
             } elseif ( $this->type == 'mutuals' )
                 $entities = $this->getItem()->getMutuals();
             elseif ( $this->type == 'commonleaders' ) {             
-                $entities = $this->getItem()->getCommonLeaders($context->viewer);
+            	$entities = $this->getItem()->getCommonLeaders(get_viewer());
             }
         }
         
