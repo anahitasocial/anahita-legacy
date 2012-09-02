@@ -30,7 +30,7 @@
                                 <input type="hidden" name="remember" value="yes">
                                 <input type="hidden" name="option" value="com_user">
                                 <input type="hidden" name="task" value="login">
-                                <input type="hidden" name="return" value="<?= $return_url ?>" />
+                                <input type="hidden" name="return" value="<?= base64_encode(JURI::base()) ?>" />
                                 <?php echo JHTML::_( 'form.token' ); ?>     
                                 <?= @helper('ui.form', array(
                                     'USERNAME'          => @html('textfield',     'username', '')->dataValidators('required'),
