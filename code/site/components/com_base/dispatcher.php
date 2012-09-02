@@ -163,4 +163,41 @@ class ComBaseDispatcher extends LibBaseDispatcherDefault
 		if ( $url )
 			JFactory::getDocument()->addStyleSheet($url);
 	}
+    
+    /**
+     * Renders a controller view
+     * 
+     * @return string
+     */
+    protected function _actionRender(KCommandContext $context)
+    {
+        $view  = $this->getController()->getView();
+        
+        $document = JFactory::getDocument();
+        $document->setMimeEncoding($view->mimetype);
+        
+        $title = array();
+        
+        $item  = $this->getController()->getState()->getItem();
+                    
+        if ( $item && $item->isDescribable() ) {
+            $title[] = $item->title;
+        }
+              
+        //chech the actor bar first
+        //they usually have a content          
+        if ( $this->getController()->actorbar   ) {
+            $title[] = $this->getController()->actorbar->getTitle();
+        }
+        elseif ( $this->getController()->toolbar ) {
+            $title[] = $this->getController()->toolbar->getTitle();
+        }
+                    
+        $title = implode(' - ', array_unique($title));
+              
+        $document->setTitle($title);
+        
+        return parent::_actionRender($context);   
+    }
+        
 }

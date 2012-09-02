@@ -48,7 +48,7 @@ class ComActorsControllerToolbarActorbar extends ComBaseControllerToolbarActorba
         $name	= $this->getController()->getIdentifier()->name;
     
         //if vieweing one actor
-        if ( $this->getController()->isIdentifiable() && $entity && $entity->isDescribable() )
+        if ( $entity && $this->getController()->isIdentifiable() && $entity->isDescribable() )
         {
             $this->setActor(null);
             
@@ -88,8 +88,9 @@ class ComActorsControllerToolbarActorbar extends ComBaseControllerToolbarActorba
                 $this->setTitle(sprintf(translate($title), $entity->name));
                 $this->setActor($entity);
             }
-            else
-                $this->setTitle($entity->getName());
+            else {                
+                $this->setTitle(sprintf(JText::_('COM-ACTORS-PROFILE-ACTORBAR-TITLE'), $entity->getName()));
+            }            
         }
         //if viewing a list of actors related to another actor
         elseif ( $this->getController()->isOwnable() && $this->getController()->actor )
