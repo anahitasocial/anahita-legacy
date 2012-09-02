@@ -142,9 +142,10 @@ class ComBaseControllerBehaviorOwnable extends KControllerBehaviorAbstract
             }
         }
         
-        //guest actor can never be a context actor                
-        if ( is_person($actor) && $actor->guest() ) {
-            $actor = null;   
+            //guest actor can never be a context actor                
+            if ( is_person($actor) && $actor->guest() ) {
+                $actor = null;
+            }
         }
         
         //actor not found
