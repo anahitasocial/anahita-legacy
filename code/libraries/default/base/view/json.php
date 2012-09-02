@@ -117,9 +117,32 @@ class LibBaseViewJson extends LibBaseViewAbstract
      */
     protected function _getList()
     {
-        if ( $list = $this->_state->getList() ) {
-            return $list->toSerializableArray();
+        $data = array();
+        
+        if ( $items = $this->_state->getList() ) 
+        {          
+            $name = KInflector::singularize($this->getName());
+             
+            foreach($items as $item) 
+            {                
+               $id = $item->getIdentityProperty();
+            
+               $data[] = array_merge(array(
+                      'href'    => (string) $this->getRoute('view='.$name.'&id='.$item->{$id}),
+                    ), $item->toSerializableArray());
+            }
+            
+            $data = array(
+                $this->getName() => $data,
+                'pagination'     => array(
+                    'offset' => (int) $items->getOffset(),
+                    'limit'  => (int) $items->getLimit(),
+                    'total'  => (int) $items->getTotal(),                
+                )
+            );            
         }
+        
+        return $data;
     }
     
     /**
@@ -129,8 +152,12 @@ class LibBaseViewJson extends LibBaseViewAbstract
      */
     protected function _getItem()
     {
+        $data = array(); 
+        
         if ( $item = $this->_state->getItem() ) {
-            return $item->toSerializableArray();   
+            $data = $item->toSerializableArray();   
         }
+        
+        return $data;
     }
 }
