@@ -140,8 +140,7 @@ class ComBaseControllerBehaviorOwnable extends KControllerBehaviorAbstract
             } else {
                 $actor = $this->getService('repos://site/actors.actor')->fetch((int)$value);
             }
-        }
-        
+            
             //guest actor can never be a context actor                
             if ( is_person($actor) && $actor->guest() ) {
                 $actor = null;
