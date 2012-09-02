@@ -279,6 +279,16 @@ abstract class AnDomainEntityAbstract extends KObject implements ArrayAccess
 		return $this->_persisted;
 	}
 	
+    /**
+     * Return the entity identity property name
+     * 
+     * @return string
+     */
+    public function getIdentityProperty()
+    {
+        return $this->description()->getIdentityProperty()->getName();
+    }
+    
 	/**
 	 * Returns the value of the entity identity property
 	 * 
@@ -286,7 +296,7 @@ abstract class AnDomainEntityAbstract extends KObject implements ArrayAccess
 	 */
 	public function getIdentityId()
 	{
-		return $this->get($this->description()->getIdentityProperty()->getName());
+		return $this->get($this->getIdentityProperty());
 	}
 	
 	/**
