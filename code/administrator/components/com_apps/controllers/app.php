@@ -39,7 +39,7 @@ class ComAppsControllerApp extends ComBaseControllerService
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-            'readonly' => true    
+            'readonly' => false    
         ));   
 
         parent::_initialize($config);
