@@ -181,20 +181,21 @@ class ComBaseDispatcher extends LibBaseDispatcherDefault
         $item  = $this->getController()->getState()->getItem();
                     
         if ( $item && $item->isDescribable() ) {
-            $title[] = $item->title;
+            $title[] = $item->title;            
         }
               
         //chech the actor bar first
         //they usually have a content      
         $actorbar = $this->getController()->actorbar;
             
-        if ( $actorbar && $actorbar->getActor() ) {
+        if ( $actorbar && $actorbar->getActor() && $actorbar->getTitle() ) {
             $title[] = $actorbar->getTitle();
         }
-        elseif ( $this->getController()->toolbar ) {
-            $title[] = $this->getController()->toolbar->getTitle();
+        else {
+            $title[] = ucfirst($view->getName());   
         }
-                    
+
+                   
         $title = implode(' - ', array_unique($title));
               
         $document->setTitle($title);
