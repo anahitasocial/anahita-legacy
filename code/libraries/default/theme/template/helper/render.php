@@ -294,14 +294,19 @@ class LibThemeTemplateHelperRender extends KTemplateHelperAbstract
         $config = new KConfig($config);
         
         $config->append(array(
-            'copyright' => $this->_params->copyright
+            'copyright' => $this->_params->copyright,
+        	'poweredby' => $this->_params->poweredby
         ));
         
         $copyright = $config->copyright;
         
         if ( empty($copyright) ) {
-            $copyright = 'Shiraz template by <a href="http://www.anahitapolis.com" target="_blank">Anahitapolis.com</a> for the Anahita™ Social Networking Platform and Framework.';
+            $copyright = 'Copyright '.date('Y').' '.JFactory::getConfig()->getValue('sitename');
         }
+
+        if($config->poweredby)
+        	$copyright .= ' - Powered by <a href="http://www.anahitapolis.com">Anahita ®</a>.';
+        
         return <<<EOF
             <div class="row" id="row-copyright">
                 <div class="span12">

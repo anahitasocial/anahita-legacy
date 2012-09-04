@@ -41,7 +41,6 @@
         <filename type="noreplace">params.ini</filename>
     </exceptions>
     <positions>
-            <position>analytics</position>
             <position>header-a</position>
             <position>header-b</position>
             <position>header-c</position>
@@ -108,6 +107,10 @@
                 <option value="1">Show</option>
             </param>
             <param name="copyright" type="text" default="" label="Copyright" description="Enter your copyright notice here." />
+            <param name="poweredby" type="list" default="1" label="Powered By Anahita">
+                <option value="0">Hide</option>
+                <option value="1">Show</option>
+            </param>
             <param name="analytics" type="text" default="" label="Analytics ID" description="Enter your google analytics tracking ID which is in the format of UA-XXXXX-Y or UA-XXXXX-YY." />
             <param name="@spacer" type="spacer" default="Row Column Ratios" />
             <param name="header" type="row" default="4,4,4" label="Header" description="Select the number of columns and their ratio from the list for this row." />
