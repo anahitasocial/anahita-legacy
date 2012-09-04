@@ -185,9 +185,11 @@ class ComBaseDispatcher extends LibBaseDispatcherDefault
         }
               
         //chech the actor bar first
-        //they usually have a content          
-        if ( $this->getController()->actorbar   ) {
-            $title[] = $this->getController()->actorbar->getTitle();
+        //they usually have a content      
+        $actorbar = $this->getController()->actorbar;
+            
+        if ( $actorbar && $actorbar->getActor() ) {
+            $title[] = $actorbar->getTitle();
         }
         elseif ( $this->getController()->toolbar ) {
             $title[] = $this->getController()->toolbar->getTitle();
