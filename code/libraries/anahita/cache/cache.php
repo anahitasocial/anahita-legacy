@@ -63,6 +63,9 @@ class AnCache extends KObject implements ArrayAccess
     {
         $conf    =& JFactory::getConfig();
         $handler = $conf->getValue('config.cache_handler','file');
+        if ( $handler != 'apc' ) {
+            $handler = null;    
+        }
         $config->append(array(
             'persist' => $conf->getValue('config.caching') && 
                          !empty($handler),
