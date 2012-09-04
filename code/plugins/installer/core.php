@@ -196,7 +196,9 @@ class PlgInstallerCore extends JPlugin
         if ( function_exists('clean_apc_with_prefix') )
         {
             $prefix = md5(JFactory::getApplication()->getCfg('secret')).'-cache-koowa';
-            clean_apc_with_prefix($prefix);    
+            clean_apc_with_prefix($prefix);
+            clean_apc_with_prefix('cache_system');
+            clean_apc_with_prefix('cache__system');
         }
     }
 }
