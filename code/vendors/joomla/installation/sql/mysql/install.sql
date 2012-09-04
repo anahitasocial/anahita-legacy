@@ -132,10 +132,10 @@ CREATE TABLE `#__content` (
   KEY `idx_createdby` (`created_by`)
 ) ENGINE=MyISAM CHARACTER SET `utf8` COLLATE `utf8_general_ci`;
 
-INSERT INTO `#__content` VALUES(1, 'Anahitapolis', 'anahitapolis', '', '<p>City of Anahita or the Home of Anahita project. The Anahita powered website where all the activities related to the Anahita project are happening. Those activities include managing and developing Anahita software, distributing, delivering support, and providing a learning environment for the <a href="http://anahitapolis.com/join">premium members</a> to learn how to install, configure, and develop for Anahita platform</p>', '', 1, 1, 0, 1, '0000-00-00 00:00:00', 62, '', '0000-00-00 00:00:00', 62, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', 'show_title=\nlink_titles=\nshow_intro=\nshow_section=\nlink_section=\nshow_category=\nlink_category=\nshow_vote=\nshow_author=\nshow_create_date=\nshow_modify_date=\nshow_pdf_icon=\nshow_print_icon=\nshow_email_icon=\nlanguage=\nkeyref=\nreadmore=', 1, 0, 1, '', '', 0, 0, 'robots=\nauthor=');
-INSERT INTO `#__content` VALUES(2, 'Anahita Framework', 'anahita-framework', '', '<p>A remarkable software development framework specialized for developing social networking applications following the nodes-graphs-stories architecture. It also makes use of a Domain Driven Design (DDD) pattern in all the models.</p>\r\n\r\n', '\r\n\r\n<p>Anahita framework has been developed using the Nooku Framework which is an MVC rapid application development framework itself. Nooku makes use of software development design patterns and DRY (Don''t Repeat Yourself) principals and that results into writing way less code that does way more. Such a code is also more secure and has less bugs. Visit <a href=\"http://www.nooku.org\" target=\"_blank\">Nooku.org</a> to learn more.</p>', 1, 1, 0, 1, '0000-00-00 00:00:00', 62, '', '0000-00-00 00:00:00', 62, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', 'show_title=\nlink_titles=\nshow_intro=\nshow_section=\nlink_section=\nshow_category=\nlink_category=\nshow_vote=\nshow_author=\nshow_create_date=\nshow_modify_date=\nshow_pdf_icon=\nshow_print_icon=\nshow_email_icon=\nlanguage=\nkeyref=\nreadmore=', 1, 0, 2, '', '', 0, 0, 'robots=\nauthor=');
-INSERT INTO `#__content` VALUES(3, 'NGS Architecture', 'ngs-architecture', '', '<p>Stands for the Nodes-Graphs-Stories architecture. In a social network everything and everybody are represented as nodes (people, groups, events, photos, topics, blog posts, etc.). The relationship amongst the nodes are maintained by the graphs. Stories propagate around in the network of nodes and graphs. Anahita  is developed following the correct Nodes-Graphs-Stories architecture of a social network. </p>', '', 1, 1, 0, 1, '0000-00-00 00:00:00', 62, '', '0000-00-00 00:00:00', 0, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', 'show_title=\nlink_titles=\nshow_intro=\nshow_section=\nlink_section=\nshow_category=\nlink_category=\nshow_vote=\nshow_author=\nshow_create_date=\nshow_modify_date=\nshow_pdf_icon=\nshow_print_icon=\nshow_email_icon=\nlanguage=\nkeyref=\nreadmore=', 1, 0, 3, '', '', 0, 0, 'robots=\nauthor=');
-
+INSERT INTO `#__content` (`id`, `title`, `alias`, `title_alias`, `introtext`, `fulltext`, `state`, `sectionid`, `mask`, `catid`, `created`, `created_by`, `created_by_alias`, `modified`, `modified_by`, `checked_out`, `checked_out_time`, `publish_up`, `publish_down`, `images`, `urls`, `attribs`, `version`, `parentid`, `ordering`, `metakey`, `metadesc`, `access`, `hits`, `metadata`) VALUES
+(1, 'Anahitapolis', 'anahitapolis', '', '<p>City of Anahita or the Home of Anahita project. The Anahita powered website where all the activities related to the Anahita project are happening. Those activities include managing and developing Anahita software, distributing, delivering support, and providing a learning environment for the <a href="http://anahitapolis.com/join">premium members</a> to learn how to install, configure, and develop for Anahita platform</p>', '', 1, 1, 0, 1, '0000-00-00 00:00:00', 62, '', '0000-00-00 00:00:00', 62, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', 'show_title=\nlink_titles=\nshow_intro=\nshow_section=\nlink_section=\nshow_category=\nlink_category=\nshow_vote=\nshow_author=\nshow_create_date=\nshow_modify_date=\nshow_pdf_icon=\nshow_print_icon=\nshow_email_icon=\nlanguage=\nkeyref=\nreadmore=', 1, 0, 1, '', '', 0, 0, 'robots=\nauthor='),
+(2, 'Anahita Framework', 'anahita-framework', '', '<p>A remarkable software development framework specialized for developing social networking applications following the nodes-graphs-stories architecture. It also makes use of a Domain Driven Design (DDD) pattern in all the models.</p>\r\n\r\n', '\r\n\r\n<p>Anahita framework has been developed using the Nooku Framework which is an MVC rapid application development framework itself. Nooku makes use of software development design patterns and DRY (Don''t Repeat Yourself) principals and that results into writing way less code that does way more. Such a code is also more secure and has less bugs. Visit <a href="http://www.nooku.org" target="_blank">Nooku.org</a> to learn more.</p>', 1, 1, 0, 1, '0000-00-00 00:00:00', 62, '', '0000-00-00 00:00:00', 62, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', 'show_title=\nlink_titles=\nshow_intro=\nshow_section=\nlink_section=\nshow_category=\nlink_category=\nshow_vote=\nshow_author=\nshow_create_date=\nshow_modify_date=\nshow_pdf_icon=\nshow_print_icon=\nshow_email_icon=\nlanguage=\nkeyref=\nreadmore=', 1, 0, 2, '', '', 0, 0, 'robots=\nauthor='),
+(3, 'NGS Architecture', 'ngs-architecture', '', '<p>Stands for the Nodes-Graphs-Stories architecture. In a social network everything and everybody are represented as nodes (people, groups, events, photos, topics, blog posts, etc.). The relationship amongst the nodes are maintained by the graphs. Stories propagate around in the network of nodes and graphs. Anahita  is developed following the correct Nodes-Graphs-Stories architecture of a social network. </p>', '', 1, 1, 0, 1, '0000-00-00 00:00:00', 62, '', '0000-00-00 00:00:00', 0, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '', 'show_title=\nlink_titles=\nshow_intro=\nshow_section=\nlink_section=\nshow_category=\nlink_category=\nshow_vote=\nshow_author=\nshow_create_date=\nshow_modify_date=\nshow_pdf_icon=\nshow_print_icon=\nshow_email_icon=\nlanguage=\nkeyref=\nreadmore=', 1, 0, 3, '', '', 0, 0, 'robots=\nauthor=');
 
 # --------------------------------------------------------
 
@@ -302,10 +302,11 @@ INSERT INTO `#__menu` (`id`, `menutype`, `name`, `alias`, `link`, `type`, `publi
 (8, 'footer-about', 'Anahita Core Architects', 'anahita-core-architects', 'http://www.anahitapolis.com/about/anahita-core-architects', 'url', 1, 0, 0, 0, 3, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, 'menu_image=-1\n\n', 0, 0, 0),
 (9, 'footer-about', 'Anahita First Tribe', 'anahita-first-tribe', 'http://www.anahitapolis.com/about/anahita-first-tribe', 'url', 1, 0, 0, 0, 4, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, 'menu_image=-1\n\n', 0, 0, 0),
 (10, 'footer-about', 'Join', 'join', 'http://www.anahitapolis.com/join', 'url', 1, 0, 0, 0, 5, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, 'menu_image=-1\n\n', 0, 0, 0),
-(11, 'socialweb-footer', 'Anahitapolis Blog', 'anahitapolis-blog', 'http://blog.anahitapolis.com', 'url', 1, 0, 0, 0, 1, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, 'menu_image=-1\n\n', 0, 0, 0),
-(12, 'socialweb-footer', 'Twitter @anahitapolis', 'twitter-anahitapolis', 'http://www.twitter.com/anahitapolis', 'url', 1, 0, 0, 0, 2, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, 'menu_image=-1\n\n', 0, 0, 0),
-(13, 'socialweb-footer', 'Facebook Page', 'facebook-page', 'http://www.facebook.com/anahitasocial', 'url', 1, 0, 0, 0, 3, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, 'menu_image=-1\n\n', 0, 0, 0);
-
+(11, 'socialweb-footer', 'Anahitapolis Blog', 'anahitapolis-blog', 'http://blog.anahitapolis.com', 'url', 1, 0, 0, 0, 2, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, 'menu_image=-1\n\n', 0, 0, 0),
+(12, 'socialweb-footer', 'Twitter @anahitapolis', 'twitter-anahitapolis', 'http://www.twitter.com/anahitapolis', 'url', 1, 0, 0, 0, 4, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, 'menu_image=-1\n\n', 0, 0, 0),
+(13, 'socialweb-footer', 'Facebook Page', 'facebook-page', 'http://www.facebook.com/anahitasocial', 'url', 1, 0, 0, 0, 5, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, 'menu_image=-1\n\n', 0, 0, 0),
+(14, 'socialweb-footer', 'Anahitapolis (Home Of Anahita Project)', 'anahitapolis-home-of-anahita-project', 'http://www.anahitapolis.com', 'url', 1, 0, 0, 0, 1, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, 'menu_image=-1\n\n', 0, 0, 0),
+(15, 'socialweb-footer', 'Anahita Podcast', 'anahita-podcast', 'http://itunes.apple.com/ca/podcast/anahitapolis-blog/id485431193', 'url', 1, 0, 0, 0, 3, 0, '0000-00-00 00:00:00', 0, 0, 0, 0, 'menu_image=-1\n\n', 0, 0, 0);
 
 # --------------------------------------------------------
 
@@ -373,17 +374,15 @@ INSERT INTO `#__modules` (`id`, `title`, `content`, `ordering`, `position`, `che
 (13, 'Admin SubMenu', '', 1, 'submenu', 0, '0000-00-00 00:00:00', 1, 'mod_submenu', 0, 2, 1, '', 0, 1, ''),
 (15, 'Title', '', 1, 'title', 0, '0000-00-00 00:00:00', 1, 'mod_title', 0, 2, 1, '', 0, 1, ''),
 (16, 'Quick Links', '', 0, 'dashboard', 0, '0000-00-00 00:00:00', 1, 'mod_rokquicklinks', 0, 0, 1, 'title-1=Bazaar\nlink-1=index.php?option=com_bazaar\nicon-1=anahita.png\ntitle-2=Social Apps\nlink-2=index.php?option=com_apps\nicon-2=application_view_icons.png\ntitle-3=Plugins\nlink-3=index.php?option=com_plugins\nicon-3=brick.png\ntitle-4=Modules\nlink-4=index.php?option=com_modules\nicon-4=brick.png\ntitle-5=Templates\nlink-5=index.php?option=com_templates\nicon-5=color_management.png\ntitle-6=Extend\nlink-6=index.php?option=com_installer\nicon-6=package.png\ntitle-7=Configuration\nlink-7=index.php?option=com_config\nicon-7=cog.png\nquickfields=[{"icon":"anahita.png","link":"index.php?option=com_bazaar","title":"Bazaar"},{"icon":"application_view_icons.png","link":"index.php?option=com_apps","title":"Social Apps"},{"icon":"brick.png","link":"index.php?option=com_plugins","title":"Plugins"},{"icon":"brick.png","link":"index.php?option=com_modules","title":"Modules"},{"icon":"color_management.png","link":"index.php?option=com_templates","title":"Templates"},{"icon":"package.png","link":"index.php?option=com_installer","title":"Extend"},{"icon":"cog.png","link":"index.php?option=com_config","title":"Configuration"}]\n\n', 0, 1, ''),
-(20, 'What is Anahita', '<p>Anahita is a remarkable open source social networking platform and framework for developing various social networking services that enable large groups of people to communicate, collaborate, and share information in highly efficient and accessible ways.</p>', 0, 'maintop-a', 0, '0000-00-00 00:00:00', 1, 'mod_custom', 0, 0, 1, 'moduleclass_sfx=\n\n', 0, 0, ''),
-(21, 'Login', '', 0, 'maintop-b', 0, '0000-00-00 00:00:00', 1, 'mod_login', 0, 0, 1, 'cache=0\nmoduleclass_sfx=\npretext=\nposttext=\nlogin=2\nlogout=1\ngreeting=1\nname=0\nusesecure=0\n\n', 0, 0, ''),
-(22, 'Anahitapolis Blog', '', 0, 'footer-a', 0, '0000-00-00 00:00:00', 1, 'mod_feed', 0, 0, 1, 'moduleclass_sfx= feed\nrssurl=http://blog.anahitapolis.com/rss\nrssrtl=0\nrsstitle=0\nrssdesc=0\nrssimage=0\nrssitems=3\nrssitemdesc=1\nword_count=15\ncache=0\ncache_time=15\n\n', 0, 0, ''),
-(23, 'About', '', 1, 'footer-b', 0, '0000-00-00 00:00:00', 1, 'mod_mainmenu', 0, 0, 1, 'menutype=footer-about\nmenu_style=list\nstartLevel=0\nendLevel=0\nshowAllChildren=0\nwindow_open=\nshow_whitespace=0\ncache=1\ntag_id=\nclass_sfx=\nmoduleclass_sfx=\nmaxdepth=10\nmenu_images=0\nmenu_images_align=0\nmenu_images_link=0\nexpand_menu=0\nactivate_parent=0\nfull_active_id=0\nindent_image=0\nindent_image1=\nindent_image2=\nindent_image3=\nindent_image4=\nindent_image5=\nindent_image6=\nspacer=\nend_spacer=\n\n', 0, 0, ''),
-(24, 'Follow Our Updates', '', 0, 'footer-b', 0, '0000-00-00 00:00:00', 1, 'mod_mainmenu', 0, 0, 1, 'menutype=socialweb-footer\nmenu_style=list\nstartLevel=0\nendLevel=0\nshowAllChildren=0\nwindow_open=\nshow_whitespace=0\ncache=1\ntag_id=\nclass_sfx=\nmoduleclass_sfx=\nmaxdepth=10\nmenu_images=0\nmenu_images_align=0\nmenu_images_link=0\nexpand_menu=0\nactivate_parent=0\nfull_active_id=0\nindent_image=0\nindent_image1=\nindent_image2=\nindent_image3=\nindent_image4=\nindent_image5=\nindent_image6=\nspacer=\nend_spacer=\n\n', 0, 0, ''),
-(25, 'Anahita Core Architects', '<p>Anahita is developed by the Software Architects and Designers from <a href="http://www.peerglobe.com">Peerglobe Technology</a> and <a href="http://www.rmdstudio.com">rmd Studio</a>, who are the co-founders of the <a href="http://www.purplerat.com">Purplerat Tribe of Companies</a>, located in Yaletown, Vancouver, BC, Canada.</p>\r\n<p>They specialize in developing Social Networking technologies and iPhone Applications.</p>', 1, 'footer-c', 0, '0000-00-00 00:00:00', 1, 'mod_custom', 0, 0, 0, 'moduleclass_sfx=\n\n', 0, 0, ''),
+(21, 'Login', '', 1, 'maintop-c', 0, '0000-00-00 00:00:00', 1, 'mod_login', 0, 0, 1, 'cache=0\nmoduleclass_sfx=\npretext=\nposttext=\nlogin=2\nlogout=1\ngreeting=1\nname=0\nusesecure=0\n\n', 0, 0, ''),
+(31, 'Free Tribe Membership', '<p>Do you have any questions that need to be answered before signing up as a <a href="http://www.anahitapolis.com/join/premium">premium tribe</a> member?</p>\r\n<p><a class="btn" href="http://www.anahitapolis.com/join/free">Join Now!</a></p>', 2, 'maintop-b', 0, '0000-00-00 00:00:00', 1, 'mod_custom', 0, 0, 1, 'moduleclass_sfx=\n\n', 0, 0, ''),
+(32, 'Homepage Hero Unit', '<div class="hero-unit">\r\n<h1>Anahita®</h1>\r\n<p>a developer friendly and open source social networking platform and framework that helps you build the foundations of your apps and services in less time using a correct nodes-graphs-stories architecture.</p>\r\n<p><a class="btn btn-large btn-primary" href="http://www.anahitapolis.com">Learn More</a></p>\r\n</div>', 0, 'showcase-a', 0, '0000-00-00 00:00:00', 1, 'mod_custom', 0, 0, 0, 'moduleclass_sfx=\n\n', 0, 0, ''),
+(24, 'Follow Our Updates', '', 2, 'maintop-a', 0, '0000-00-00 00:00:00', 1, 'mod_mainmenu', 0, 0, 1, 'menutype=socialweb-footer\nstartLevel=0\nendLevel=0\nshowAllChildren=0\nwindow_open=\nshow_whitespace=0\ncache=1\ntag_id=\nclass_sfx=\nmoduleclass_sfx=\nmaxdepth=10\nmenu_images=0\nmenu_images_align=0\nmenu_images_link=0\nexpand_menu=0\nactivate_parent=0\nfull_active_id=0\nindent_image=0\nindent_image1=\nindent_image2=\nindent_image3=\nindent_image4=\nindent_image5=\nindent_image6=\nspacer=\nend_spacer=\n\n', 0, 0, ''),
+(25, 'Developed By', '<p>Anahita@ is developed by <a href="http://www.peerglobe.com" target="_blank">Peerglobe Technology</a> and <a href="http://www.rmdstudio.com" target="_blank">rmd Studio</a> who are also the co-founders of the <a href="http://www.purplerat.com" target="_blank">Purplerat Tribe of Companies</a> in Vancouver, BC, Canada.</p>', 0, 'footer-a', 0, '0000-00-00 00:00:00', 1, 'mod_custom', 0, 0, 0, 'moduleclass_sfx=\n\n', 0, 0, ''),
 (26, 'Bazaar Updates', '', 0, 'sidebar', 0, '0000-00-00 00:00:00', 1, 'mod_bazaar', 0, 0, 1, '', 1, 1, ''),
-(27, 'Main Menu', '', 0, 'navigation', 0, '0000-00-00 00:00:00', 1, 'mod_mainmenu', 0, 0, 0, 'menutype=mainmenu\nmenu_style=list\nstartLevel=0\nendLevel=0\nshowAllChildren=1\nwindow_open=\nshow_whitespace=0\ncache=1\ntag_id=\nclass_sfx= nav\nmoduleclass_sfx=\nmaxdepth=10\nmenu_images=0\nmenu_images_align=0\nmenu_images_link=0\nexpand_menu=0\nactivate_parent=0\nfull_active_id=0\nindent_image=0\nindent_image1=\nindent_image2=\nindent_image3=\nindent_image4=\nindent_image5=\nindent_image6=\nspacer=\nend_spacer=\n\n', 0, 0, ''),
-(28, 'Viewer', '', 0, 'viewer', 0, '0000-00-00 00:00:00', 1, 'mod_viewer', 0, 0, 0, 'menutype=viewer\n', 0, 0, ''),
-(29, 'Anahita Lingo', '', 1, 'sidebar-b', 0, '0000-00-00 00:00:00', 1, 'mod_newsflash', 0, 0, 1, 'catid=1\nlayout=default\nimage=0\nlink_titles=0\nshowLastSeparator=1\nreadmore=1\nitem_title=1\nitems=\nmoduleclass_sfx=\ncache=0\ncache_time=900\n\n', 0, 0, '')
-;
+(27, 'Main Menu', '', 1, 'navigation', 0, '0000-00-00 00:00:00', 1, 'mod_mainmenu', 0, 0, 0, 'menutype=mainmenu\nmenu_style=list\nstartLevel=0\nendLevel=0\nshowAllChildren=1\nwindow_open=\nshow_whitespace=0\ncache=1\ntag_id=\nclass_sfx= nav\nmoduleclass_sfx=\nmaxdepth=10\nmenu_images=0\nmenu_images_align=0\nmenu_images_link=0\nexpand_menu=0\nactivate_parent=0\nfull_active_id=0\nindent_image=0\nindent_image1=\nindent_image2=\nindent_image3=\nindent_image4=\nindent_image5=\nindent_image6=\nspacer=\nend_spacer=\n\n', 0, 0, ''),
+(28, 'Viewer', '', 1, 'viewer', 0, '0000-00-00 00:00:00', 1, 'mod_viewer', 0, 0, 0, 'menutype=viewer\n', 0, 0, ''),
+(30, 'Premium Tribe Membership', '<p><strong>Get all the Anahita resources that you need!</strong></p>\r\n<p>Our 12 months Platinum, Gold, and Executive premium plans provide you all the resources that you need to execute and launch your social networking project or business idea.</p>\r\n<p><a class="btn btn-primary" href="http://www.anahitapolis.com/join/premium">Join Now!</a></p>', 0, 'maintop-b', 0, '0000-00-00 00:00:00', 1, 'mod_custom', 0, 0, 1, 'moduleclass_sfx=\n\n', 0, 0, '');
 
 
 
@@ -405,16 +404,14 @@ CREATE TABLE `#__modules_menu` (
 
 INSERT INTO `#__modules_menu` (`moduleid`, `menuid`) VALUES
 (1, 0),
-(20, 1),
 (21, 1),
-(22, 0),
-(23, 0),
-(24, 0),
-(25, 0),
+(24, 1),
+(25, 1),
 (27, 0),
 (28, 0),
-(29, 2)
-;
+(30, 1),
+(31, 1),
+(32, 1);
 
 # --------------------------------------------------------
 
@@ -442,7 +439,8 @@ CREATE TABLE `#__sections` (
   KEY `idx_scope` (`scope`)
 ) ENGINE=MyISAM CHARACTER SET `utf8` COLLATE `utf8_general_ci`;
 
-INSERT INTO `#__sections` VALUES(1, 'About', '', 'about', '', 'content', 'left', '', 1, 0, '0000-00-00 00:00:00', 2, 0, 1, '');
+INSERT INTO `#__sections` (`id`, `title`, `name`, `alias`, `image`, `scope`, `image_position`, `description`, `published`, `checked_out`, `checked_out_time`, `ordering`, `access`, `count`, `params`) VALUES
+(1, 'About', '', 'about', '', 'content', 'left', '', 1, 0, '0000-00-00 00:00:00', 2, 0, 1, '');
 
 # --------------------------------------------------------
 
@@ -492,8 +490,10 @@ CREATE TABLE `#__templates_menu` (
 ) ENGINE=MyISAM CHARACTER SET `utf8` COLLATE `utf8_general_ci`;
 
 # Dumping data for table `#__templates_menu`
-INSERT INTO `#__templates_menu` VALUES ('shiraz', '0', '0');
-INSERT INTO `#__templates_menu` VALUES ('rt_missioncontrol_j15', '0', '1');
+
+INSERT INTO `#__templates_menu` (`template`, `menuid`, `client_id`) VALUES
+('shiraz', 0, 0),
+('rt_missioncontrol_j15', 0, 1);
 
 # --------------------------------------------------------
 

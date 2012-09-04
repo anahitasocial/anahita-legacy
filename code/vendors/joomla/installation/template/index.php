@@ -7,7 +7,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 	<head>
 		<jdoc:include type="head" />
 
-		<link href="../templates/shiraz/css/style1.css" rel="stylesheet" type="text/css" />
+		<link href="../templates/shiraz/css/style1/style.css" rel="stylesheet" type="text/css" />
 		<link href="template/css/template.css" rel="stylesheet" type="text/css" />
 
 		<script type="text/javascript" src="../media/lib_anahita/js/min/mootools.js"></script>
@@ -27,8 +27,8 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 		<div class="navbar">
         	<div class="navbar-inner">
         		<div class="container">
-	        		<a class="brand brand-logo" style="background: url(../templates/shiraz/images/logo/logo.png) no-repeat 10px 10px transparent">
-	        			Anahita™ <?php print Anahita::getVersion() ?> - Social Networking Platform & Framework
+	        		<a class="brand brand-logo" style="background: url(../templates/base/css/images/logo/logo.png) no-repeat 10px 10px transparent">
+	        			Anahita® <?php print Anahita::getVersion() ?> - Social Networking Platform & Framework
 	        		</a>
         		</div>
         	</div>
@@ -39,7 +39,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 				<jdoc:include type="installation" />
 			</div>
 		</div>
-		<div id="copyright"><a href="http://www.anahitapolis.com" target="_blank">Anahita™</a>
+		<div id="copyright"><a href="http://www.anahitapolis.com" target="_blank">Anahita®</a>
 			<?php echo JText::_('ISFREESOFTWARE') ?>
 		</div>
 	</body>
