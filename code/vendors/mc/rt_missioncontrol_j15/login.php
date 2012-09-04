@@ -49,7 +49,7 @@ $mctrl->addScript('MC.Notice.js');
 					<p class="copyright">
 						<span class="mc-footer-logo"></span>
 						
-						<a href="http://www.anahitapolis.com" target="_blank">Anahita™</a>
+						<a href="http://www.anahitapolis.com" target="_blank">Anahita</a>
 						<?php echo JText::_('ISFREESOFTWARE') ?>
 						<br />
 						<?php echo JText::_('MISSION_CONTROL_FOOTER') ?>
