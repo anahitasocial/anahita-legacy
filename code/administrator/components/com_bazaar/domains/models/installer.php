@@ -16,6 +16,7 @@
 
 jimport( 'joomla.installer.installer' );
 jimport('joomla.installer.helper');
+jimport('joomla.filesystem.file');
 
 /**
  * Package Installer
