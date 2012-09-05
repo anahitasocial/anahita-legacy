@@ -145,6 +145,9 @@ class ComBaseControllerBehaviorOwnable extends KControllerBehaviorAbstract
             if ( is_person($actor) && $actor->guest() ) {
                 $actor = null;
             }
+                    
+            //set the data owner to actor.
+            $context->data['owner'] = $actor;            
         }
         
         //actor not found
@@ -154,9 +157,7 @@ class ComBaseControllerBehaviorOwnable extends KControllerBehaviorAbstract
             ));
             return false;
         }
-        
-        //set the data owner to actor.
-        $context->data['owner'] = $actor;
+
         
         $this->setActor($actor);
     }
