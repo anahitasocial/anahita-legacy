@@ -55,7 +55,7 @@ abstract class ComMediumControllerAbstract extends ComBaseControllerService
 	 * @return void
 	 */
 	protected function _initialize(KConfig $config)
-	{
+	{               
 	    $config->append(array(
             'state' => array(
                 'viewer' => get_viewer(),
@@ -63,17 +63,21 @@ abstract class ComMediumControllerAbstract extends ComBaseControllerService
              'request'  => array(
                 'grid'      => '',
                 'filter'    => ''
-             ),
+            ),
 	        'behaviors' => array(
                 'composable',
                 'publisher',
-                'commentable',
-                'ownable' => array('default'=>get_viewer()),
+                'commentable',                
                 'votable',
                 'privatable',
-                'subscribable'
+                'subscribable'                                
         )));
-	
+                
+        $config->append(array(
+            'behaviors' => array(
+                'ownable' => array('default'=>get_viewer()),  
+        )));
+        
 	    parent::_initialize($config);
 	}
 		
