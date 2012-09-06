@@ -177,11 +177,13 @@ class ComBaseDispatcher extends LibBaseDispatcherDefault
         $document->setMimeEncoding($view->mimetype);
         
         $title = array();
+        $description = null;
         
         $item  = $this->getController()->getState()->getItem();
                     
         if ( $item && $item->isDescribable() ) {
-            $title[] = $item->title;            
+            $title[] = $item->title; 
+            $description = $item->description;           
         }
               
         //chech the actor bar first
@@ -190,6 +192,8 @@ class ComBaseDispatcher extends LibBaseDispatcherDefault
             
         if ( $actorbar && $actorbar->getActor() && $actorbar->getTitle() ) {
             $title[] = $actorbar->getTitle();
+       		if(!$description)
+            	$description = $actorbar->getDescription();
         }
         else {
             $title[] = ucfirst($view->getName());   
@@ -199,6 +203,7 @@ class ComBaseDispatcher extends LibBaseDispatcherDefault
         $title = implode(' - ', array_unique($title));
               
         $document->setTitle($title);
+        $document->setDescription($this->getService('com://site/base.template.helper.text')->truncate($description, array('length'=>160)));
         
         return parent::_actionRender($context);   
     }
