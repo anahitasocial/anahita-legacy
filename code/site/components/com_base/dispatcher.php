@@ -175,38 +175,37 @@ class ComBaseDispatcher extends LibBaseDispatcherDefault
         
         $document = JFactory::getDocument();
         $document->setMimeEncoding($view->mimetype);
-        
-        $title = array();
-        $description = null;
-        
-        $item  = $this->getController()->getState()->getItem();
-                    
-        if ( $item && $item->isDescribable() ) {
-            $title[] = $item->title; 
-            $description = $item->description;           
-        }
-              
-        //chech the actor bar first
-        //they usually have a content      
-        $actorbar = $this->getController()->actorbar;
+                
+        if ( KRequest::format() == 'html' && KRequest::type() == 'HTTP' )
+        {
+            $item     = $this->getController()->getState()->getItem();
+            $actorbar = $this->getController()->actorbar;
             
-        if ( $actorbar && $actorbar->getActor() && $actorbar->getTitle() ) {
-            $title[] = $actorbar->getTitle();
-       		if(!$description)
-            	$description = $actorbar->getDescription();
+            $title = array();
+            $description = null;                               
+            
+            if ( $actorbar && $actorbar->getActor() ) 
+            {
+                if ( $actorbar->getTitle() )
+                    $title[] = $actorbar->getTitle();
+                    
+                $description = $actorbar->getDescription();      
+            }
+            else {
+                $title[] = ucfirst($view->getName());   
+            }
+            
+            if ( $item && $item->isDescribable() ) {
+                array_unshift($title, $item->name);
+                $description = $item->body;
+            }
+         
+            $title = implode(' - ', array_unique($title));      
+            $document->setTitle($title);
+            $description = htmlspecialchars($view->getTemplate()->renderHelper('text.truncate', $description, array('length'=>160)));            
+            $document->setDescription($description);            
         }
-        else {
-            $title[] = ucfirst($view->getName());   
-        }
-
-                   
-        $title = implode(' - ', array_unique($title));
-              
-        $document->setTitle($title);
-        $description = $this->getService('com://site/base.template.helper.text')->truncate($description, array('length'=>160));
-        $description = $this->getService('com://site/base.view.html')->escape($description);
-        $document->setDescription($description);
-        
+               
         return parent::_actionRender($context);   
     }
         
