@@ -203,7 +203,9 @@ class ComBaseDispatcher extends LibBaseDispatcherDefault
         $title = implode(' - ', array_unique($title));
               
         $document->setTitle($title);
-        $document->setDescription($this->getService('com://site/base.template.helper.text')->truncate($description, array('length'=>160)));
+        $description = $this->getService('com://site/base.template.helper.text')->truncate($description, array('length'=>160));
+        $description = $this->getService('com://site/base.view.html')->escape($description);
+        $document->setDescription($description);
         
         return parent::_actionRender($context);   
     }
