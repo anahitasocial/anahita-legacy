@@ -203,8 +203,7 @@ class ComBaseDispatcher extends LibBaseDispatcherDefault
             $title = implode(' - ', array_unique($title));      
             $document->setTitle($title);
 	        $description = preg_replace( '/\s+/', ' ', $description );
-	        $description = $this->getService('com://site/base.template.helper.text')->truncate($description, array('length'=>160));
-	        $description = $this->getService('com://site/base.view.html')->escape($description);
+	        $description = htmlspecialchars($view->getTemplate()->renderHelper('text.truncate', $description, array('length'=>160)));          
 	        $document->setDescription($description);            
         }
                
