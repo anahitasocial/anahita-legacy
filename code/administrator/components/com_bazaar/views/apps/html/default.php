@@ -15,4 +15,4 @@ if ( !in_array('curl', get_loaded_extensions()) )
 <?= $install_message ?>
 </div>
 <?php endif;?>
-<iframe style="height:1600px; width:1080px;" scrolling="no" frameborder="0" src="<?= $url?>"></iframe>
+<iframe style="height:1800px; width:1080px;" scrolling="no" frameborder="0" src="<?= $url?>"></iframe>
