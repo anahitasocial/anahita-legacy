@@ -92,6 +92,11 @@ class ComBaseControllerBehaviorParentable extends KControllerBehaviorAbstract
                 
                 $this->setParent($parent);
                 
+                //set the entity owner as the context actor of the controller
+                if ( $parent && $this->getRepository()->isOwnable() && $this->isOwnable() ) {
+                    $this->setActor($parent->owner);
+                }
+                
                 $context->data['parent'] = $parent;
 			}
 		}
