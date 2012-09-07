@@ -118,7 +118,7 @@ class HTML_languages {
 					<td width="5%" align="center">
 						<?php
 						if ($row->published == 1) {	 ?>
-							<img src="templates/khepri/images/menu/icon-16-default.png" alt="<?php echo JText::_( 'Default' ); ?>" />
+							<img src="templates/rt_missioncontrol_j15/images/bullet-star.png" alt="<?php echo JText::_( 'Default' ); ?>" />
 							<?php
 						} else {
 							?>
