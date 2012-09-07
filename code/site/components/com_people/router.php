@@ -19,7 +19,17 @@ function PeopleBuildRoute( &$query ) {
 	if ( isset($query['id']) && !is_array($query['id']) ) {
 		$segments[] = $query['id'];
 		unset($query['id']);
-	}	
+	}
+	
+	if ( isset($query['get']) ) {
+		$segments[] = $query['get'];
+		unset($query['get']);
+	}
+	
+	if ( isset($query['type']) ) {
+		$segments[] = $query['type'];
+		unset($query['type']);
+	}
 	
 	return $segments;
 }
@@ -32,6 +42,12 @@ function PeopleParseRoute( $segments ) {
 	
 	if ( count($segments) )
 		$vars['id'] = array_shift($segments);
+		
+	if ( count($segments) )
+		$vars['get'] = array_shift($segments);
+		
+	if ( count($segments) )
+		$vars['type'] = array_shift($segments);
 				
 	return $vars;
 }
