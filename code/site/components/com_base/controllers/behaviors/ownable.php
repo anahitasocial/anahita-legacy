@@ -130,7 +130,7 @@ class ComBaseControllerBehaviorOwnable extends KControllerBehaviorAbstract
      */
     protected function _fetchOwner(KCommandContext $context)
     {
-        $actor = $this->_default;
+        $actor = pick($this->getActor(), $this->_default);
         $value = $this->{$this->getIdentifiableKey()};
         
         if ( $value ) 
