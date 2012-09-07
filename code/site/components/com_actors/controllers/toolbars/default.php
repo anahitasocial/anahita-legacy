@@ -53,7 +53,7 @@ class ComActorsControllerToolbarDefault extends ComBaseControllerToolbarDefault
         $actor  = $this->getController()->actor;
         $filter = $this->getController()->filter;
         
-        if ( $this->getController()->canAdd() && $filter != 'leaders' ) 
+        if ( $this->getController()->canAdd() && $filter != 'leaders' && false ) 
         {
             $this->addCommand('new', array('actor'=>$actor));
         }
