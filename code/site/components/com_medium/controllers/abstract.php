@@ -72,7 +72,10 @@ abstract class ComMediumControllerAbstract extends ComBaseControllerService
                 'privatable',
                 'subscribable'                                
         )));
-                
+        
+        //anything within the medium app
+        //is within the context of an owner
+        //we need to set the default owner to the viewer        
         $config->append(array(
             'behaviors' => array(
                 'ownable' => array('default'=>get_viewer()),  

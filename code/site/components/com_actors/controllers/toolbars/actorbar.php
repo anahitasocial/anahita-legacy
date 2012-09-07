@@ -125,9 +125,9 @@ class ComActorsControllerToolbarActorbar extends ComBaseControllerToolbarActorba
         foreach($filters as $filter)
         {
             //COM-[COMPONENT]-NAV-FILTER-[ADMINISTRATING|FOLLOWING]
-            $label = array(
-                strtoupper('COM-ACTORS-NAV-FILTER-'.$filter),
-                strtoupper('COM-'.$this->getIdentifier()->package.'-NAV-FILTER-'.$filter)
+            $label = array(                
+                strtoupper('COM-'.$this->getIdentifier()->package.'-NAV-FILTER-'.$filter),
+                strtoupper('COM-ACTORS-NAV-FILTER-'.$filter)                
             );
             
             $this->addNavigation('navbar-'.$filter,translate($label),
@@ -137,9 +137,9 @@ class ComActorsControllerToolbarActorbar extends ComBaseControllerToolbarActorba
 
         $filter = pick($this->getController()->filter, 'following');
         
-        $title  = array(
-            strtoupper('COM-ACTORS-NAV-TITLE-'.$filter),        
-            strtoupper('COM-'.$this->getIdentifier()->package.'-NAV-TITLE-'.$filter)
+        $title  = array(                    
+            strtoupper('COM-'.$this->getIdentifier()->package.'-NAV-TITLE-'.$filter),
+            strtoupper('COM-ACTORS-NAV-TITLE-'.$filter)            
         );               
         
         $this->setTitle(sprintf(translate($title), $this->getController()->actor->name));        

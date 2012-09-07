@@ -74,7 +74,7 @@ class ComBaseControllerBehaviorOwnable extends KControllerBehaviorAbstract
     {
         $config->append(array(
             'identifiable_key' => 'oid',
-            'default'          => get_viewer(),
+            'default'          => null,
             'priority'         => KCommand::PRIORITY_HIGHEST
         ));
 
@@ -147,17 +147,15 @@ class ComBaseControllerBehaviorOwnable extends KControllerBehaviorAbstract
             }
                     
             //set the data owner to actor.
-            $context->data['owner'] = $actor;            
+            $context->data['owner'] = $actor;  
+            
+            if ( !$actor ) {
+                $context->setError(new KHttpException(
+                    'Owner Not Found', KHttpResponse::NOT_FOUND
+                ));
+                return false;
+            }                      
         }
-        
-        //actor not found
-        if ( !$actor ) {
-            $context->setError(new KHttpException(
-                'Owner Not Found', KHttpResponse::NOT_FOUND
-            ));
-            return false;
-        }
-
         
         $this->setActor($actor);
     }
