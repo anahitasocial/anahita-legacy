@@ -42,7 +42,11 @@ abstract class ComMediumControllerAbstract extends ComBaseControllerService
 	
         //add the anahita:event.command        
         $this->getCommandChain()
-            ->enqueue( $this->getService('anahita:command.event'), KCommand::PRIORITY_LOWEST);        
+            ->enqueue( $this->getService('anahita:command.event'), KCommand::PRIORITY_LOWEST);
+            
+        //add medium related states
+        $this->getState()
+                ->insert('filter')->insert('grid')->insert('order');
 	}
 	
 	/**
@@ -61,8 +65,9 @@ abstract class ComMediumControllerAbstract extends ComBaseControllerService
                 'viewer' => get_viewer(),
              ),
              'request'  => array(
-                'grid'      => '',
-                'filter'    => ''
+                'grid'      => null,
+                'filter'    => null,
+                'order'     => null
             ),
 	        'behaviors' => array(
                 'composable',
