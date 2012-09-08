@@ -51,6 +51,9 @@ class ComBaseControllerBehaviorParentable extends KControllerBehaviorAbstract
         
         //set the identifiable key. By default its set to pid
         $this->_identifiable_key = $config->identifiable_key;
+        
+        //insert the state
+        $this->getState()->insert($this->_identifiable_key);
     }
         
     /**
