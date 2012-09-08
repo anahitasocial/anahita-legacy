@@ -60,6 +60,9 @@ class LibBaseControllerBehaviorIdentifiable extends KControllerBehaviorAbstract
         ));        
         
         $this->_identifiable_key = $config->identifiable_key;
+        
+        //add the identifiable_key 
+        $this->getState()->insert($this->_identifiable_key, null, true); 
     }
            
     /**
