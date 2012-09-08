@@ -240,10 +240,9 @@ class ComBaseTemplateHelperUi extends KTemplateHelperAbstract
         $config = new KConfig($config);
         
         $config->append(array(
-            'url'             => clone KRequest::url()   ,
+            'url'             => (string)$this->_template->getView()->getRoute()   ,
             'scroll'          => true,
-            'force'           => false,
-            'merge_query'     => true
+            'force'           => false,        
         ));
         
         if ( $config->paginate ) {
@@ -287,40 +286,20 @@ class ComBaseTemplateHelperUi extends KTemplateHelperAbstract
         }
         
         $config->paginator = $paginator;
-        
-        //fix up the url
-        if ( is_string($config->url) ) 
-        {
-            //if the URL is a string then parse the URL as KhttpUrl
-            //and merge in all the exsting query
-            $url    = new KHttpUrl(new KConfig(array('url'=>$config->url)));
-            if ( $config->merge_query ) 
-            {
-                $query  = KRequest::url()->getQuery(true);
-                unset($query['start']);
-                unset($query['limit']);             
-                $url->setQuery(array_merge($query, $url->getQuery(true)));
-            }
-            $config->url  = $url;
-        }
-        elseif ( !is($config->url, 'KHttpUrl'))
-        {
-            $url   = clone KRequest::url();
-            $query = KConfig::unbox($config->url);
-            $config->url   = $url->setQuery(array_merge($url->getQuery(true), $query));
-        }
+       
+        //convert url to the httpurl object
+        $config->url = $this->getService('koowa:http.url', array('url'=>$config->url));        
         
         if ( $config->scroll )
         {
-            $url   = (array)$config->url->getQuery(true);
-            
-            $url   = array_merge($url, array('limit'=>$paginator->pages->next->limit, 
+            $query   = array_merge($config->url->getQuery(true), array('limit'=>$paginator->pages->next->limit, 
                         'start'=>$paginator->pages->next->offset));
-            
-            $config->next_page_url = (string)$config->url->setQuery($url);
+                        
+            $config->next_page_url = (string)$config->url->setQuery($query);
             
             return $this->_render('pagination_scroll', $config);
-        } else 
+        } 
+        else 
         {
             $pages = array();
             
