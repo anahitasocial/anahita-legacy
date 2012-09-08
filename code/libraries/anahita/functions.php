@@ -690,6 +690,21 @@ function is_admin($actor)
  */
 function print_query($query)
 {
+    if ( $query instanceof AnDomainEntitysetDefault ) {
+        $query = $query->getQuery();
+    }
+    
+    if ( $query instanceof AnDomainQuery ) {
+        $repos   = $query->getRepository();
+        $context = $repos->getCommandContext();
+        $context->operation = AnDomain::OPERATION_FETCH;
+        $context->query     = $query;
+        $context->mode      = AnDomain::FETCH_ENTITY_SET;
+        $query->fetch_mode  = AnDomain::FETCH_ENTITY_SET;
+        $repos->getCommandChain()->run('before.fetch', $context);
+        $query = (string) $context->query;
+    }
+    
     print str_replace('#__','jos_', $query)."\G";
 }
 
