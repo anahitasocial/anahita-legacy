@@ -341,6 +341,12 @@ abstract class LibBaseViewAbstract extends KObject
 	        if(!isset($parts['layout'])) {
 	            $route['layout'] = $this->getLayout();
 	        }
+            
+            //since the view is missing then get the data from
+            //the state
+            $data = $this->getState()->getData();
+            
+            $route = array_merge($data, $route);
 	    }
 	    
 	    //Add the format information to the route only if it's not 'html'
