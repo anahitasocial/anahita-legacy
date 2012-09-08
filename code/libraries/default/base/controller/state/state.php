@@ -207,6 +207,36 @@ class LibBaseControllerState extends KConfig
     }
     
     /**
+     * Check if the state information is unique
+     *
+     * @return  boolean TRUE if the state is unique, otherwise FALSE.
+     */
+    public function isUnique()
+    {
+        $unique = false;
+
+        //Get the unique states
+        $states = $this->getData(true);
+
+        if(!empty($states))
+        {
+            $unique = true;
+
+            //If a state contains multiple values the state is not unique
+            foreach($states as $state)
+            {
+                if(is_array($state) && count($state) > 1)
+                {
+                    $unique = false;
+                    break;
+                }
+            }
+        }
+
+        return $unique;
+    }    
+    
+    /**
      * Set state value
      *
      * @param   string  The user-specified state name.
