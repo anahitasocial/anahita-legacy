@@ -109,19 +109,9 @@
     
     <files>
         <folder>css</folder>
-        <folder>html</folder>
-        <folder>images</folder>
         <folder>elements</folder>
-        <file>component.php</file>
-		<file>offline.php</file>
-        <file>error_default.php</file>
-        <file>error_404.php</file>
-        <file>error_405.php</file>
-        <file>en-GB.tpl_shiraz.ini</file>
-        <file>htaccess.txt</file>
-        <file>index.php</file>
+        <folder>html</folder>
         <file>params.ini.tmp</file>
         <file>template_thumbnail.png</file>
-        <file>CHANGELOG.php</file>
     </files>
 </install>
