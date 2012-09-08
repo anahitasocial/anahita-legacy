@@ -41,6 +41,10 @@ abstract class ComActorsControllerAbstract extends ComBaseControllerService
         //add the anahita:event.command        
         $this->getCommandChain()
             ->enqueue( $this->getService('anahita:command.event'), KCommand::PRIORITY_LOWEST);
+          
+        //set filter state  
+        $this->getState()
+                ->insert('filter');            
     }
         
     /**
