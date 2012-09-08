@@ -159,63 +159,7 @@ abstract class ComActorsControllerAbstract extends ComBaseControllerService
             dispatch_plugin('profile.onSave', array('actor'=>$entity, 'data'=>$context->data));  
         }
         return $entity;
-    }
-    
-    /**
-     * Read Owner's Socialgraph
-     * 
-     * @param KCommandContext $context
-     * 
-     * @return AnDomainEntitysetDefault
-     */
-    protected function _actionGetgraph(KCommandContext $context)
-    {      
-        $this->_state->append(array(
-            'type' => 'followers'
-        ));
- 
-        $filters  = array();
-        $entities = array();
-        $entity   = $this->getItem();
-        
-        if ( $this->getItem()->isFollowable() )
-        {
-            if ( $this->type == 'followers') {
-                $entities = $this->getItem()->followers;
-            } elseif ( $this->type == 'blockeds' && $entity->authorize('administration')) {
-                $entities = $this->getItem()->blockeds;
-            }
-        }
-        
-        if ( $this->getItem()->isLeadable() ) 
-        {
-            if ( $this->type == 'leaders' ) 
-            {
-                $entities = $this->getItem()->leaders;
-            } elseif ( $this->type == 'mutuals' )
-                $entities = $this->getItem()->getMutuals();
-            elseif ( $this->type == 'commonleaders' ) {             
-            	$entities = $this->getItem()->getCommonLeaders(get_viewer());
-            }
-        }
-        
-        if ( !$entities )
-            return false;
-            
-        $xid = (array) KConfig::unbox($this->_state->xid);
-        
-        if ( !empty($xid) )
-            $entities->where('id','NOT IN', $xid);
-            
-        $entities->limit( $this->limit, $this->start );
-        
-        if ( $this->q )
-            $entities->keyword($this->q);
-            
-        $this->setList($entities)->actor($this->getItem());
-       
-        return $entities;
-    }
+    }    
         
     /**
      * Set the default Actor View
