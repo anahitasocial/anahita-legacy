@@ -35,6 +35,9 @@ class ComBaseControllerService extends LibBaseControllerService
 	public function __construct(KConfig $config)
 	{
 		parent::__construct($config);
+        
+        //insert the search term query
+        $this->getState()->insert('q');
 	}
 		
     /**
@@ -67,7 +70,7 @@ class ComBaseControllerService extends LibBaseControllerService
      * @return AnDomainQuery
      */ 
     protected function _actionBrowse(KCommandContext $context)
-    {        
+    {                
         $context->append(array(
             'query' => $this->getRepository()->getQuery() 
         ));
