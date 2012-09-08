@@ -60,6 +60,9 @@ class ComBaseControllerBehaviorOwnable extends KControllerBehaviorAbstract
         
         //set the identifiable key. By default its set to oid
         $this->_identifiable_key = $config->identifiable_key;
+                 
+        //$this->_default ? $this->_default->id : null                                                        
+        $this->getState()->insert($this->_identifiable_key);        
     }
         
     /**
