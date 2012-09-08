@@ -494,13 +494,17 @@ class ComBaseTemplateHelperUi extends KTemplateHelperAbstract
 	 */
 	public function searchbox($path, $config = array())
 	{
-	    if ( is_array($path) )
-	    {
-	        $url  = clone KRequest::url();
-	        $url->setQuery(array_merge($url->getQuery(true), $path));
-	        $path   = (string) $url;
+	    if ( is_array($path) ) {
+	        $path = $this->_template->getView()->getRoute($path);
 	    }
-	
+        
+	    //remove q from the url
+        $uri  = $this->getService('koowa:http.url', array('url'=>$path));
+        $data = $uri->getQuery(true);
+        unset($data['q']);
+        $uri->setQuery($data);
+        $path = (string)$uri;
+        
 	    $config = new KConfig($config);
 	
 	    $config->append(array(
