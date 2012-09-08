@@ -344,7 +344,7 @@ abstract class LibBaseViewAbstract extends KObject
             
             //since the view is missing then get the data from
             //the state
-            $data = $this->getState()->getData();
+            $data = $this->_state->getData($this->_state->isUnique());
             
             $route = array_merge($data, $route);
 	    }
