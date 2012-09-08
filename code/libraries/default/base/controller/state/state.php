@@ -129,6 +129,8 @@ class LibBaseControllerState extends KConfig
         $state->default  = $default;
         $this->_states[$name] = $state;
         
+        //if a default value set, then try
+        //set it to the state data
         if ( $this->_validate($state) ) {
             $this->append(array(
                 $state->name => $state->value
