@@ -762,18 +762,24 @@ Behavior.addGlobalFilter('Pagination', {
 			if ( this.getParent().hasClass('active') || this.getParent().hasClass('disabled') )
 				return;
 			var uri   	= this.get('href').toURI();
-			var current	= new URI().getData();	
+			var current	= new URI(document.location).getData();				
 			//only add the queries to hash that are different 
 			//from the current
 			var hash = {};
 			Object.each(uri.getData(), function(value, key) {
+				//if not value skip
 				if ( !value )
+					return;				
+				//if the value is either option,layout,view skip
+				if ( ['layout','option','view'].contains(key) ) {
 					return;
-				if ( current[key] != value && key != 'layout' ) {
+				}
+				//no duplicate value
+				if ( current[key] != value ) {
 					hash[key] = value;
 				}
  			});
-			document.location.hash = $H(hash).toQueryString();
+			document.location.hash = Object.toQueryString(hash);
 			this.ajaxRequest({			
 				method 	  :  'get'  ,
 				onSuccess : function() {					
