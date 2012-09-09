@@ -67,11 +67,15 @@ class ComActorsControllerBehaviorExecutable extends LibBaseControllerBehaviorExe
 	 */
 	public function canAdd()
 	{
-	    $app = $this->getService('repos:apps.app')->fetch(array('component'=>'com_'.$this->getIdentifier()->package));
-	    if ( $app ) 
-	        return $app->authorize('publish');
+	    $app    = $this->getService('repos://site/apps.app')
+                    ->fetch(array('component'=>'com_'.$this->getIdentifier()->package));
+        $result = false;
+        
+	    if ( $app ) {
+	        $result = $app->authorize('publish');
+        }
 	        
-		return false;
+		return $result;
 	}
 	
     /**
