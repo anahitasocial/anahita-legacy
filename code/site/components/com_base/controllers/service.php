@@ -56,6 +56,7 @@ class ComBaseControllerService extends LibBaseControllerService
 		parent::_initialize($config);
         
 		$config->append(array(
+            'viewer'        => get_viewer(),
             'language'      => 'com_'.$this->getIdentifier()->package ,
             'toolbars'      => array($this->getIdentifier()->name,'menubar','actorbar'),
             'request'       => array(
