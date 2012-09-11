@@ -37,7 +37,10 @@ class ComBaseControllerService extends LibBaseControllerService
 		parent::__construct($config);
         
         //insert the search term query
-        $this->getState()->insert('q');
+        $this->_state->insert('q');
+        
+        //set viewer in the state
+        $this->_state->viewer = $config->viewer;
 	}
 		
     /**

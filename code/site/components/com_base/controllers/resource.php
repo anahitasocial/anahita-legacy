@@ -40,6 +40,8 @@ class ComBaseControllerResource extends LibBaseControllerResource
 
         //load the language
         JFactory::getLanguage()->load( $config->language );
+        
+        $this->_state->viewer = $config->viewer;
     }
         
     /**
@@ -52,7 +54,8 @@ class ComBaseControllerResource extends LibBaseControllerResource
      */
 	protected function _initialize(KConfig $config)
 	{
-		$config->append(array(		    
+		$config->append(array(
+            'viewer'        => get_viewer(),
 		    'language'      => 'com_'.$this->getIdentifier()->package
 		));
 				
