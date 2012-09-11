@@ -82,7 +82,6 @@ class LibBaseControllerResource extends LibBaseControllerAbstract
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-            'state'     => array('viewer'=>get_viewer()),
             'readonly'  => true,
             'behaviors' => array('sanitizable','executable'),
             'request'   => array('format' => 'html'),
@@ -146,10 +145,6 @@ class LibBaseControllerResource extends LibBaseControllerAbstract
                 'base_url'  => KRequest::url()->getUrl(KHttpUrl::BASE),
                 'state'     => $this->getState()                
             );
-//            
-//            if($this->isExecutable()) {
-//                $config['auto_assign'] = !$this->getBehavior('executable')->isReadOnly();
-//            }
 
             $this->_view = $this->getService($this->_view, $config);
             
