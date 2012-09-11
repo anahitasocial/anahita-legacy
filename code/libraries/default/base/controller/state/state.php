@@ -49,22 +49,6 @@ class LibBaseControllerState extends KConfig
     protected $_list;
     
     /**
-     * Set the state
-     * 
-     * @param array $data An array of data
-     * 
-     * @return LibBaseControllerData
-     */
-    public function setData(array $data)
-    {
-        foreach($data as $key => $value) {
-            $this->$key = $value;   
-        }
-        
-        return $this;
-    }
-    
-    /**
      * Set the item
      * 
      * @param mixed $item The item 
