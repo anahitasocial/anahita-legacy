@@ -105,6 +105,19 @@ class ComBaseDomainSerializerDefault extends AnDomainSerializerDefault
             }
         }
         
+        if ( $entity->isFollowable() ) {
+            $data['followerCount'] = $entity->followerCount;   
+        }
+        
+        if ( $entity->isLeadable() ) {
+            $data['leaderCount'] = $entity->leaderCount;
+            $data['mutualCount'] = $entity->mutualCount;   
+        }
+        
+        if ( $entity->isSubscribable() ) {
+            $data['subscriberCount'] = $entity->subscriberCount;
+        }        
+        
         if ( $entity->isVotable() ) {
             $data['voteUpCount'] = $entity->voteUpCount;
         }
