@@ -42,10 +42,7 @@ class LibBaseControllerAbstract extends KControllerAbstract
      */
     public function __construct( KConfig $config)
     {
-        parent::__construct($config);
-                
-        //set the state           
-        $this->getState()->setData( KConfig::unbox($config->state) );
+        parent::__construct($config);                        
     }
               
     /**
@@ -58,11 +55,7 @@ class LibBaseControllerAbstract extends KControllerAbstract
      * @return void
      */
     protected function _initialize(KConfig $config)
-    {
-        $config->append(array(
-            'state' => array()
-        ));
-        
+    {        
         parent::_initialize($config);    
     }
             
@@ -73,7 +66,7 @@ class LibBaseControllerAbstract extends KControllerAbstract
      */   
     public function getState()
     {
-        if ( !isset($this->_state) ) {        
+        if ( !isset($this->_state) ) {
             $this->_state = new LibBaseControllerState();   
         }
         
