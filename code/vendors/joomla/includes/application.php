@@ -310,9 +310,6 @@ class JSite extends JApplication
 		$template = JFilterInput::clean($template, 'cmd'); // need to filter the default value as well
 
 		// Fallback template
-		if (!file_exists(JPATH_THEMES.DS.$template.DS.'index.php')) {
-			$template = 'shiraz';
-		}
 
 		// Cache the result
 		$this->set('setTemplate', $template);
