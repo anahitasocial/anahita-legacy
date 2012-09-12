@@ -129,6 +129,7 @@ function joomla_symlinks(&$links)
          'vendors/joomla/includes/js'  => 'includes/js',
          'vendors/joomla/includes/application.php'  => 'includes/application.php',
 		 'vendors/joomla/modules/mod_mainmenu'      => 'modules/mod_mainmenu',
+         'vendors/joomla/modules/mod_login'   => 'modules/mod_login',
          'vendors/joomla/modules/mod_breadcrumbs'   => 'modules/mod_breadcrumbs',
          'vendors/joomla/administrator/components/com_modules' => 'administrator/components/com_modules',
          'vendors/joomla/administrator/components/com_templates' => 'administrator/components/com_templates',
