@@ -176,38 +176,49 @@ class ComBaseDispatcher extends LibBaseDispatcherDefault
         $document = JFactory::getDocument();
         $document->setMimeEncoding($view->mimetype);
                 
-        if ( KRequest::format() == 'html' && KRequest::type() == 'HTTP' )
-        {
-            $item     = $this->getController()->getState()->getItem();
-            $actorbar = $this->getController()->actorbar;
-            
-            $title = array();
-            $description = null;                               
-            
-            if ( $actorbar && $actorbar->getActor() ) 
-            {
-                if ( $actorbar->getTitle() )
-                    $title[] = $actorbar->getTitle();
-                    
-                $description = $actorbar->getDescription();      
-            }
-            else {
-                $title[] = ucfirst($view->getName());   
-            }
-            
-            if ( $item && $item->isDescribable() ) {
-                array_unshift($title, $item->name);
-                $description = $item->body;
-            }
-         
-            $title = implode(' - ', array_unique($title));      
-            $document->setTitle($title);
-	        $description = preg_replace( '/\s+/', ' ', $description );
-	        $description = htmlspecialchars($view->getTemplate()->renderHelper('text.truncate', $description, array('length'=>160)));          
-	        $document->setDescription($description);            
+        if ( KRequest::format() == 'html' && KRequest::type() == 'HTTP' ) {
+            $this->_setPageTitle();          
         }
                
         return parent::_actionRender($context);   
     }
+    
+    /**
+     * Sets the page title/description
+     * 
+     * @return void
+     */
+    protected function _setPageTitle()
+    {
+        $view     = $this->getController()->getView();
+        $document = JFactory::getDocument();
         
+        $item     = $this->getController()->getState()->getItem();
+        $actorbar = $this->getController()->actorbar;
+        
+        $title = array();
+        $description = null;                               
+        
+        if ( $actorbar && $actorbar->getActor() ) 
+        {
+            if ( $actorbar->getTitle() )
+                $title[] = $actorbar->getTitle();
+                
+            $description = $actorbar->getDescription();      
+        }
+        else {
+            $title[] = ucfirst($view->getName());   
+        }
+        
+        if ( $item && $item->isDescribable() ) {
+            array_unshift($title, $item->name);
+            $description = $item->body;
+        }
+     
+        $title = implode(' - ', array_unique($title));      
+        $document->setTitle($title);
+        $description = preg_replace( '/\s+/', ' ', $description );
+        $description = htmlspecialchars($view->getTemplate()->renderHelper('text.truncate', $description, array('length'=>160)));          
+        $document->setDescription($description);         
+    }
 }
