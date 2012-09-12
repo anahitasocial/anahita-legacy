@@ -58,7 +58,7 @@ endif; ?>
 			<?php endif; ?>
 			
 			<div class="control-group">
-				<label class="control-label"  for="username"><?php print JText::_('Username') ?></label>
+				<label class="control-label"  for="username"><?php print JText::_('USERNAME OR EMAIL') ?></label>
 				<div class="controls">
 					<input name="username" id="username" type="text" alt="username" size="18" />
 				</div>

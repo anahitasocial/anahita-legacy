@@ -27,7 +27,7 @@
                             <input type="hidden" name="task" value="login">
                             <input type="hidden" name="return" value="<?= base64_encode(JURI::base()) ?>" />
                             <?= JHTML::_( 'form.token' ); ?>
-                            <input data-behavior="required" type="text" name="username" class="input-medium" placeholder="<?= @text('USERNAME') ?>">
+                            <input data-behavior="required" type="text" name="username" class="input-medium" placeholder="<?= @text('USERNAME OR EMAIL') ?>">
                             <input data-behavior="required" type="password" name="passwd" class="input-medium" placeholder="<?= @text('PASSWORD') ?>">
                             <button type="submit" class="btn btn-primary"><?=@text('LOGIN')?></button>
                         </form>

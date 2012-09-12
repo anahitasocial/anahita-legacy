@@ -61,7 +61,7 @@ endif; ?>
 	<?php echo $params->get('pretext'); ?>
 	
 	<div class="control-group">
-		<label class="control-label" for="username"><?php print JText::_('Username') ?></label>
+		<label class="control-label" for="username"><?php print JText::_('USERNAME OR EMAIL') ?></label>
 		<div class="controls">
 			<input id="modlgn_username" type="text" name="username" alt="username" size="18" />
 		</div>
