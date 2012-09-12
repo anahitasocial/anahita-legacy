@@ -127,6 +127,7 @@ function joomla_symlinks(&$links)
          'vendors/joomla/libraries/joomla' => 'libraries/joomla',
          'vendors/joomla/media/system' => 'media/system',
          'vendors/joomla/includes/js'  => 'includes/js',
+         'vendors/joomla/language/en-GB/en-GB.ini'  => 'language/en-GB/en-GB.ini',
          'vendors/joomla/includes/application.php'  => 'includes/application.php',
 		 'vendors/joomla/modules/mod_mainmenu'      => 'modules/mod_mainmenu',
          'vendors/joomla/modules/mod_login'   => 'modules/mod_login',
