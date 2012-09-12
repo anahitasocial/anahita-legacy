@@ -1,7 +1,6 @@
 <?php defined('KOOWA') or die ?>
-<?php $options = empty($options) ? array() : $options ?>
 
-<?php @listItemView()->layout('list')->set($options) ?>
+<?php @listItemView()->layout('list') ?>
 
 <?php if(count($items)) :?>
 <div id="an-actors" class="an-entities an-actors">
