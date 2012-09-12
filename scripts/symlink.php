@@ -122,6 +122,8 @@ function anahita_symlinks(&$links)
 function joomla_symlinks(&$links)
 {
     $links = array_merge($links, array(            
+         'vendors/joomla/plugins/authentication/joomla.php' => 'plugins/authentication/joomla.php',
+         'vendors/joomla/plugins/user/joomla.php' => 'plugins/user/joomla.php',
          'vendors/joomla/libraries/joomla' => 'libraries/joomla',
          'vendors/joomla/media/system' => 'media/system',
          'vendors/joomla/includes/js'  => 'includes/js',
