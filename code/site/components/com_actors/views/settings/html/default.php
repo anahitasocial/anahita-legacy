@@ -9,7 +9,7 @@
 <?php foreach($tabs as $tab) : ?>
 	<li class="<?= $tab->active ? 'active' : ''?>">        
 		<a href="<?=@route($tab->url)?>">            
-            <?= @text($tab->label)?>
+            <?= $tab->label ?>
         </a>
 	</li>
 <?php endforeach;?>
