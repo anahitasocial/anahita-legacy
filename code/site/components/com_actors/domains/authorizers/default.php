@@ -99,8 +99,7 @@ class ComActorsDomainAuthorizerDefault extends LibBaseDomainAuthorizerDefault
 				
 	    $ret = true;
         
-        if  ( is_person($this->_viewer) && $this->_viewer->admin() ) 
-        {
+        if  ( is_person($this->_viewer) && $this->_viewer->admin() ) {
             $ret = true;
         }   
         elseif  ( $this->_entity->isFollowable() && $this->_entity->blocking($this->_viewer) )
@@ -121,6 +120,15 @@ class ComActorsDomainAuthorizerDefault extends LibBaseDomainAuthorizerDefault
      */ 
     protected function _authorizeAction(KCommandContext $context)
     {
+        //if entity is not privatable then it doesn't have access to allow method
+        if ( !$this->_entity->isPrivatable() )
+            return true;
+        
+        //if viewer is admin then return true on the action
+        if  ( is_person($this->_viewer) && $this->_viewer->admin() ) {
+            return true;
+        }
+                            
         $action = $context->action;
         
         //any action on the actor requires being a follower by default
