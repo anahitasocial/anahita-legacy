@@ -277,6 +277,7 @@ class LibThemeTemplateHelperRender extends KTemplateHelperAbstract
         
         foreach($messages as $message) {
             $html .= $this->_template->getHelper('message')->render($message);
+            break;
         }
         
         return $html;
