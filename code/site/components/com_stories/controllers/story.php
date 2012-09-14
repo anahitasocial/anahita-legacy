@@ -200,7 +200,8 @@ class ComStoriesControllerStory extends ComBaseControllerService
 	 */
 	protected function _actionDelete($context)
 	{
-		$this->getItem()->delete();
+        $this->getItem()->delete();
+        $this->setRedirect($this->getItem()->owner->getURL());
 	}
 	
 	/**
