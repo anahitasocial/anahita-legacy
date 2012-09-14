@@ -68,7 +68,10 @@ class LibThemeTemplateHelperMessage extends KTemplateHelperAbstract
         $config->append(array(
             'type' => 'info'
         ));
-        $message = "<div class=\"alert alert-block alert-{$config->type}\">$message</div>";
+        $message = "<div class=\"alert alert-block alert-{$config->type}\">" .
+                "<a class=\"close\" data-trigger=\"nix\" data-nix-options=\"'target':'!div.alert'\">&times;</a>".
+                "$message" .
+                "</div>";
         return $message;
     }
     
