@@ -75,7 +75,7 @@ class UserController extends JController
 		$post['password2']	= JRequest::getVar('password2', '', 'post', 'string', JREQUEST_ALLOWRAW);
 		
 		// get the redirect
-        if ( $return = KRequest::get('request.return','cmd') )
+        if ( $return = KRequest::get('request.return','raw') )
             $return = base64_decode($return);		
         else 
             $return = JURI::base();
