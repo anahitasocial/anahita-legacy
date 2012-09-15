@@ -362,3 +362,8 @@ function anahita_16()
 	dbexec("DELETE FROM jos_plugins WHERE element = 'gantry'");
 	dbexec("DELETE FROM jos_components WHERE `option`='com_gantry'");
 }
+
+function anahita_17()
+{
+    dbexec("UPDATE jos_anahita_nodes SET mimetype = 'image/jpeg', filename = IF(filename NOT LIKE '%.jpg%',CONCAT(filename,'.jpg'), filename) WHERE type LIKE 'ComActorsDomainEntityActor%'AND filename <> ''");
+}
