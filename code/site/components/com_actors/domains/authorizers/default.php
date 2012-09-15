@@ -297,6 +297,18 @@ class ComActorsDomainAuthorizerDefault extends LibBaseDomainAuthorizerDefault
         return $this->_viewer->following($entity);
     }
     
+    /**
+     * Check if a person can be deleted by the viewer
+     * 
+     * @param KCommandContext $context Context parameter
+     * 
+     * @return boolean
+     */ 
+    protected function _authorizeDelete(KCommandContext $context)
+    {        
+        return $this->_entity->authorize('administration');    
+    }
+        
 	/**
 	 * If true then owner's name is visiable to the viewer, if not the default name is 
 	 * displayed
