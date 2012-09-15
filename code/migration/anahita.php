@@ -365,5 +365,6 @@ function anahita_16()
 
 function anahita_17()
 {
-    dbexec("UPDATE jos_anahita_nodes SET mimetype = 'image/jpeg', filename = IF(filename NOT LIKE '%.jpg%',CONCAT(filename,'.jpg'), filename) WHERE type LIKE 'ComActorsDomainEntityActor%'AND filename <> ''");
+    dbexec("UPDATE jos_anahita_nodes SET mimetype = NULL WHERE type LIKE 'ComMediumDomainEntityMedium%'");
+    dbexec("UPDATE jos_anahita_nodes SET mimetype = NULL, filename = IF(filename NOT LIKE '%.jpg%',CONCAT(filename,'.jpg'), filename) WHERE type LIKE 'ComActorsDomainEntityActor%'AND filename <> ''");
 }

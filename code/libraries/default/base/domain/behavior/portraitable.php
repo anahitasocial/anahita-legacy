@@ -55,7 +55,6 @@ class LibBaseDomainBehaviorPortraitable extends LibBaseDomainBehaviorStorable
 		$config->append(array(
 			'attributes' 	=> array(
 				'filename' => array('write'=>'protected'),
-				'mimetype' => array('write'=>'protected')
 			)
 		));
 		
@@ -145,7 +144,6 @@ class LibBaseDomainBehaviorPortraitable extends LibBaseDomainBehaviorStorable
         
 		$this->_mixer->setData(array(
 			'filename'  => $filename,
-			'mimetype'  => $config->mimetype
 		), AnDomain::ACCESS_PROTECTED);
 		                
 		foreach($sizes as $size => $dimension )
@@ -192,7 +190,6 @@ class LibBaseDomainBehaviorPortraitable extends LibBaseDomainBehaviorStorable
 			$this->_mixer->deletePath($file);
 		}
 		$this->filename = null;
-        $this->mimetype = null;
 	}	
 	
     /**
