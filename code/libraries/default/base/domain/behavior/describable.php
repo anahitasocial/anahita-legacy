@@ -71,10 +71,10 @@ class LibBaseDomainBehaviorDescribable extends AnDomainBehaviorAbstract
 	 * @return string
 	 */
 	public function getURL()
-	{
-		if ( !isset($this->_url) ) 
-		{            
-            $this->_url = 'option='.$this->component.'&view='.$this->_mixer->getIdentifier()->name;
+	{        
+		if ( !isset($this->_mixer->_url) ) 
+		{
+            $this->_mixer->_url = 'option='.$this->component.'&view='.$this->_mixer->getIdentifier()->name;
             
             if ( $comment = $this->_mixer->getRowData('comment') ) {
                 $id = $this->_mixer->getRowData('_id');                
@@ -84,17 +84,17 @@ class LibBaseDomainBehaviorDescribable extends AnDomainBehaviorAbstract
             }
                         
             if ( $id )             
-                $this->_url .= '&id='.$id;             
+                $this->_mixer->_url .= '&id='.$id;             
             
             if ( $this->alias )
-                $this->_url .= '&alias='.$this->alias;
+                $this->_mixer->_url .= '&alias='.$this->alias;
                 
             if ( $comment ) {
-                $this->_url .= '&permalink='.$this->_mixer->id;
+                $this->_mixer->_url .= '&permalink='.$this->_mixer->id;
             }
 		}
 	
-		return $this->_url;
+		return $this->_mixer->_url;
 	}
 	
 	/**
