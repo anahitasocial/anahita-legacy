@@ -34,7 +34,7 @@ class ComActorsControllerBehaviorExecutable extends LibBaseControllerBehaviorExe
 	 */
 	public function canDelete()
 	{		
-		return $this->getItem()->authorize('administrations');
+		return $this->getItem()->authorize('delete');
 	}
 	
 	/**
