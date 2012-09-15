@@ -140,7 +140,8 @@ class LibBaseDomainBehaviorDescribable extends AnDomainBehaviorAbstract
 				if ( strlen($word) >= 2 ) 
                 {
 					if ( $commentable ) {
-						$sub_clause->where('node.body','LIKE','%'.$word.'%');                        
+						//$sub_clause->where('node.body','LIKE','%'.$word.'%');
+                        $sub_clause->where('@col(node.body) LIKE @quote(%'.$word.'%) OR @col(node.name) LIKE @quote(%'.$word.'%)');                        
 					} 
                     else {                        
                         $sub_clause
