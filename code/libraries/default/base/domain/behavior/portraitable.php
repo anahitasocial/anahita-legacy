@@ -14,6 +14,8 @@
  * @link       http://www.anahitapolis.com
  */
 
+jimport('joomla.filesystem.file');
+
 /**
  * Portraitable Behavior. 
  * 
@@ -67,36 +69,45 @@ class LibBaseDomainBehaviorPortraitable extends LibBaseDomainBehaviorStorable
 	 * 
 	 * @return boolean
 	 */
-	public function setPortraitImage($options = array())
+	public function setPortraitImage($config = array())
 	{
 		if ( $this->state() == AnDomain::STATE_NEW ) {
-			$this->__image_options = $options;
+			$this->__image_options = $config;
 			return $this;
 		}
 				
-		$options = new KConfig($options);
+		$config = new KConfig($config);
 		
-		$options->append(array(
+		$config->append(array(
 			'rotation' => 0,	
-			'mimetype' => 'image/jpg'
+			'mimetype' => 'image/jpeg'
 		));
-
-		if ( $options->url ) {
-			$options->append(array(
-				'data' => file_get_contents($options->url)
+        
+		if ( $config->url ) {
+			$config->append(array(
+				'data' => file_get_contents($config->url)
 			));
 		}
-			
-		$data	  = $options->data;
-		
-		if ( empty($data) )
-		{
-			$this->filename = null;
-			$this->mimetype = null;
-			return;
-		}
-		
-		$rotation = $options->rotation;
+        
+        $config->mimetype = strtolower($config->mimetype);
+        
+        //the allowed mimetypes
+        $mimetypes = array('image/jpeg'=>'jpg','image/png'=>'png','image/gif'=>'gif');
+        
+        $data = $config->data;
+        
+        if ( !isset($mimetypes[$config->mimetype]) || empty($data) ) {            
+            return;            
+        }
+        
+        //only remove exisitng if the entity hasn't been
+        //just inserted
+        if ( !$this->state() & AnDomain::STATE_INSERTED ) {            
+            //remove existing portrait image
+            $this->removePortraitImage();            
+        }
+        
+		$rotation  = $config->rotation;
 	
 		switch($rotation)
 		{
@@ -109,54 +120,46 @@ class LibBaseDomainBehaviorPortraitable extends LibBaseDomainBehaviorStorable
 	
 		$image 	= imagecreatefromstring($data);
 		
-		if($rotation != 0 )
+		if($rotation != 0 ) {
 			$image = imagerotate($image, $rotation, 0);
-
+        }
+                    
+        $extension = $mimetypes[$config->mimetype];
+        
+        $filename  = md5(time()).'.'.$extension;
+        
 		$context = new KCommandContext();
 		
 		$context->append(array(
-			'filename'	=> md5($this->getIdentityId()),
-			'mimetype'	=> $options->mimetype,
-			'image' 	=> $image,			
-			'sizes'		=> array()
+			'image' => $image,			
+			'sizes' => array()
 		));
-		
-		//for now set the mimetype to image/jpg only
-		//later we should support different image types
-		$context['mimetype'] = 'image/jpg';
-		
-		if ( strpos($context->mimetype,'/') && strpos($context->filename,'.') === false )
-		{
-		    list($type, $ext)  =  explode('/',$context->mimetype);
-		    $context->filename .= '.'.$ext;
-		}
         
 		$this->_mixer->execute('before.storeimage', $context);
 
+        $sizes   = KConfig::unbox($context->sizes);
+        
+        if ( empty($sizes) ) {
+            $sizes = self::getDefaultSizes();
+        }
+        
 		$this->_mixer->setData(array(
-			'filename'  => $context->filename,
-			'mimetype'  => $context->mimetype
+			'filename'  => $filename,
+			'mimetype'  => $config->mimetype
 		), AnDomain::ACCESS_PROTECTED);
-		
-		$sizes	 = KConfig::unbox($context->sizes);
-		
-		if ( empty($sizes) ) {
-			$sizes = self::getDefaultSizes();
-		}
-						
+		                
 		foreach($sizes as $size => $dimension )
 		{
-			$data = AnHelperImage::resize($image, $dimension, array('format'=>'jpg'));
-			
+            $data = AnHelperImage::resize($image, $dimension);
+            $data = AnHelperImage::output($data, $config->mimetype);
 			$filename = $this->_mixer->getPortraitFile($size);
-			
 			$this->_mixer->writeData($filename, $data);
 		}
 		
 		$this->_mixer->setValue('sizes', $sizes);
 		
 		imagedestroy($image);
-		
+        unset($this->__image_options);        
 		return $this->_mixer;
 	}
 
@@ -178,6 +181,7 @@ class LibBaseDomainBehaviorPortraitable extends LibBaseDomainBehaviorStorable
 	public function removePortraitImage()
 	{
 		$sizes   = $this->_mixer->getPortraitSizes();
+        
 		if ( empty($sizes) ) {
 			$sizes = explode(' ','original large medium small thumbnail square');
 		} else
@@ -188,34 +192,19 @@ class LibBaseDomainBehaviorPortraitable extends LibBaseDomainBehaviorStorable
 			$this->_mixer->deletePath($file);
 		}
 		$this->filename = null;
-	}
+        $this->mimetype = null;
+	}	
 	
-	/**
-	 * Return the portrait file for a size
-	 * 
-	 * @return string
-	 */
-	public function getPortraitFile($size)
-	{
-		if ( $this->mimetype )
-			$ext = 'jpg';
-		else
-			$ext = 'jpg';
-		
-		$filename = md5($this->getIdentityId()).'_'.$size.'.'.$ext;
-		
-		return $filename;
-	}
-	
-	/**
-	 * Return the portrait file identifier
-	 * 
-	 * @return string
-	 */
-	public function getFileIdentifier()
-	{
-		return md5($this->getIdentityId());
-	}
+    /**
+     * Return the portrait file for a size
+     * 
+     * @return string
+     */
+    public function getPortraitFile($size)
+    {
+        //returns [SIZE].[Filename].[extension];
+        return $size.$this->filename;
+    }
 	
 	/**
 	 * Return the URL to the portrait
@@ -248,8 +237,9 @@ class LibBaseDomainBehaviorPortraitable extends LibBaseDomainBehaviorStorable
 	 */
 	protected function _afterEntityInsert(KCommandContext $context)
 	{
-		if ( !empty($this->__image_options) ) 
+		if ( !empty($this->__image_options) ) {
 			$this->_mixer->setPortraitImage($this->__image_options);
+        }
 	}
 	
 	/**
