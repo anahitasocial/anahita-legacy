@@ -8,7 +8,7 @@ CREATE TABLE `#__migrator_migraitons` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `#__migrator_migraitons` VALUES(1,'anahita=16');
+INSERT INTO `#__migrator_migraitons` VALUES(1,'anahita=17');
 
 CREATE TABLE `#__anahita_nodes` (
   `id` bigint(11) unsigned NOT NULL AUTO_INCREMENT,
