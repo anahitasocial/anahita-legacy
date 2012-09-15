@@ -117,10 +117,8 @@ class ComPeopleControllerPerson extends ComActorsControllerDefault
     public function onSettingDisplay(KEvent $event)
     {   
         $tabs = $event->tabs;   
-        if ( JFactory::getUser()->id == $event->actor->userId )
-        {     
-            $tabs->insert('account',array('label'=>JText::_('COM-PEOPLE-SETTING-TAB-ACCOUNT')));
-            $tabs->rearrange(array('profile','avatar','account'));            
+        if ( JFactory::getUser()->id == $event->actor->userId ) {     
+            $tabs->insert('account',array('label'=>JText::_('COM-PEOPLE-SETTING-TAB-ACCOUNT')));                    
         } 
     }    
 }

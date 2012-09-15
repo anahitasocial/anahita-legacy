@@ -209,24 +209,26 @@ class LibBaseTemplateObjectContainer implements IteratorAggregate, Countable, Ar
      * 
      * @return void
      */
-    public function rearrange($order)
+    public function sort($order)
     {        
-        $objects = array();
+        $objects = array();        
         
-        foreach($this->_objects as $key => $object) 
-        {
-            if ( in_array($key, $order) ) {                
-                unset($this->_objects[$key]);
-                $objects[] = $object;
+        settype($order, 'array');
+        $order = array_unique($order);
+                
+        foreach($order as $item) {
+            if ( isset($this->_objects[$item]) ) {
+                $objects[$item]  = $this->_objects[$item];
+            } 
+        }
+        
+        foreach($this->_objects as $key => $object) {
+            if ( !isset($objects[$key]) ) {
+                $objects[$key] = $object;
             }
         }
-        $objects        = array_merge($objects, array_values($this->_objects));
         
-        $this->_objects = array();
-        
-        foreach($objects as $object) {
-            $this[] = $object;
-        }
+        $this->_objects = $objects;        
     }
     
     /**

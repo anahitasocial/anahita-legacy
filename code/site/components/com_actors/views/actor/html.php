@@ -89,7 +89,7 @@ class ComActorsViewActorHtml extends ComBaseViewHtml
                 ));
         }
                 
-        $context->gadgets->rearrange(array('stories','information'));                
+        $context->gadgets->sort(array('stories','information'));                
                      
 		$this->set(array(
             'commands'  => $context->commands, 
