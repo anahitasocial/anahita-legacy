@@ -24,22 +24,20 @@
  * @link       http://www.anahitapolis.com
  */
 class AnHelperImage extends KObject
-{
+{    
 	/**
-	 * Resizes an image based on the options passed
+	 * Resizes an image using the passed size and return the resized image resource
 	 * 
-	 * @param $image resource
-	 * @param $size string 
-	 * @param $options array[Optional]
-	 * @return string data
+	 * @param resource $image The image resource
+	 * @param string   $size  The image size
+     * 
+	 * @return resource
 	 */
-	function resize( $image, $size , $options=array())
-	{
-		
-		$options = array_merge(array('format'=>null), $options);
-		
-		if ( !$image ) 
+	static function resize($image, $size)
+	{		
+		if ( !$image ) { 
 			return false;
+        }
 		
 		$height = null;
 		$width  = null;
@@ -51,7 +49,6 @@ class AnHelperImage extends KObject
 			$width = (int) $size[0];
 		}
 		
-
 		if ($height == 'auto' && $width == 'auto' )
 			return false;
 		
@@ -85,24 +82,48 @@ class AnHelperImage extends KObject
 		}
 		
 		$tmp = imageCreateTrueColor( $width, $height );
-
+        imagesavealpha($tmp, true);
+        $color = imagecolorallocatealpha($tmp,0x00,0x00,0x00,127);
+        imagefill($tmp, 0, 0, $color);
 		imagecopyresampled($tmp, $image, 0, 0, $x, $y, $width, $height, $o_wd, $o_ht);
-		
-		if ( $options['format'] == null ) 
-			return $tmp;
-		//
-		if ( !isset($options['format']) || !in_array($options['format'],array('jpeg','jpg','png','gif'))) {		
-			throw new Exception("Invalid Image Type");
-		}
-		
-		if  ( $options['format'] == 'jpg' ) {
-			$options['format'] = 'jpeg';
-		}
-		
-		$func = 'image'.strtolower($options['format']);
-		ob_start();	
-		$func($tmp, NULL, 100);
-		$tmp = ob_get_clean();
-		return $tmp;
+        return $tmp;				
 	}
+    
+    /**
+     * Outputs an image to the desired image type
+     * 
+     * @param resource $image The image resource
+     * @param string   $type  The image mimetype
+     *  
+     * @return string 
+     */
+    static public function output($image, $type)
+    {
+        $parts = explode('/',$type);                
+        $func  = 'image'.strtolower($parts[1]);
+        if ( !function_exists($func) ) {
+            return null;   
+        }
+        
+        $args = null;
+        
+        switch($parts[1])
+        { 
+            case 'jpeg': 
+                $args = array($image, NULL, 100);
+                break;
+            case 'png' :                
+                $args = array($image, NULL, 9);
+                break;
+            case 'gif';
+                $args = array($image, NULL);
+                break;
+            default : 
+                return null;                   
+        }
+        ob_start();        
+        call_user_func_array($func, $args);
+        $image = ob_get_clean();
+        return $image;        
+    }
 }
