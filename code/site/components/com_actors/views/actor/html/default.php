@@ -2,6 +2,10 @@
 
 <div id="actor-profile">
 
+<?php if($item->isEnableable() && !$item->enabled): ?>
+<?= @message(@text('COM-ACTORS-PROFILE-DISABLED-PROMPT'), array('type'=>'warning')) ?>
+<?php endif; ?>
+
 <module position="sidebar-b" style="simple">
 	<?= @helper('ui.gadget', $gadgets->extract('socialgraph')) ?>	
 </module>
