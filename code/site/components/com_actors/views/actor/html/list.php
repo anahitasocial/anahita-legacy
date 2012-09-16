@@ -2,7 +2,8 @@
 
 <?php $commands = @commands('list') ?>
 
-<div class="an-entity an-record dropdown-actions" data-behavior="BS.Dropdown">
+<?php $highlight = ($item->enabled) ? '' : 'an-highlight' ?>
+<div class="an-entity an-record dropdown-actions <?= $highlight ?>" data-behavior="BS.Dropdown">
 	<div class="actor-portrait">
 		<?= @avatar($item) ?>
 	</div>
