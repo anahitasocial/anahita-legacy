@@ -44,6 +44,7 @@ class LibThemeTemplateHelperLess extends KTemplateHelperAbstract
             'parse_urls'        => true,
             'preserve_comments' => true,
             'import' => array(),
+            'force'  => false,
             'output' => null, //required
             'input'  => null, //required
         ));
@@ -59,7 +60,7 @@ class LibThemeTemplateHelperLess extends KTemplateHelperAbstract
         } else
             $cache = $config->input;
                 
-        $force = false;
+        $force = $config->force;
         
         //if output doesn't exsit then force compile
         if ( !is_readable($config->output) ) {

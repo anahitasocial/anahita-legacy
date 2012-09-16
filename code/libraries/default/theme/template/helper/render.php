@@ -85,7 +85,9 @@ class LibThemeTemplateHelperRender extends KTemplateHelperAbstract
         
         $config->append(array(
             'parse_urls'   => true,
-            'style'        => $this->_template->getView()->getParams()->cssStyle,
+            'style'        => $this->_params->cssStyle,
+            'compile'      => pick((int)$this->_params->compilestyle,0),
+            'compress'     => pick((int)$this->_params->compresstyle,0),
         ));
         
         $paths = array(
@@ -99,9 +101,11 @@ class LibThemeTemplateHelperRender extends KTemplateHelperAbstract
         $style = $finder->getPath('style.less');
         $css   = $css_folder.DS.'style.css';
         //compile        
-        if ( JDEBUG && !empty($style) )
+        if ( $config->compile > 0 && !empty($style) )
         {
             $this->_template->renderHelper('less.compile', array(
+                'force'      => $config->compile > 1,
+                'compress'   => $config->compress,
                 'parse_urls' => $config->parse_urls,
                 'import'     => $finder->getSearchDirs(),
                 'input'      => $style,

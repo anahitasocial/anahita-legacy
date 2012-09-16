@@ -81,6 +81,15 @@
                 <option value="style2">Dark</option>
                 <option value="style3">Custom</option>
             </param>
+            <param name="compilestyle" type="list" default="0" description="Flag to when compile the less style file" label="Compile Style">
+                <option value="0">Never (good for production)</option>
+                <option value="1">Only if changed (good for development)</option>
+                <option value="2">All the time (good for development)</option>
+            </param>
+            <param name="compresstyle" type="list" default="0" description="Compress the output style" label="Compress Style">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </param>                        
             <param name="navbarInverse" type="list" default="0" label="Navbar Theme">
                 <option value="0">Light</option>
                 <option value="1">Dark</option>
