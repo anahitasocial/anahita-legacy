@@ -1,7 +1,7 @@
 <?php defined('KOOWA') or die ?>
 
 <?php $commands = @commands('list') ?>
-<?php $highlight = ($item->isEnableable() && $item->enabled) ? '' : 'an-highlight' ?>
+<?php $highlight = ($item->isEnableable() && !$item->enabled) ? 'an-highlight' : '' ?>
 <div class="an-entity an-record dropdown-actions <?= $highlight ?>" data-behavior="BS.Dropdown">
 	<div class="actor-portrait">
 		<?= @avatar($item) ?>
