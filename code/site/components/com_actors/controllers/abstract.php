@@ -150,7 +150,7 @@ abstract class ComActorsControllerAbstract extends ComBaseControllerService
         {         
             $file = KRequest::get('files.portrait', 'raw'); 
             $this->getItem()->setPortraitImage(array('url'=>$file['tmp_name'], 'mimetype'=>$file['type']));
-            if ( isset($file['size']) ) {
+            if ( !empty($file['size']) ) {
                 $story = $this->createStory(array(
                    'name'   => 'avatar_edit',
                    'owner'  => $entity,
