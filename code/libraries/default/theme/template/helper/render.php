@@ -101,7 +101,7 @@ class LibThemeTemplateHelperRender extends KTemplateHelperAbstract
         $style = $finder->getPath('style.less');
         $css   = $css_folder.DS.'style.css';
         //compile        
-        if ( $config->compile > 0 && !empty($style) )
+        if ( JDEBUG && $config->compile > 0 && !empty($style) )
         {
             $this->_template->renderHelper('less.compile', array(
                 'force'      => $config->compile > 1,
