@@ -41,16 +41,19 @@ class LibThemeTemplateHelperLess extends KTemplateHelperAbstract
         $config = new KConfig($config);
         
         $config->append(array(
-            'parse_urls'        => true,
-            'preserve_comments' => true,
+            'parse_urls'        => true,            
+            'compress' => true,
             'import' => array(),
             'force'  => false,
             'output' => null, //required
             'input'  => null, //required
         ));
-
+        
         $less  = new lessc();
-        $less->setPreserveComments($config->preserve_comments);
+        $less->setPreserveComments(!$config->compress);
+        if ( $config->compress ) {
+            $less->setFormatter("compressed");   
+        }
         $config['import'] = $config['import'];
         $less->setImportDir( $config['import'] );        
         $cache_file = JFactory::getConfig()->getValue('tmp_path').'/less-'.md5($config->input);
