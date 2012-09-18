@@ -93,17 +93,26 @@ class LibBaseDomainBehaviorPortraitable extends LibBaseDomainBehaviorStorable
         //the allowed mimetypes
         $mimetypes = array('image/jpeg'=>'jpg','image/png'=>'png','image/gif'=>'gif');
         
+        //force mimetype to jpeg if invalid
+        //@TODO is this wise ??
+        if ( !isset($mimetypes[$config->mimetype]) ) {
+            $config->mimetype = 'image/jpeg';   
+        }
+         
         $data = $config->data;
         
-        if ( !isset($mimetypes[$config->mimetype]) || empty($data) ) {            
-            return;            
-        }
-        
+        //first remove the existing avatar. 
         //only remove exisitng if the entity hasn't been
         //just inserted
-        if ( !$this->state() & AnDomain::STATE_INSERTED ) {            
+        if ( $this->state() != AnDomain::STATE_INSERTED ) {            
             //remove existing portrait image
             $this->removePortraitImage();            
+        }
+        
+        //if data is null or mimetype is invalid then 
+        //existing avatar is deleted
+        if ( empty($data) ) {            
+            return;            
         }
         
 		$rotation  = $config->rotation;
@@ -129,7 +138,7 @@ class LibBaseDomainBehaviorPortraitable extends LibBaseDomainBehaviorStorable
         
 		$context = new KCommandContext();
 		
-		$context->append(array(
+		$context->append(array( 
 			'image' => $image,			
 			'sizes' => array()
 		));
