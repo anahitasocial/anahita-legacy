@@ -84,7 +84,6 @@
             <param name="compilestyle" type="list" default="0" description="Flag to when compile the less style file" label="Compile Style">
                 <option value="0">Never (good for production)</option>
                 <option value="1">Only if changed (good for development)</option>
-                <option value="2">All the time (good for development)</option>
             </param>
             <param name="compresstyle" type="list" default="0" description="Compress the output style" label="Compress Style">
                 <option value="0">No</option>
