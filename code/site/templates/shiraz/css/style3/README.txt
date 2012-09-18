@@ -9,7 +9,9 @@ style3/colors/colors.less
 style3/core/actor.less
 style3/images/spinner.gif
 
-The go to the administration back-end > global configuration > system settings
-switch Debug System and refresh one of the pages in the front end. 
+Then go to the administration back-end > site templates > your template > parameters then
+- set "Style" = "Custom",
+- set "Compile Style" = "Only if changed"
+and refresh one of the pages in the front end.
 That will cause the less compiler that comes with Anahita to create a new style3/style.css file.
 Then switch off the debug system in the back-end once you are done customizing the shiraz theme.
