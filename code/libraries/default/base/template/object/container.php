@@ -203,32 +203,45 @@ class LibBaseTemplateObjectContainer implements IteratorAggregate, Countable, Ar
     }
     
     /**
-     * Rearrange the objects according to the order=>object arrangement
+     * Rearrange the objects according to the order arrangement. If head is set to true
+     * then the sort order is applied to the head of the objects if false then it's applied 
+     * to the tail
      *
      * @param array $order An array of order=>name
+     * @param bool  $head  Whether to apply the sort order to the head of array or tail 
      * 
-     * @return void
+     * @return LibBaseTemplateObjectContainer
      */
-    public function sort($order)
+    public function sort($order, $head = true)
     {        
-        $objects = array();        
+        $list = array();
         
         settype($order, 'array');
+        
         $order = array_unique($order);
                 
         foreach($order as $item) {
             if ( isset($this->_objects[$item]) ) {
-                $objects[$item]  = $this->_objects[$item];
+                $list[$item]  = $this->_objects[$item];
             } 
         }
         
         foreach($this->_objects as $key => $object) {
-            if ( !isset($objects[$key]) ) {
-                $objects[$key] = $object;
+            if ( isset($list[$key]) ) {
+                unset($this->_objects[$key]);       
             }
         }
         
-        $this->_objects = $objects;        
+        
+        if ( $head ) {
+            $objects = array_merge($list, $this->_objects);
+        } else {
+            $objects = array_merge($this->_objects, $list);
+        }
+        
+        $this->_objects = $objects; 
+        
+        return $this;       
     }
     
     /**
