@@ -118,7 +118,7 @@ class LibThemeTemplateHelperLess extends KTemplateHelperAbstract
                 ->addSearchDirs( array_reverse($paths) );
         $starting_path = $paths[0];
        
-        if ( preg_match_all('/url\((.*)\)/', $text, $matches) ) 
+        if ( preg_match_all('/url\((.*?)\)/', $text, $matches) ) 
         {
             foreach($matches[1] as $match) 
             {
