@@ -12,5 +12,6 @@
         </div>
         
         <?= @render('component') ?>
+        <?= @render('analytics') ?>
     </body>
 </html>
