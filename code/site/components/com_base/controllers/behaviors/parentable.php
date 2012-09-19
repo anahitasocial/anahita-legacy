@@ -87,7 +87,7 @@ class ComBaseControllerBehaviorParentable extends KControllerBehaviorAbstract
 		
 		if ( $parts[0] == 'before' ) 
 		{
-            $value = $this->{$this->getIdentifiableKey()};
+            $value = pick($this->{$this->getIdentifiableKey()}, $context->data->{$this->getIdentifiableKey()});
 						
 			if ( $value) 
             {
