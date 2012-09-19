@@ -154,8 +154,13 @@ class AnHelperArray extends KHelperArray
 		
 		foreach($array as $index => $item) 
 		{
-			foreach($values as $value)  {
-				if ( $value == $item ) {				    
+			foreach($values as $value)  
+            {
+				if ( !is_numeric($index) ) {
+                    $item = $index;
+                }
+                
+                if ( $value == $item ) {				    
 					unset($array[$index]);
 				}
 			}
