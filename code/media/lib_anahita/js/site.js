@@ -418,43 +418,40 @@ Behavior.addGlobalFilter('Editable',{
 Behavior.addGlobalFilter('EmbeddedVideo', {
 	setup : function(el, api) 
 	{
-		//el.spin();
-		var img	 = el.getElement('img');
-		el.store('thumbnail', img);
-		img.addEvent('load', function() {
-			el.get('spinner').element.destroy();
-			var ratio  = img.width / img.height;
-			var width  = Math.min(img.getStyle('max-width').toInt(), img.width);
-			var height = width / ratio;
-			var styles = {width:width,height:height};
-			el.unspin();			
-			var span = new Element('span');
-			span.setStyles(styles);
-			el.setStyles(styles);
-			span.inject(el, 'top');
-		});
-		el.addEvent('click:once', function() {			
-			var thumb	= el.retrieve('thumbnail');
-			var options = api._getOptions();
-			var size 	= el.getParent().getSize();
-			var width	    = el.getParent().get('embed_width') || options.width;
-			var ratio		= width / options.width;
-			options.height  = ratio * options.height;
-			options.width   = width;
-			if ( Browser.Engine.trident )
-				options.wMode   = '';
-			var object = new Swiff(options['url']+'&autoplay=1', {
-					width  : thumb.width,
-					height : thumb.height,
-					params : options
-			});
-			thumb.set('tween',{
-				duration 	: 'short',
-				onComplete	: function() {
-					el.empty().adopt(object);
-				}
-			});
-			thumb.fade(0.7);			
+		var img = Asset.image(el.getElement('img').src, {
+			onLoad: function (img)
+			{
+				var width = Math.min(img.width, el.getSize().x);
+				var height = Math.min(img.height, el.getSize().y);
+
+				var styles = {'width':width, 'height':height};
+				var span = new Element('span');
+				span.setStyles(styles);
+				el.setStyles(styles);
+				span.inject(el, 'top');
+				
+				el.addEvent('click:once', function(){
+					
+					var options = api._getOptions();					
+
+					if ( Browser.Engine.trident )
+						options.wMode   = '';
+					
+					var object = new Swiff(options['url']+'&autoplay=1', {
+						width: width,
+						height: height,
+						params : options
+					});
+					
+					img.set('tween',{
+						duration 	: 'short',
+						onComplete	: function() {
+							el.empty().adopt(object);
+						}
+					});
+					img.fade(0.7);
+				});
+			}
 		});
 	}		
 });
