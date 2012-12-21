@@ -81,7 +81,6 @@ class RTMenuHelper {
 		$menu->addChild(new JMenuNode(JText::_('Section Manager'), 'index.php?option=com_sections&scope=content', 'section'));
 		$menu->addChild(new JMenuNode(JText::_('Category Manager'), 'index.php?option=com_categories&section=com_content', 'category'));
 		$menu->addSeparator();
-		$menu->addChild(new JMenuNode(JText::_('Media Manager'), 'index.php?option=com_media', 'media'));
 		$menu->addChild(new JMenuNode(JText::_('Frontpage Manager'), 'index.php?option=com_frontpage', 'frontpage'));
 
 		$menu->getParent();
@@ -160,7 +159,6 @@ class RTMenuHelper {
 			$query = 'SELECT *' .
 				' FROM #__components' .
 				' WHERE '.$db->NameQuote( 'option' ).' <> "com_frontpage"' .
-				' AND '.$db->NameQuote( 'option' ).' <> "com_media"' .
 				' AND enabled = 1' .
 				' ORDER BY ordering, name';
 			$db->setQuery($query);
@@ -228,7 +226,7 @@ class RTMenuHelper {
 		 * Help SubMenu
 		 */
 		$menu->addChild(new JMenuNode(JText::_('Help')), true);
-		$menu->addChild(new JMenuNode(JText::_('Anahita™ Help'), 'http://www.anahitapolis.com/help/resources', 'help'));
+		$menu->addChild(new JMenuNode(JText::_('Anahita Help'), 'http://www.anahitapolis.com', 'help'));
 		$menu->addChild(new JMenuNode(JText::_('System Info'), 'index.php?option=com_admin&task=sysinfo', 'info'));
 
 		$menu->getParent();
@@ -295,13 +293,13 @@ class RTMenuHelper {
 	
 	function __construct() {
 		// menu data
-		$menus['Dashboard'] = array('com_content','com_trash:task=viewContent','com_sections:scope=content','com_categories:section=com_content','com_media','com_frontpage');
+		$menus['Dashboard'] = array('com_content','com_trash:task=viewContent','com_sections:scope=content','com_categories:section=com_content','com_frontpage');
 		$menus['Articles'] = array('com_menus','com_trash:task=viewMenu');
 		$menus['Users'] = array('com_users');
-		$menus['Extend'] = array('com_installer','com_modules','com_plugins','com_templates','com_languages','com_banners','com_categories:section=com_banner','com_contact','com_categories:section=com_contact_details','com_newsfeeds','com_categories:section=com_newsfeeds','com_poll','com_search','com_weblinks','com_categories:section=com_weblinks');
+		$menus['Extend'] = array('com_installer','com_modules','com_plugins','com_templates','com_languages','com_search');
 		$menus['Config'] = array('com_config');
 		$menus['Help'] = array('com_admin:task=help','com_admin:task=sysinfo');
-		$menus['Tools'] = array('com_messages','com_massmail','com_checkin','com_cache');
+		$menus['Tools'] = array('com_checkin','com_cache');
 		
 		$this->menudata = $menus;
 	}
