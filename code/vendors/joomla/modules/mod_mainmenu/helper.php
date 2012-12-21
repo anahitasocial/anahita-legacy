@@ -35,7 +35,7 @@ class modMainMenuHelper
 
 		// Get Menu Items
 		$rows = $items->getItems('menutype', $params->get('menutype'));
-		$maxdepth = $params->get('maxdepth',10);
+		$maxdepth = 1;
 
 		// Build Menu Tree root down (orphan proof - child might have lower id than parent)
 		$user =& JFactory::getUser();
@@ -48,7 +48,6 @@ class modMainMenuHelper
 			while (count($rows) && !is_null($row = array_shift($rows)))
 			{
 				if (array_key_exists($row->parent, $ids)) {
-					$row->ionly = $params->get('menu_images_link');
 					$menu->addNode($params, $row);
 
 					// record loaded parents
@@ -86,62 +85,35 @@ class modMainMenuHelper
 
 		$menu	= &JSite::getMenu();
 		$active	= $menu->getActive();
-		$start	= $params->get('startLevel');
-		$end	= $params->get('endLevel');
-		$sChild	= $params->get('showAllChildren');
 		$path	= array();
 
-		// Get subtree
-		if ($start)
-		{
-			$found = false;
-			$root = true;
-			if(!isset($active)){
-				$doc = false;
-			}
-			else{
-				$path = $active->tree;
-				for ($i=0,$n=count($path);$i<$n;$i++)
-				{
-					foreach ($doc->children() as $child)
-					{
-						if ($child->attributes('id') == $path[$i]) {
-							$doc = &$child->ul[0];
-							$root = false;
-							break;
-						}
-					}
-
-					if ($i == $start-1) {
-						$found = true;
-						break;
-					}
-				}
-				if ((!is_a($doc, 'JSimpleXMLElement')) || (!$found) || ($root)) {
-					$doc = false;
-				}
-			}
-		}
-
 		if ($doc && is_callable($decorator)) {
-			$doc->map($decorator, array('end'=>$end, 'children'=>$sChild));
+			$doc->map($decorator, array('end'=>0, 'children'=>true));
 		}
 		return $doc;
 	}
 
 	function render(&$params, $callback)
 	{
+		$menuType = $params->get('menutype');
 		// Include the new menu class
-		$xml = modMainMenuHelper::getXML($params->get('menutype'), $params, $callback);
+		$xml = modMainMenuHelper::getXML($menuType, $params, $callback);
 		if ($xml) {
 			$class = $params->get('class_sfx');
-			$xml->addAttribute('class', 'menu'.$class);
-			$xml->addAttribute('data-behavior', 'BS.Dropdown');
+			
+			if($menuType == 'mainmenu')
+			{
+				$xml->addAttribute('class', 'mainmenu '.$class);
+				$xml->addAttribute('data-behavior', 'BS.Dropdown');
+			}
+			else
+				$xml->addAttribute('class', 'menu '.$class);
+			
 			if ($tagId = $params->get('tag_id')) {
 				$xml->addAttribute('id', $tagId);
 			}
 
-			$result = JFilterOutput::ampReplace($xml->toString((bool)$params->get('show_whitespace')));
+			$result = JFilterOutput::ampReplace($xml->toString((bool) $params->get('show_whitespace', 0)));
 			$result = str_replace(array('<ul/>', '<ul />'), '', $result);
 			echo $result;
 		}
@@ -277,33 +249,11 @@ class JMenuTree extends JTree
 		}
 
 		$iParams = new JParameter($tmp->params);
-		if ($params->get('menu_images') && $iParams->get('menu_image') && $iParams->get('menu_image') != -1) {
-			switch ($params->get('menu_images_align', 0)){
-				case 0 : 
-				$imgalign='align="left"';
-				break;
-				
-				case 1 :
-				$imgalign='align="right"';
-				break;
-				
-				default :
-				$imgalign='';
-				break;
-			}
-				
-			
-			$image = '<img src="'.JURI::base(true).'/images/stories/'.$iParams->get('menu_image').'" '.$imgalign.' alt="'.$item->alias.'" />';
-			if($tmp->ionly){
-				 $tmp->name = null;
-			 }
-		} else {
-			$image = null;
-		}
+
 		switch ($tmp->type)
 		{
 			case 'separator' :
-				return '<a href="#"><span class="separator">'.$image.$tmp->name.'</span></a>';
+				return '<a href="#"><span class="separator">'.$tmp->name.'</span></a>';
 				break;
 
 			case 'url' :
@@ -338,11 +288,11 @@ class JMenuTree extends JTree
 				default:
 				case 0:
 					// _top
-					$data = '<a href="'.$tmp->url.'">'.$image.$tmp->name.'</a>';
+					$data = '<a href="'.$tmp->url.'">'.$tmp->name.'</a>';
 					break;
 				case 1:
 					// _blank
-					$data = '<a href="'.$tmp->url.'" target="_blank">'.$image.$tmp->name.'</a>';
+					$data = '<a href="'.$tmp->url.'" target="_blank">'.$tmp->name.'</a>';
 					break;
 				case 2:
 					// window.open
@@ -350,11 +300,11 @@ class JMenuTree extends JTree
 
 					// hrm...this is a bit dickey
 					$link = str_replace('index.php', 'index2.php', $tmp->url);
-					$data = '<a href="'.$link.'" onclick="window.open(this.href,\'targetWindow\',\''.$attribs.'\');return false;">'.$image.$tmp->name.'</a>';
+					$data = '<a href="'.$link.'" onclick="window.open(this.href,\'targetWindow\',\''.$attribs.'\');return false;">'.$tmp->name.'</a>';
 					break;
 			}
 		} else {
-			$data = '<a>'.$image.$tmp->name.'</a>';
+			$data = '<a>'.$tmp->name.'</a>';
 		}
 
 		return $data;

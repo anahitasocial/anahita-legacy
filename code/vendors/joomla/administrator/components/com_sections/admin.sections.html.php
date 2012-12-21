@@ -202,9 +202,6 @@ class sections_html
 		} else {
 			$name = JText::_( 'New Section' );
 		}
-		if ($row->image == '') {
-			$row->image = 'blank.png';
-		}
 
 		JFilterOutput::objectHTMLSafe( $row, ENT_QUOTES, 'description' );
 		?>
@@ -289,35 +286,6 @@ class sections_html
 					</td>
 					<td>
 						<?php echo $lists['access']; ?>
-					</td>
-					<td rowspan="4" width="50%">
-						<?php
-							$path = JURI::root() . 'images/';
-							if ($row->image != 'blank.png') {
-								$path.= 'stories/';
-							}
-						?>
-						<img src="<?php echo $path;?><?php echo $row->image;?>" name="imagelib" width="80" height="80" border="2" alt="<?php echo JText::_( 'Preview' ); ?>" />
-					</td>
-				</tr>
-				<tr>
-					<td class="key">
-						<label for="image">
-							<?php echo JText::_( 'Image' ); ?>:
-						</label>
-					</td>
-					<td>
-						<?php echo $lists['image']; ?>
-					</td>
-				</tr>
-				<tr>
-					<td nowrap="nowrap" class="key">
-						<label for="image_position">
-							<?php echo JText::_( 'Image Position' ); ?>:
-						</label>
-					</td>
-					<td>
-						<?php echo $lists['image_position']; ?>
 					</td>
 				</tr>
 				</table>

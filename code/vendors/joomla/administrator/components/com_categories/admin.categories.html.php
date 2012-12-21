@@ -234,21 +234,11 @@ class categories_html
 
 		$editor =& JFactory::getEditor();
 
-		if ($row->image == '') {
-			$row->image = 'blank.png';
-		}
-
 		if ( $redirect == 'content' ) {
 			$component = 'Content';
-		} else {
-			$component = ucfirst( substr( $redirect, 4 ) );
-			if ( $redirect == 'com_contact_details' ) {
-				$component = 'Contact';
-			}
 		}
 
 		JFilterOutput::objectHTMLSafe( $row, ENT_QUOTES, 'description' );
-		$cparams = JComponentHelper::getParams ('com_media');
 		?>
 		<script language="javascript" type="text/javascript">
 		function submitbutton(pressbutton, section) {
@@ -346,40 +336,6 @@ class categories_html
 							<?php echo $lists['access']; ?>
 						</td>
 					</tr>
-					<tr>
-						<td class="key">
-							<label for="image">
-								<?php echo JText::_( 'Image' ); ?>:
-							</label>
-						</td>
-						<td>
-							<?php echo $lists['image']; ?>
-						</td>
-					</tr>
-					<tr>
-						<td class="key">
-							<label for="image_position">
-								<?php echo JText::_( 'Image Position' ); ?>:
-							</label>
-						</td>
-						<td>
-							<?php echo $lists['image_position']; ?>
-						</td>
-					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td>
-						<script language="javascript" type="text/javascript">
-						if (document.forms.adminForm.image.options.value!=''){
-							jsimg='../<?php echo $cparams->get('image_path'); ?>/' + getSelectedValue( 'adminForm', 'image' );
-						} else {
-							jsimg='../images/M_images/blank.png';
-						}
-						document.write('<img src=' + jsimg + ' name="imagelib" width="80" height="80" border="2" alt="<?php echo JText::_( 'Preview', true ); ?>" />');
-						</script>
-						</td>
-					</tr>
-
 				</table>
 			</fieldset>
 
