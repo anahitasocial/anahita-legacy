@@ -78,7 +78,7 @@ class ComBaseDomainBehaviorSubscribable extends AnDomainBehaviorAbstract
 	 */
 	public function subscribed($subscriber)
 	{
-		return $this->subscriberIds->offsetExists($subscriber->id);		
+		return ($subscriber->id && $this->subscriberIds->offsetExists($subscriber->id));		
 	}
 	
 	/**
