@@ -99,8 +99,8 @@ class PlgContentfilterVideo extends PlgContentfilterAbstract
 					$link = 'http://www.youtube.com/v/'.$id;
 					
 					$options = array(						
-						'allowfullscreen' 	=> 'true',
-						'allowscriptaccess' => 'always',
+						'allowFullScreen' 	=> 'true',
+						'allowScriptAccess' => 'always',
 						'autoplay'	=> 1,
 						'url' 		=> $link,
 						'thumbnail' => 'http://img.youtube.com/vi/'.$id.'/0.jpg'
