@@ -8,7 +8,7 @@
             <?php 
                 $array = array_values($composers->getObjects());
             ?>
-            <button class="btn dropdown-toggle"><i class="icon-pencil"></i><span class="composer-button-title"><?=$array[0]->title?></span><span class="caret"></span></button>
+            <button class="btn dropdown-toggle"><i class="icon-plus-sign"></i><span class="composer-button-title"><?=$array[0]->title?></span><span class="caret"></span></button>
             
             <ul class="dropdown-menu">  
             <?php foreach($composers as $composer) : ?>
