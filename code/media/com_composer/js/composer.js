@@ -124,13 +124,11 @@ Behavior.addGlobalFilter('ComposerForm', {
     
     });
     Delegator.register('click', 'LoadComposerTab', function(event, el, api) {        
-        var index = api.getAs(Number, 'index');        
-        if ( composerTabs ) {
-            if ( composerTabs.now == index )
-            {
-                composerTabs.now = -1;
-                composerTabs.show(index);                
-            }
+    	var index = api.getAs(Number, 'index');        
+    	if ( composerTabs && composerTabs.now == index )
+        {
+            composerTabs.now = -1;
+            composerTabs.show(index);                
         }
     });    
 })();
