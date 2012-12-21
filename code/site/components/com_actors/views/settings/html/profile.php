@@ -12,7 +12,7 @@
 				<?= @text('COM-ACTORS-NAME') ?>
 			</label>
 			<div class="controls">
-				<input data-validators="required" class="input-input-xxlarge" size="50" maxlength="100" name="name" value="<?=$item->name?>" type="text" />
+				<input data-validators="required" class="input-block-level" size="50" maxlength="100" name="name" value="<?=$item->name?>" type="text" />
 			</div>
 		</div>
 		
@@ -32,7 +32,7 @@
 				<?= @text('COM-ACTORS-BODY') ?>
 			</label>
 			<div class="controls">
-				<textarea data-validators="required maxLength:1000" class="input-xxlarge" name="body" rows="5" cols="5"><?= $item->body?></textarea>
+				<textarea data-validators="required maxLength:1000" class="input-block-level" name="body" rows="5" cols="5"><?= $item->body?></textarea>
 			</div>
 		</div>
 		
@@ -56,7 +56,7 @@
 			<label><?= @text($label) ?></label>
 			<div class="controls">
 				<?php if (is_object($field)) : ?>
-				<?php $class = ( in_array($field->name, array('textarea', 'input')) ) ? 'input-xxlarge' : '' ?>
+				<?php $class = ( in_array($field->name, array('textarea', 'input')) ) ? 'input-block-level' : '' ?>
 				<?= $field->class($class)->rows(5)->cols(5) ?>
 				<?php else : ?>
 				<?= $field ?>

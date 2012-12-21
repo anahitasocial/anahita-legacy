@@ -65,7 +65,6 @@ abstract class ComMediumControllerAbstract extends ComBaseControllerService
                 'viewer' => get_viewer(),
              ),
              'request'  => array(
-                'grid'      => null,
                 'filter'    => null,
                 'order'     => null
             ),

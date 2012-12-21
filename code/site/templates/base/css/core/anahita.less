@@ -10,80 +10,6 @@ form.inline-edit
     }	
 }
 
-// ENTITIES
-.entity-thumbnail
-{
-    float: left;
-    border: 0;
-    padding: 5px;
-            
-    img
-    {
-        .border-radius(3px);
-        .square(50px);
-        margin: 5px;
-        border: 0;
-        padding: 0;
-    }
-}
-
-.entity-name
-{
-    font-size: @baseFontSize + 2;
-    line-height: 20px;
-}
-
-.entity-description
-{
-    font-size: @baseFontSize;
-    padding: 5px 0;
-    word-wrap: break-word;
-    
-    ol,ul
-    {
-       padding-left: 30px;
-    }
-    
-    code 
-    { 
-        padding: 10px; 
-    }
-    
-    h1 { font-size: @baseFontSize + 7 }
-    h2 { font-size: @baseFontSize + 3 }
-    h3 { font-size: @baseFontSize + 2 }
-    h4 { font-size: @baseFontSize + 1 }
-
-    img
-    {
-        max-width: 620px;
-        margin: 10px 0;
-        .border-radius(3px);
-    }
-}
-
-.entity-meta
-{ 
-    font-size: @baseFontSize;
-    margin: 0;
-}
-
-.entity-actions
-{
-    padding: 10px 0;    
-}
-
-.entity-container
-{
-    padding: 0 10px 0 80px;
-    .clearfix;
-}
-
-.an-hide
-{ 
-    display: none; 
-}
-
 .media-grid
 {
     margin: 0 -10px;
@@ -100,7 +26,6 @@ form.inline-edit
         
         img
         {
-            .border-radius(3px);
             margin: 10px;
         }
     }
@@ -119,7 +44,6 @@ form.inline-edit
 { 
     font-size: @baseFontSize - 1;
     line-height: @baseLineHeight + 2;
-    margin: 1px 0 1px 0;
 }
 
 .uiActivityIndicator 
@@ -155,8 +79,9 @@ ul.an-navigations
         width: 100%;
         font-size: @baseFontSize;
     }
+    
     .border-radius(3px);
-    margin-bottom: 10px;
+    margin: 10px 0;
     
     &:hover
     {
@@ -170,23 +95,9 @@ ul.an-navigations
     padding: 10px;	
 }
 
-.well,
-.alert,
-input,
-textarea
-{
-   .border-radius(3px);	
-}
-
 .well
 {
-    margin: 15px 0 15px 0;	
-}
-
-// input-xxlarge width has to fill the width
-.input-xxlarge
-{
-    width: 97%;	
+    margin: 15px 0;	
 }
 
 form
@@ -206,14 +117,6 @@ a.vote-action
     }
 }
 
-a#an-get-more-records
-{
-    padding: 10px;
-    .border-radius(3px);	
-    display: block;
-    text-align: center;
-}
-
 .an-actions
 {
     a
@@ -222,20 +125,24 @@ a#an-get-more-records
     }	
 }
 
-ul.toolbar
+// ACTIONS
+ul.an-actions
 {
+    list-style: none;
+    font-size: @baseFontSize + 1;
+    padding: 0;
+    margin: 0;
+    
     li
-    {
-        > a.active
+    { 
+        display: inline; 
+        margin-right: 10px;
+        
+        a
         {
-            text-decoration: underline;
+            font-size: @baseFontSize;
         }
-    }	
-}
-
-.btn-toolbar
-{
-    padding-top: 5px;
+    }
 }
 
 //Scrollbar CSS
@@ -255,7 +162,7 @@ ul.toolbar
 	    width: 5px;
 	    height: 50px;
 	    margin: 0 10px;
-	    .border-radius(3px);
+	    .border-radius(@baseBorderRadius);
 	    cursor: pointer;
 	    -moz-opacity: 0.75;
 	    opacity: 0.75;
@@ -267,17 +174,10 @@ ul.toolbar
 	}
 }
 
-.btn 
+.dropdown-menu
 {
-    .border-radius(3px);
-    
-    .caret
+    a:hover
     {
-        margin: 7px 0;	
-    }
-}
-
-.btn-large
-{
-    .border-radius(3px);
+        cursor: pointer;
+    }	
 }

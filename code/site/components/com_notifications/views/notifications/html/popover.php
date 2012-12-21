@@ -5,11 +5,11 @@
 <span class="pull-right"><a href="<?=@route('oid='.$actor->id.'&layout=default')?>"><?=@text('COM-NOTIFICATIONS-POPOVER-VIEW-ALL')?></a></span>
 </div>
 <div class="popover-content">
-	<div class="popover-entities" data-behavior="Scrollable" data-scrollable-container="!.popover-content">
+	<div class="an-entities" data-behavior="Scrollable" data-scrollable-container="!.popover-content">
     <?php foreach($notifications as $notification) : ?>
     <?php $class = $actor->notificationViewed($notification) ? '' : 'an-highlight'; ?>    
-    <div class="popover-entity <?= $class ?>">
-		<div class="entity-thumbnail">
+    <div class="an-entity <?= $class ?>">
+		<div class="entity-portrait-square">
 			<?= @avatar($notification->subject) ?>
 		</div>
 

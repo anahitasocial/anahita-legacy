@@ -11,7 +11,9 @@
 </module>
 
 <module position="sidebar-a" style="simple">
-<?= @avatar($item, 'medium', false) ?>
+<div id="actor-avatar">
+	<?= @avatar($item, 'medium', false) ?>
+</div>
 </module>
 
 <?php if ( count($gadgets) > 1 ) : ?>

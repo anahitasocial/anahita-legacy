@@ -157,7 +157,7 @@ class ComBaseTemplateHelperUi extends KTemplateHelperAbstract
 		if ( $config['pagination'] === true && 
             $config['comments'] instanceof AnDomainEntitysetDefault ) 
         {
-		    $config['pagination'] = $this->pagination($config['comments'], array('paginate'=>true));
+        	$config['pagination'] = $this->pagination($config['comments'], array('paginate'=>true, 'options'=>array('scrollToTop'=>true)));
 		}
 		
 		return $this->_render('comments', $config);
@@ -187,7 +187,7 @@ class ComBaseTemplateHelperUi extends KTemplateHelperAbstract
 				
 		$html = $this->getService('com:base.template.helper.html');
 		
-		return (string)$html->tag('a', $command->label, $attributes);
+		return (string) $html->tag('a', $command->label, $attributes);
 	}
 
 	/**
@@ -240,14 +240,12 @@ class ComBaseTemplateHelperUi extends KTemplateHelperAbstract
         $config = new KConfig($config);
         
         $config->append(array(
-            'url'             => (string)$this->_template->getView()->getRoute()   ,
-            'scroll'          => true,
-            'force'           => false,        
+            'url'             => (string)$this->_template->getView()->getRoute(),
+            'force'           => false,
+        	'options'         => array(
+        		'limit' => 20
+        	)    
         ));
-        
-        if ( $config->paginate ) {
-            $config->scroll = false;
-        }
         
         if ( is($paginator, 'AnDomainEntitysetDefault') )
         {       
@@ -257,20 +255,7 @@ class ComBaseTemplateHelperUi extends KTemplateHelperAbstract
                 'limit'  => 20                          
             ));
             
-            if ( !$config->scroll ) 
-            {
-                //only show 5 pages
-                
-                $paginator->total   = $entityset->getTotal();
-            } else 
-            {
-                $total = $entityset->getOffset() + $entityset->getLimit() + 1;                                
-                
-                if ( count($entityset) < $entityset->getLimit() )
-                    $total = 0;
-        
-                $paginator->total = $total;
-            }
+            $paginator->total   = $entityset->getTotal();
         }
         
         if ( !$paginator instanceof KConfigPaginator )
@@ -290,49 +275,36 @@ class ComBaseTemplateHelperUi extends KTemplateHelperAbstract
         //convert url to the httpurl object
         $config->url = $this->getService('koowa:http.url', array('url'=>$config->url));        
         
-        if ( $config->scroll )
-        {
-            $query   = array_merge($config->url->getQuery(true), array('limit'=>$paginator->pages->next->limit, 
-                        'start'=>$paginator->pages->next->offset));
-                        
-            $config->next_page_url = (string)$config->url->setQuery($query);
+        $pages = array();
             
-            return $this->_render('pagination_scroll', $config);
-        } 
-        else 
-        {
-            $pages = array();
-            
-            foreach($paginator->pages->offsets as $offset)
-            {               
-                $page       = array();
-                $url        = clone $config->url;               
-                $query      = array_merge($url->getQuery(true), array('limit'=>$offset->limit, 'start'=>$offset->offset));
-                $url->setQuery($query);
-                $page['number']  = $offset->page;
-                $page['current'] = $offset->current;
-                $page['url']     = (string)$url;
-                $pages[] = $page;
-            }
-            
-            $config['pages'] = $pages;
-            $config['total'] = $paginator->total;
-            $pages = array('prev','next');
-            
-            foreach($pages as $page) 
-            {                        
-                if ( $paginator->pages->$page ) 
-                {
-                    $url        = clone $config->url;               
-                    $query      = array_merge($url->getQuery(true), array('limit'=>$paginator->pages->$page->limit, 'start'=>$paginator->pages->$page->offset));
-                    $url->setQuery($query);                
-                    $config->{$page.'_page'} = (string) $url;
-                }
-            }
-            
-            return $this->_render('pagination_page', $config);          
+        foreach($paginator->pages->offsets as $offset)
+        {               
+            $page       = array();
+            $url        = clone $config->url;               
+            $query      = array_merge($url->getQuery(true), array('limit'=>$offset->limit, 'start'=>$offset->offset));
+            $url->setQuery($query);
+            $page['number']  = $offset->page;
+            $page['current'] = $offset->current;
+            $page['url']     = (string)$url;
+            $pages[] = $page;
         }
-        
+            
+        $config['pages'] = $pages;
+        $config['total'] = $paginator->total;
+        $pages = array('prev','next');
+            
+        foreach($pages as $page) 
+        {                        
+            if ( $paginator->pages->$page ) 
+            {
+                $url        = clone $config->url;               
+                $query      = array_merge($url->getQuery(true), array('limit'=>$paginator->pages->$page->limit, 'start'=>$paginator->pages->$page->offset));
+                $url->setQuery($query);                
+                $config->{$page.'_page'} = (string) $url;
+            }
+        }
+            
+        return $this->_render('pagination', $config);
     }
 
 	/**

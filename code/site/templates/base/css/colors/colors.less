@@ -1,15 +1,56 @@
+//VARIABLES
+@borderColor: darken(@grayLighter, 5%);
+
+//NAVPILLS
+.nav
+{
+    &.nav-pills
+    {
+	    a:hover
+	    {
+	        background-color: @borderColor;
+	    }
+	    
+	    .active > a,
+		.active > a:hover 
+		{
+		    background-color: @linkColor;
+		}
+    }	
+}
+
+//NAVTABS
+.nav-tabs > .active > a,
+.nav-tabs > .active > a:hover {
+  background-color: @white;
+}
+
 // Actions (the buttons)
 .actions 
 {
   background: @grayLighter;
-  border-top: 1px solid lighten(@grayLight, 50%);
+  border-top: 1px solid @borderColor;
+}
+
+// Media Grid
+.media-grid
+{
+    img
+    {
+        background-color: @white;
+    }
+    
+    a
+    {
+        border: 0;
+    }	
 }
 
 .container
 {
     .hero-unit
     {
-        background-color: @grayLighter;
+        background-color: transparent;
         
         &.hero-unit-light
         {
@@ -32,32 +73,16 @@
     }
 }
 
-#row-header,
-#row-feature,
-#container-maintop,
-#container-mainbottom
-{
-   .module-title
-   {
-       border-bottom: 1px solid darken(@grayLighter, 15%);
-   }
-}
-
-#container-main
-{
-    background-color: @white;
-}
-
 #bottom-wrapper
 {
     background-color: @gray;
-    border-bottom: 1px solid @grayLight;    
+    border-top: 1px solid @grayLighter;    
 }
 
 #footer-wrapper
 {
+    border-top: 1px solid @grayLighter;
     background-color: @grayDark;
-    border-bottom: 1px solid @grayLight;  
     
     .module-title
     { 
@@ -81,38 +106,30 @@
    }
 }
 
-#row-copyright
+#copyright-wrapper
 {
-    color: @grayLight;
+    border-top: 1px solid @white;
 }
 
 // DEFAULT MODULE
-.module-border 
-{ 
-    border: 1px solid @grayLighter; 
-}
-
 .module-title
 {
-    border-bottom: 1px solid @grayLighter;
-    color: @grayDark;
+    border-bottom: 1px solid @borderColor;
 }
 
-// ACTORS MODULE
-div.an-mod-header-text 
-{ 
-    border-bottom: 1px solid @grayLighter; 
+.module-border
+{
+    background-color: @wellBackground;
+    border: 1px solid darken(@wellBackground, 7%);
+    .box-shadow(inset 0 1px 1px rgba(0,0,0,.05));
 }
 
-li.an-mod-actors-list-item 
-{ 
-    border-top: 1px solid @grayLighter; 
-}
-
-// ACTOR MODULE
-.an-mod-actor-row 
-{ 
-    border-bottom: 1px solid @grayLighter; 
+.module-content
+{
+    .an-entity
+    {
+        background-color: transparent;
+    }
 }
 
 .an-highlight 
@@ -138,14 +155,11 @@ li.an-mod-actors-list-item
     }
 }
 
-.an-application
-{ 
-    background-color: @grayLighter; 
-}
-
 .an-media-header
 { 
-    background-color: @grayLighter; 
+   #gradient > .vertical(@navbarBackgroundHighlight, @navbarBackground);
+   border: 1px solid @navbarBorder;
+  .box-shadow(0 1px 4px rgba(0,0,0,.065)); 
 }
 
 .an-meta,
@@ -155,58 +169,59 @@ li.an-mod-actors-list-item
     color: @grayLight; 
 }
 
-a#an-get-more-records
-{ 
-    background-color: @grayLighter; 
+.an-entity
+{
+    background-color: @white; 
 }
 
-.an-actors,
-.an-mediums 
-{
-    .an-entity
+.an-entities
+{   
+    &.masonry
     {
-        border-top: 1px solid @grayLighter;
-    }
-}
-
-.an-socialgraph-stat
-{
-    border-bottom: 1px solid @grayLighter;
-}
-    
-.story-container 
-{
-    .story-body
-    {
-        border-left: 1px solid @grayLighter;
-    }
-    
-    .story-timestamp
-    {
-        .an-meta;
-    }
-    
-    .story-comments 
-    {
-        .comment-overtext-box
+        .an-entity
         {
-            a.action-comment-overtext
+	        border: 1px solid @borderColor;
+	        
+	        .entity-portrait-medium
             {
-                border: 1px solid @grayLighter;
+                border-bottom: 1px solid @borderColor;
             }
+	        
+	        .entity-actions
+	        {
+	            background-color: @white;
+	        }
         }
     }
 }
 
-// ACTOR EXTENDED INFO
-#actor-extended-info
+.entity-title,
+.entity-name,
+.entity-description,
+.entity-body
+{        
+    &.editable:hover
+    {
+        background-color: @yellow;
+    }
+    
+    blockquote
+    { 
+        border-right: @grayLighter; 
+    }
+}
+
+.an-comment
 {
-    dl
-    {            
-        dt
-        {
-            color: @grayLight;
-        }
+    border-top: 1px solid @bodyBackground;
+}
+
+//datalist
+dl
+{            
+    dt
+    {
+        color: @grayLight;
     }
 }
 
@@ -214,50 +229,19 @@ a#an-get-more-records
 // GADGET
 .an-gadget
 { 
-    border: 1px solid @grayLighter;
-
     h2.gadget-title
     {
-        border-bottom: 1px solid @grayLighter;
-    }   
-    
-    .gadget-entity
-    {
-        border-bottom: 1px solid @grayLighter;
+        border-bottom: 1px solid @borderColor;
     }
 }
 
 // POPOVER
-.popover-entities
-{
-    .popover-entity
+.popover-content
+{   
+    .an-entity
     {
-        border-bottom: 1px solid @grayLighter;
+        border-top: 1px solid @bodyBackground;
     }   
-}
-
-// COMMENTS
-.an-comment
-{ 
-    border-top: 1px solid @grayLighter; 
-    .comment-body
-    {
-        blockquote{ border-right: @grayLighter !important }
-    }
-}
-
-// APPS
-.an-apps
-{
-    .an-app:first-child
-    {
-        border: 0;
-    }
-    
-    .an-app
-    {
-        border-top: 1px solid @grayLighter;
-    }
 }
 
 // Fixing the link button diabled view
@@ -291,29 +275,13 @@ ul.autocompleter-choices
     }
 }
 
-// PORTRAIABLES
-.an-portraiable
-{  
-    h3.portraiable-title
-    {        
-        &.editable:hover
-        {
-            background-color: @yellow;
-        }
-    }
-    
-    .portraiable-description
-    {         
-        &.editable:hover
-        {
-          background-color: @yellow;
-        }
-    }
-}
-
 // STORIES
 #com-composer-container
 { 
+    .box-shadow(inset 0 2px 5px rgba(0,0,0,.065));
+    border: 1px solid @navbarBorder;
+    background-color: @white;
+    
     .nav-tabs
     {
         border-color: @grayLighter;
@@ -336,51 +304,18 @@ ul.autocompleter-choices
     }
 }
 
-// SUBSCRIPTIONS
-#an-entities-wrapper
+.an-story
 {
-    .package
+    .story-title
     {
-        border-top: 1px solid @grayLighter;
-        
-        .package-info
-        {            
-            .key
-            {
-                color: @grayLight;
-            }
-        }
-    }
+        color: @grayLight;
+    }	
 }
 
-#transaction
-{
-    .info-container
-    {        
-        dl
-        {
-            dt
-            {
-                color: @grayLight;
-            }
-        }
-    }
-}
-
-#sub-package
-{    
-    .package-info
-    { 
-        .key
-        {
-            color: @grayLight;
-        }
-    }
-}
-
+// SUBSCRIPTIONS
 #sub-tos
 {
-    .tos-description
+    .entity-description
     {
         border: 1px solid @grayLighter;
     }

@@ -6,14 +6,22 @@ html
     letter-spacing: 0;
 }
 
-body
+@media(min-width: 980px)
 {
-    padding-top: 65px;
-    
-    &#tmpl-component
-    {
-        padding: 0;
-    }
+	body
+	{
+	    padding-top: 60px;
+	    
+	    &#tmpl-component
+	    {
+	        padding-top: 0;
+	    }	
+	}
+}
+
+img
+{
+    .border-radius(@baseBorderRadius);  
 }
 
 a:hover
@@ -24,8 +32,6 @@ a:hover
 // Template Grid
 .container
 {
-    margin-bottom: 20px;
-    
     .block
     {
         padding: 10px 0;
@@ -33,7 +39,7 @@ a:hover
     
     .hero-unit
     {
-        .border-radius(3px);
+        .border-radius(@baseBorderRadius);
         margin-bottom: 20px;
     }
 }
@@ -41,36 +47,46 @@ a:hover
 // BRAND
 .navbar
 { 
-    .container
+    a.brand
+    {            
+        &.brand-logo
+        {
+           padding: 12px 10px 12px 60px;
+           background: url(images/logo.png) 10px 5px no-repeat transparent;
+        }
+    }
+    
+    ul.nav
     {
-        a.brand
-        {            
-            &.brand-logo
-            {
-               padding: 12px 10px 12px 60px;
-               background: url(images/logo.png) 10px 5px no-repeat transparent;
-            }
-        }
-        
-        ul.nav
+        >li
         {
-            >li
-            {
-               >a
-               {
-                   padding: 13px 10px;
-               }
-            }
+           >a
+           {
+               padding: 12px 10px;
+           }
         }
-        
-        span.viewer
+    }
+    
+    span.viewer
+    {
+        float: right;
+        img.actor-avatar
         {
-            float: right;
-            img.actor-avatar
-            {
-                margin: -15px 0;
-                .square(33px);
-            }
+            margin: -15px 0;
+            .square(30px);
+        }
+    }
+}
+
+#mobile-main-menu
+{
+    ul
+    {
+        float: none;
+        
+        li
+        {
+            float: none;
         }
     }
 }
@@ -85,63 +101,23 @@ a:hover
 {
     .nav-header
     {
-        padding: 10px 15px;
+        padding: 10px;
     }   
 }
 
 // NOTIFICATION POPOVER
-.notifications-popover
+.popover
 { 
-    .popover-inner 
+    &.notifications-popover
     {
-        width: 320px; 
+        width: 320px;
     }
+    
     .popover-content
     {
         max-height: 350px;
         overflow:hidden;    
     }
-}
-
-.purr-wrapper
-{
-   .alert {
-        margin-bottom: 5px;
-   }
-   margin: 5px;
-}
-
-#container-system-message
-{
-    margin-bottom: 0;   
-}
-
-#container-maintop,
-#container-mainbottom
-{
-    padding: 0 10px;
-    .border-radius(3px);
-    
-    .simple-module
-    {
-        padding: 0;
-        
-        h2.module-title
-        {
-            margin: 0 0 10px 0;
-        }
-        
-        .module-content
-        {
-            margin: 0;
-        }
-    }
-}
-
-#container-main
-{
-    padding: 0 10px;
-    .border-radius(3px);
 }
 
 #bottom-wrapper,
@@ -162,34 +138,23 @@ a:hover
     }
 }
 
-#row-copyright
+#copyright-wrapper
 {
-    text-align: center;
-    padding: 20px 0;
+    padding: 15px 0;
+}
+
+.module-border
+{
+    padding: 10px;
+    .border-radius(@baseBorderRadius);
 }
 
 // MODULES
-.module-border
-{
-	padding: 5px;
-    .border-radius(3px);
-    
-    .module-title
-    {
-         margin: 0 5px 10px 5px;
-    }
-    
-    .module-content
-    {
-        margin: 5px;
-    }
-}
-
 .module-title
 {
 	font-size: @baseFontSize + 3;
-    margin-bottom: 10px;
-    padding-bottom: 5px;
+	margin: 0 0 10px 0;
+	padding-bottom: 10px;
 }
 
 .module-content
@@ -239,14 +204,47 @@ a:hover
         &.inline-edit;
     }
     
-
-    .an-actors,
-    .an-mediums
+    img
     {
-        .an-entity
+        margin: 10px 0;
+    }
+       
+    .actions
+    {
+        margin-bottom: 0;
+        padding: 10px;
+        ul.an-actions
         {
-            border: 0;
+            padding: 0;
         }
+    }
+    
+    .media-grid
+    {
+        margin: 0 -5px;
+        
+        > div
+        {
+            img 
+            {
+               .square(47px);
+               margin: 5px;
+            }
+        }
+    }
+    
+    .an-entity
+    {
+       padding: 0;
+       margin: 0;
+       
+       .entity-portrait-square
+       {
+            img
+            {
+                margin: 0;
+            }
+       }
     }
 }
 
@@ -255,12 +253,6 @@ a:hover
 {
     padding-left: 25px;
     background:url("images/icon-download.png") no-repeat scroll 0 10px transparent;
-}
-
-.project h2.module-title
-{
-    padding-left: 25px;    
-    background:url("images/icon-crank.png") no-repeat scroll 0 10px transparent;
 }
 
 .feed h2.module-title
@@ -301,49 +293,15 @@ a:hover
         
         img.actor-avatar
         {
-            .square(33px);
-            .border-radius(3px);
+            .square(30px);
+            margin: 0;
         }
     }
     
     .login-greeting
     {
-        padding-left: 47px;
+        padding-left: 40px;
     }
-}
-
-// SOCIALENGINE PROFILE INFO & STORY GADGETS
-#main  
-{ 
-    .an-gadget
-    {
-        border: 0; 
-        padding-left: 0px;
-        padding-right: 0px;
-        
-        .gadget-title
-        {
-            margin-left: 0;
-            margin-right: 0;
-        }
-        
-        .gadget-content
-        {
-            padding: 0 1px;
-            .gadget-entities
-            {
-                margin: 0;
-            }
-            
-            .alert-message
-            {
-                &.alert-block
-                {
-                    margin: 10px 0 0 0;
-                }
-            }
-        }
-    } 
 }
 
 // NAVIGATION MODULE

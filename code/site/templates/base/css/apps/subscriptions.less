@@ -4,7 +4,7 @@
 .icon-paypal, 
 .icon-visa
 {
-	background: url(images/icon-payments.png) no-repeat;
+	background: url("images/icon-payments.png") no-repeat;
     padding: 6px 16px;
     margin: 4px;
 }
@@ -34,144 +34,21 @@
 	background-position: 0 0;
 }
 
-#an-entities-wrapper
-{
-	.package
-	{
-		.clearfix;
-		padding: 10px;
-//		border-top: 1px solid @grayLighter;
-		
-		h3.package-title
-        {
-            .entity-name;
-        }
-        
-        .package-info
-        {
-            padding: 10px 0;
-            .clearfix;
-            
-            .key
-            {
-                font-weight: bold;
-                float: left;
- //             color: @grayLighter;
-            }
-            
-            .value
-            {
-                padding-left: 80px;
-                font-size: @baseFontSize + 6;
-            }
-        }
-        
-        .package-description
-        {
-            .entity-description;
-        }
-		
-		.action
-		{
-			.entity-actions;
-		}
-	}
-}
-
-#transaction
-{
-    .info-container
-    {
-       padding: 0 10px;
-        
-        h3
-        {
-           margin: 20px 0;
-        }
-        
-        dl
-        {   
-            .clearfix;
-            font-size: @baseFontSize;
-            
-            dt
-            {
-                padding: 5px 0;
-                font-weight: bold;
-                float: left;
-//              color: @grayLight;
-            }
-            dd
-            {
-                padding: 5px 0 5px 100px;
-            }
-        }
-    }
-}
-
-#sub-package
-{
-    .clearfix;
-    padding: 10px;
-    
-    h3.package-title
-    {
-        .entity-name;
-    }
-    
-    .package-info
-    {
-        padding: 10px 0;
-        .clearfix;
-        
-        .key
-        {
-            font-weight: bold;
-            float: left;
-//          color: @grayLighter;
-        }
-        
-        .value
-        {
-            padding-left: 100px;
-            font-size: @baseFontSize + 6;
-        }
-    }
-    
-    .package-description
-    {
-        .entity-description;
-    }
-}
-
 #sub-tos
 {
-	
-	h2.tos-title
-	{
-		.entity-name;
-	}
-	
-	.tos-description
+	.entity-description
 	{
 		margin: 10px 0;
 		padding: 10px;
-		height: 280px;
+		height: 320px;
 		overflow: auto;
-//		border: 1px solid #f2f2f2;
-		.border-radius(3px);
-	}
-	
-	.actions
-	{
-		.entity-actions;
+		.border-radius(@baseBorderRadius);
 	}
 }
 
 #payment-selector
 {
 	padding: 10px;
-//	border-top: 1px solid @grayLighter;
 }
 
 #payment-methods-container
@@ -220,13 +97,6 @@ ol.sub-steps
 		display: inline;
 		padding: 5px 10px;
 		margin-right: 10px;
-		.border-radius(3px);
-//		background-color: @grayLighter;
-		
-		&.active
-		{
-//			background-color: @grayDark;
-//			color: @white;
-		}
+		.border-radius(@baseBorderRadius);
 	}
 }

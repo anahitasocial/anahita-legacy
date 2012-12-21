@@ -3,7 +3,7 @@
 <?php if ( $actor->authorize('action', 'com_stories:story:add') ) : ?>
 <div id="story-composer">
 	<form id="story-composer-form" action="<?= @route('option=com_stories&view=story&oid='.$actor->id) ?>" method="POST" data-formvalidator-options="'evaluateFieldsOnBlur':true">
-		<textarea class="input-xxlarge" data-validators="minLength:1 maxLength:<?=STORY_MAX_LIMIT?>" id="composer-textarea"  name="body" overtext="<?= @text('COM-STORIES-SHARE-PROMPT') ?>"></textarea>
+		<textarea class="input-block-level" data-validators="minLength:1 maxLength:<?=STORY_MAX_LIMIT?>" id="composer-textarea"  name="body" overtext="<?= @text('COM-STORIES-SHARE-PROMPT') ?>"></textarea>
 	
 		<div class="story-actions">
 		    <?php 
@@ -39,22 +39,22 @@
     			<?php endif; ?>
 			<?php endif; ?>
 			
-			<div class="story-action right">
+			<div class="story-action pull-right">
 				<button data-trigger="Share" data-request-options="{inject:'an-stories'}" class="btn btn-primary" >
 					<?= @text('LIB-AN-ACTION-SHARE') ?>
-				</button>
-			</div>
+				</button> 
+			</div> 
 			
 			<?php if ( is_person($actor) && !is_viewer($actor) ) : ?>			
-			<div class="story-action right">
-				<label class="checkbox" for="private-message">
+			<div class="story-action pull-right"> 
+				<label class="checkbox" for="private-message"> 
 					<input id="private-flag" type="checkbox" name="private_message"> 
 					<?=@text('COM-STORIES-COMPOSER-PRIVATE-MESSAGE-FLAG')?>
 				</label>
 			</div>
 			<?php endif; ?>
 			
-			<div class="story-action right">
+			<div class="story-action right"> 
 				<span class="counter"></span>
 			</div>
 		</div>

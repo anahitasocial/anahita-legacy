@@ -27,7 +27,7 @@ $editor = !isset($editor) ? false : $editor;
 				<?php $body = isset($comment) ? $comment->getBody() : ''?>
 				<?= @editor(array('name'=>'comment[body]', 'content'=>$body, 'html'=>array('cols'=>50, 'rows'=>5, 'class'=>'input-xxlarge','data-validators'=>'required maxLength:5000', 'id'=>'an-comment-body-'.$id)))?>
 				<?php else : ?>
-				<textarea name="comment[body]" cols="50" rows="3" class="input-xxlarge" data-validators="required maxLength:5000"><?= isset($comment) ? stripslashes($comment->getBody()) : ''?></textarea>
+				<textarea name="comment[body]" cols="50" rows="3" class="input-block-level" data-validators="required maxLength:5000"><?= isset($comment) ? stripslashes($comment->getBody()) : ''?></textarea>
 				<?php endif;?>
 				</div>
 			</div>

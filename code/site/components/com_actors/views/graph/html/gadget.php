@@ -35,7 +35,7 @@
     <?php endif; ?>
 </div>
 
-<?php $limit = 8; ?>
+<?php $limit = 7; ?>
          
 <?php if( $actor->leaderCount + $actor->followerCount ) : ?>  
 <div class="an-gadget-socialgraph">

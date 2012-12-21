@@ -1,7 +1,7 @@
 <?php defined('KOOWA') or die ?>
 
 
-<module position="sidebar-b"></module>
+<module position="sidebar-b" style="simple"></module>
 
 <?php if ( count($gadgets) >= 1 ) : ?>
 <module position="sidebar-a" style="simple">   

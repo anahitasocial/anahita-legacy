@@ -1,7 +1,7 @@
 <?php defined('KOOWA') or die('Restricted access');?>
 
 
-<module position="sidebar-b">
+<module position="sidebar-b" style="simple">
 <ul id="setting-tabs" class="nav nav-pills nav-stacked" >
 	<li class="nav-header">
           <?= @text('COM-ACTORS-PROFILE-EDIT') ?>

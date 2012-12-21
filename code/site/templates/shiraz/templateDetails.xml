@@ -59,6 +59,7 @@
             <position>maintop-d</position>
             <position>navigation</position>
             <position>viewer</position>
+            <position>mobile</position>
             <position>sidebar-a</position>
             <position>sidebar-b</position>
             <position>mainbottom-a</position>
@@ -88,7 +89,8 @@
             <param name="compresstyle" type="list" default="0" description="Compress the output style" label="Compress Style">
                 <option value="0">No</option>
                 <option value="1">Yes</option>
-            </param>                        
+            </param>
+            <param name="favicon" type="text" default="favicon.ico" label="Favicon" description="Favicon file name" />                        
             <param name="navbarInverse" type="list" default="0" label="Navbar Theme">
                 <option value="0">Light</option>
                 <option value="1">Dark</option>

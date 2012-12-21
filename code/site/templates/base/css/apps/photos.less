@@ -1,129 +1,62 @@
 // PHOTOS
-
 .an-photos-highlight img
 {
 	 opacity:0.4;
 	 filter:alpha(opacity=40);
 }
 
-// ALBUMS
-.an-photos-albums 
-{ 
-	.clearfix;
-	list-style: none;
-	margin: 0 -10px;
-	
-	.album
-	{
-		float: left;
-		margin: 10px;
-		text-align: center;
-		.size(170px, 108px);
-		
-		img
-		{
-			.border-radius(3px);
-			.square(100px);
-			margin-bottom: 10px;
-		}
-		
-		h4
-		{
-			font-size: @baseFontSize;
-		}
-	}
-}
-
-.an-photos-album
-{
-    padding: 0;
-    
-    #album-cover-wrapper
-    {
-        margin-bottom: 20px;
-    	
-    	img.album-cover
-    	{ 
-    		.border-radius(3px);
-    		width: 280px;
-    	}
-	}
-}
-
+// SETS
 .an-photos-plugin
 {
    margin: 20px 0;
     
    img
    {
-       .square(90px);   
+       .square(90px);
    }
 }
 
-
-
-// ALBUM SELECT LIST
-
-.album-select-list-wrapper
+#set-select-list
 {
-	max-height: 266px; 
-	overflow: auto;
-	margin: 20px 0;
-	
-	.an-entity
-	{
-    	cursor: pointer;
-    	
-    	.medium-portrait
-    	{
-    	   img
-    	   {
-    	       .square(33px, 33px);
-    	   }
-    	}
-    	
-    	.medium-container
-    	{
-    	   padding-left: 53px
-    	}
-	}
+    .thumbnail
+    {
+        cursor: pointer;
+        .square(98px);
+        
+        &:hover
+        {
+            .an-highlight;
+        }
+    }	
 }
 
-// ALBUMS MODULE
-.module-content
+#set-mediums
 {
-	.an-photos-module-albums
-	{
-		list-style: none;
-		padding: 0;
-		
-		div.album:first-child
-		{
-			margin-top: 0;
-		}
-		
-		div.album
-		{
-			.clearfix;
-			margin-top: 20px;
-			
-			img
-			{
-				.square(50px);
-				.border-radius(3px);
-				float: left;
-			}
-			
-			h4
-			{
-				font-size: @baseFontSize + 1;
-				margin: 0;
-			}
-			
-			.album-title-wrapper
-			{
-				padding-left: 70px;
-			}
-		}
-	}
+    margin: 10px 0;
+    .border-radius(@baseBorderRadius);
+    .media-grid
+    {
+        min-height: 130px;
+    }
+}
+
+#medium-selector
+{
+    .well;
+    .media-grid.an-entities
+    {
+	    overflow-x: hidden;
+        overflow-y: auto;
+        height: 240px;
+        padding-right: 10px;
+	    margin: -10px;
+	    
+	    .thumbnail-wrapper
+	    {		    
+		    img
+		    {   
+		        .square(65px);
+		    }
+        }
+    }
 }

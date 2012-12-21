@@ -1,14 +1,7 @@
 <?php defined( 'KOOWA' ) or die( 'Restricted access' ) ?>
 
-<div class="vote-count-wrapper" id="vote-count-wrapper-<?= $entity->id ?>">
-<?= @helper('ui.voters', $entity); ?>
-</div>
-
 <div class="an-comments-wrapper">
-<?php if (!empty($pagination)) : ?>
-<?= $pagination ?>
-<?php endif; ?>
-<div id="an-comments-" class="an-comments an-entities">
+<div class="an-comments an-entities">
 	<?php foreach($comments as $comment) : ?>
 	<?= @view('comment')->comment($comment)->strip_tags($strip_tags)->truncate_body($truncate_body)->editor($editor) ?>
 	<?php endforeach; ?>
@@ -17,6 +10,7 @@
 <?php if (!empty($pagination)) : ?>
 <?= $pagination ?>
 <?php endif; ?>
+
 <?php if ( $can_comment ) : ?>
 <?= @view('comment')->load('form', array('parent'=>$entity,'editor'=>$editor,'comment'=>null))?>
 <?php endif;?>

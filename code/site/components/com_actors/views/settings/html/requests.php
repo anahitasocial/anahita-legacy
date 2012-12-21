@@ -5,25 +5,25 @@
 <div id="an-actors" class="an-entities an-actors">
     <?php foreach($item->requesters as $actor ) : ?>
     <div class="an-entity an-record">
-        <div class="actor-portrait">
+        <div class="entity-portrait-square">
             <?= @avatar($actor) ?>
         </div>
         
-        <div class="actor-container">
-            <h3 class="actor-name"><?= @name($actor) ?></h3>
+        <div class="entity-container">
+            <h3 class="entity-name"><?= @name($actor) ?></h3>
             
-            <div class="an-meta">
+            <div class="entity-meta">
                 <?= $actor->followerCount ?>
                 <span class="stat-name"><?= @text('COM-ACTORS-SOCIALGRAPH-FOLLOWERS') ?></span> 
                 / <?= $item->leaderCount ?>
                 <span class="stat-name"><?= @text('COM-ACTORS-SOCIALGRAPH-LEADERS') ?></span>
             </div>
             
-            <div class="actor-description">
+            <div class="entity-description">
             <?= @helper('text.truncate',strip_tags($actor->description), array('length'=>200)); ?>
             </div>
                 
-            <div class="an-actions">
+            <div class="entity-actions">
                 <button data-trigger="Submit" href="<?= @route($item->getURL().'&action=addblocked&actor='.$actor->id) ?>" class="btn">
                     <i class="icon-ban-circle"></i>&nbsp;<?= @text('COM-ACTORS-SOCIALGRAPH-BLOCK') ?>
                 </button>

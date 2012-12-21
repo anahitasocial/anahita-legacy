@@ -9,7 +9,7 @@
 			<?= @text('COM-ACTORS-NAME') ?>
 		</label>
 		<div class="controls">
-			<input data-validators="required" class="input-xxlarge" size="30" maxlength="100" name="name" value="<?=$entity->name?>" type="text" />
+			<input data-validators="required" class="input-block-level" size="30" maxlength="100" name="name" value="<?=$entity->name?>" type="text" />
 		</div>
 	</div>
 	
@@ -18,7 +18,7 @@
 			<?= @text('COM-ACTORS-BODY') ?>
 		</label>
 		<div class="controls">
-			<textarea data-validators="required maxLength:1000" class="input-xxlarge" name="body" rows="5"><?= $entity->body?></textarea>
+			<textarea data-validators="required maxLength:1000" class="input-block-level" name="body" rows="5"><?= $entity->body?></textarea>
 		</div>
 	</div>
 

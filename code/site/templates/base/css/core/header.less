@@ -1,8 +1,7 @@
 // PAGE HEADER
 h1.an-page-header
 {
-	padding: 0 5px;
-	margin-bottom: 10px;
+	
 	font-size: @baseFontSize + 7;
 	
 	ul.toolbar
@@ -28,8 +27,8 @@ h1.an-page-header
 .an-media-header
 {
 	padding: 5px;
-	margin-bottom: 10px;
-	.border-radius(3px);
+	margin-bottom: 20px;
+    .border-radius(@baseBorderRadius);  
 	.clearfix;
 	
 	h2.title
@@ -44,15 +43,14 @@ h1.an-page-header
 		float: left; 
 		img
 		{
-			.border-radius(3px);
-			.square(33px);
+			.square(30px);
 		 	margin: 8px 5px;
 		 }
 	}
 
 	.info 
 	{ 
-		padding-left: 45px;
+		padding-left: 50px;
 		.clearfix;
 	}
 
@@ -80,38 +78,11 @@ h1.an-page-header
 	            float: right;
 	            margin-right: 0;
 	        }
+	        
+	        a.active
+		    {
+		       text-decoration: underline;
+		    }
 		}
 	}
-}
-
-// ACTIONS
-ul.an-actions
-{
-	list-style: none;
-	font-size: @baseFontSize + 1;
-	padding: 5px 0 10px 0;
-	margin-left: 0;
-	
-	li
-	{ 
-		display: inline; 
-		margin-right: 10px;
-		
-		a
-        {
-            font-size: @baseFontSize;
-        }
-	}
-}
-
-// TOOLBAR
-ul.an-toolbar
-{
-	list-style: none;
-	.clearfix;
-	li
-	{ 
-	   display: inline; 
-	}
-	padding: 5px 10px;
 }

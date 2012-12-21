@@ -1,6 +1,6 @@
 <?php defined('KOOWA') or die('Restricted access') ?>
-<div scroll-handle="<?=$comment->id?>" id="an-comment-<?= $comment->id ?>" class="an-comment an-record an-removable">
-	<div class="comment-author-avatar">
+<div scroll-handle="<?=$comment->id?>" id="an-comment-<?= $comment->id ?>" class="an-entity an-comment an-record an-removable">
+	<div class="entity-portrait-square">
 		<?= @avatar($comment->author)  ?>
 	</div>
 	
@@ -12,21 +12,22 @@
 	<?php $body = @helper('text.truncate', stripslashes( $body ), is_bool($truncate_body) ? array() : $truncate_body) ?>	
 	<?php endif;?>
 	
-	<div class="comment-box">
-		<div class="comment-body">
-			<span class="comment-author"><?= @name($comment->author) ?></span>  
-			<span><?= $body ?></span>
-		</div>	
-		
-		<div class="an-meta">
-			<?=@date($comment->creationTime) ?> 
-			<a href="<?= @route($comment->parent->getURL().'#permalink='.$comment->id) ?>">#</a>
+	<div class="entity-container">
+		<div class="entity-body">  
+			<div class="entity-author"><?= @name($comment->author) ?></div> 
+			<?= $body ?>
 		</div>
 		
-		<?= @helper('ui.commands', @commands('list')) ?>
+		<div class="entity-meta">
+			<?=@date($comment->creationTime) ?> 
+			<a href="<?= @route($comment->parent->getURL().'#permalink='.$comment->id) ?>">#</a>
+			<div id="vote-count-wrapper-<?= $comment->id ?>">
+				<?= @helper('ui.voters', $comment); ?>
+			</div>
+		</div>
 		
-		<div id="vote-count-wrapper-<?= $comment->id ?>">
-			<?= @helper('ui.voters', $comment); ?>
+		<div class="entity-actions">
+			<?= @helper('ui.commands', @commands('list')) ?>
 		</div>
 	</div>
 </div>

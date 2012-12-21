@@ -3,15 +3,15 @@
 $dates = @helper('notifications.group', $notifications);
 ?>
 <?php foreach($dates as $date => $notifications) : ?>
-<h4><?=$date?></h4>
-<div id="com-notifications-list" class="an-entities an-actors">
+<h3><?=$date?></h3>
+<div id="com-notifications-list-" class="an-entities">
     <?php foreach($notifications as $notification) : ?>
     <div class="an-entity an-record an-removable">
-    	<div class="actor-portrait">
+    	<div class="entity-portrait-square">
     		<?= @avatar($notification->subject) ?>
     	</div>
-    	<div class="actor-container">	        
-	        <div class="actor-description">
+    	<div class="entity-container">	        
+	        <div class="entity-description">
 	        <?php $data = @helper('parser.parse', $notification, $actor)?>
 	        <?= $data['title']?>
         	</div>
