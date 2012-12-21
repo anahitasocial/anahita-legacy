@@ -320,12 +320,14 @@ DELETE FROM `jos_plugins` WHERE
     (`folder` LIKE 'socialshare') OR
     (`folder` LIKE 'content' AND `element` IN ('vote','geshi', 'jw_allvideos', 'slideshare15')) OR
     (`folder` LIKE 'search' AND `element` IN ('contacts','newsfeeds', 'weblinks')) OR
-    (`folder` LIKE 'system'  AND `element` IN ('mtupgrade','roktracking', 'backlink', 'rokbox'));
+    (`folder` LIKE 'system'  AND `element` IN ('mtupgrade','roktracking', 'backlink', 'rokbox')) OR
+    (`folder` LIKE 'editors-xtd'  AND `element` IN ('image'))
+    ;
     
 DELETE FROM `jos_components` WHERE `option` IN ( 
    'com_socialengine', 'com_banners', 'com_roknavmenubundle', 'com_massmail', 
    'com_messages', 'com_banners', 'com_weblinks', 'com_contact', 'com_poll', 'com_newsfeeds',
-   'com_wrapper', 'com_massmail', 'com_messages', 'com_rokmodule'
+   'com_wrapper', 'com_massmail', 'com_messages', 'com_rokmodule', 'com_media'
 );  
   
 DELETE FROM `jos_modules` WHERE 

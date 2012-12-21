@@ -71,6 +71,24 @@ class LibThemeTemplateHelperRender extends KTemplateHelperAbstract
     }
     
     /**
+     * Renders the favicon link
+     * 
+     * @param $config Configuration
+     * 
+     * @return string
+     */
+    public function favicon($config = array())
+    {
+    	$config = new KConfig($config);
+    	
+    	$config->append(array(
+    		'favicon' => $this->_params->favicon
+    	));
+    	
+    	return '<link rel="shortcut icon" href="base://images/'.$config->favicon.'" />';
+    }
+    
+    /**
      * Renders the template style
      * 
      * @param array  $config Configuration 
@@ -137,7 +155,7 @@ class LibThemeTemplateHelperRender extends KTemplateHelperAbstract
             $config->spans = explode(',', $config->spans);    
         }
                 
-        $html           = '';
+        $html = '';
         foreach($config->spans as $i => $span)
         {
             $position = $row.'-'.chr($i + ord('a'));
@@ -229,11 +247,11 @@ class LibThemeTemplateHelperRender extends KTemplateHelperAbstract
         
         
         if ( $config['sidebar-a'] > 0 ) {
-            $html .= '<div class="span'.$config['sidebar-a'].'" id="sidebar-a">'.$modules->render($sb_a_modules).'&nbsp;</div>';    
+        	$html .= '<div class="span'.$config['sidebar-a'].'" id="sidebar-a">'.$modules->render($sb_a_modules).'&nbsp;</div>';    
         }
         
         if ( $config['main'] > 0 && !empty($content) ) {
-            $html .= '<div class="span'.$config['main'].'" id="main"><div class="block">'.$content.'</div></div>';    
+        	$html .= '<div class="span'.$config['main'].'" id="main"><div class="block">'.$content.'</div></div>';    
         }
 
         if ( $config['sidebar-b'] > 0 ) {        
@@ -312,13 +330,7 @@ class LibThemeTemplateHelperRender extends KTemplateHelperAbstract
         if($config->poweredby)
         	$copyright .= ' - Powered by <a href="http://www.anahitapolis.com">Anahita ®</a>.';
         
-        return <<<EOF
-            <div class="row" id="row-copyright">
-                <div class="span12">
-                    $copyright
-                </div>
-            </div>
-EOF;
+        return $copyright;
     }
     
     /**
