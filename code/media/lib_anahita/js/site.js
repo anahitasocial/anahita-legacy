@@ -355,10 +355,11 @@ Behavior.addGlobalFilter('Editable',{
 	},
 	setup : function(el, api)
 	{
-		var prompt 	   = api.getAs(String, 'prompt'),
-			inputType  = api.getAs(String, 'inputType')
-			url	   	   = api.getAs(String, 'url')
-			inputName  = api.getAs(String, 'name')
+		var prompt 	       = api.getAs(String, 'prompt'),
+			inputType      = api.getAs(String, 'inputType'),
+			url	   	       = api.getAs(String, 'url'),
+			inputName      = api.getAs(String, 'name'),
+			dataValidators = api.getAs(String, 'dataValidators')
 			;
 			
 		el.store('prompt', '<span class="an-ui-inline-form-prompt">'+ prompt +'</span>');
@@ -375,15 +376,22 @@ Behavior.addGlobalFilter('Editable',{
 			}
 			el.store('state:edit', true);
 			el.hide();
-			var form 	   = new Element('form', {method:'post', 'action':url,'class':'inline-edit'});			
+			var form 	   = new Element('form', {method:'post', 'action':url,'class':'inline-edit', 'data-behavior':'FormValidator'});			
 			var cancelBtn  = new Element('button', {text:'Action.cancel'.translate(),'class':'btn'});
 			var saveBtn    = new Element('button', {text:'Action.save'.translate(),  'class':'btn btn-primary'});
 			var value	   = el.getElement('span') ? '' : el.get('text');
-			var inputText  = new Element('input',{type:'text'});
-			if ( inputType == 'textarea' ) {
-				inputText = new Element('textarea');
-			}
-			inputText.set({name:inputName, value:value.trim(), 'class':'input-xxlarge', 'cols':'5', 'rows':'5'});
+			
+			
+			if ( inputType == 'textarea' )
+				var inputText = new Element('textarea', {'cols':'5', 'rows':'5'});
+			else
+				var inputText  = new Element('input', {type:'text'});
+			
+			inputText.set({name:inputName, value:value.trim(), 'class':'input-xxlarge'});
+			
+			if(dataValidators)
+				inputText.set({'data-validators':dataValidators});
+			
 			form.show();
 			form.adopt(new Element('div', {'class':'control-group'}).adopt(new Element('div', {'class':'controls'}).adopt(inputText)));
 			form.adopt(new Element('div', {'class':'form-actions'}).adopt(cancelBtn).appendText(' ').adopt(saveBtn));
@@ -398,6 +406,10 @@ Behavior.addGlobalFilter('Editable',{
 			saveBtn.addEvent('click', function(e){
 				e.stop();
 				el.store('state:edit', false);
+				
+				if(!form.get('validator').validate())
+					return;
+				
 				form.ajaxRequest({
 					onSuccess : function() {
 						el.set('html', inputText.get('value') || prompt);
@@ -427,8 +439,12 @@ Behavior.addGlobalFilter('EmbeddedVideo', {
 				var styles = {'width':width, 'height':height};
 				var span = new Element('span');
 				span.setStyles(styles);
-				el.setStyles(styles);
 				span.inject(el, 'top');
+				
+	    		window.addEvent('resize', function(){
+	    			el.getElement('span').setStyle('width', Math.min(img.width, el.getSize().x));
+    				el.getElement('span').setStyle('height', Math.min(img.height, el.getSize().y));
+	    		}.bind(this));
 				
 				el.addEvent('click:once', function(){
 					
@@ -621,138 +637,308 @@ Request.Options = {};
  * Paginations
  */
 (function()
-{        
-    /*
-    var StreamPagination = new Class({
-        initialize : function(url)
+{      
+    /**
+     * Populates entities in colums in the tiled view
+     */
+    var MasonryLayout = new Class ({
+    	
+    	Implements :[Options],
+    	
+    	options : {
+    		container  		: null,
+    		numColumns		: 3,
+    		record			: null
+    	},
+    	
+    	initialize : function(options) 
         {
-            this.url = url.toURI();
-            new Request.HTML({
-                url : this.url
-            }).get();
+    		this.setOptions(options);
+
+    		this.currentColumn = 0;
+    		this.columns = new Array();
+    		
+    		this.scaffold();
+    		this.add(this.options.container.getElements(this.options.record));
         },
-    });*/
-    var Pagination = new Class(
-    {
-        __cache            : {},
-        __internal_pointer : 0,
-        getPage  : function(url, options)
+        
+        scaffold : function()
         {
-            var urlKey = this._urlToKey(url);
-            options = options || {}
-            Object.set(options,{
-               onSuccess    : Function.from(),
-            });
-            if ( !this.__cache[urlKey] )
-            {
-                Object.append(options, {             
-                    url : url
-                });
-                this.__cache[urlKey] = new Request(options).get();
-            } else 
-            {
-                var request = this.__cache[urlKey];
-                var callSuccess = function() {                   
-                    request.__event_registered = true;
-                    if ( options.spinner )
-                        options.spinner.unspin();
-                    options.onSuccess.call(request);
-                }
-                if ( request.isRunning() )                     
-                     request.addEvent('success', callSuccess);
-                else {
-                    callSuccess.call();
-                }
-            }
+        	if(this.options.container.getSize().x > 767)
+    		{
+    			this.numColumns = this.options.numColumns;
+    			
+    			this.options.container.addClass('row');
+    			
+    			var spanClass = 'span' + Math.floor(this.options.container.getSize().x / (80 * this.numColumns));
+    			
+    			for(var i=0; i < this.numColumns; i++)
+	    			this.columns[i] = new Element('div').addClass(spanClass).inject(this.options.container);
+    		}	
+    		else
+    		{
+    			this.numColumns = 1;
+    			this.columns[this.currentColumn] = this.options.container;
+    		}
         },
-        cache    : function(url, times)
+        
+        add : function(entities)
         {
-            times = times || 2;
-            url   = url.toURI();
-            (times).times(function(i) {
-               i += this.__internal_pointer;
-               var start   = parseInt(url.getData('start')) || 0,
-               limit       = parseInt(url.getData('limit'));
-               var nextURL = Object.clone(url).setData({limit:limit,start:start + limit * i}, true);
-               this.getPage(nextURL.toString());
-            }.bind(this));
-            this.__internal_pointer += (Math.max(0,times-1));
+        	entities.each(function(entity) {
+        		this.columns[this.currentColumn].adopt(entity);
+        		window.behavior.apply(entity);
+        		if( this.numColumns > 1 ) {
+        			this.currentColumn++;
+        			this.currentColumn = this.currentColumn % this.numColumns;
+        		}	
+        	}.bind(this));        	
         },
-        _urlToKey : function(url)
+        
+        update: function()
+        {        	
+        	var columns = new Array();
+        	var entities = new Array();
+        	var total = this.options.container.getElements(this.options.record).length;
+        	
+        	for(var i=0; i<this.numColumns; i++)
+        		columns[i] = this.columns[i].getElements(this.options.record);
+        	
+        	var currentColumn = 0;
+        	for(var k=0; k<total; k++)
+        	{
+        		entities.push(columns[currentColumn].shift());
+        		currentColumn++;
+        		currentColumn = currentColumn %this.numColumns;
+        	}
+        	
+        	this.reset();
+        	this.scaffold();
+        	this.add(entities);
+        },
+        
+        reset : function()
         {
-            url =  url.toURI();
-            var key =  url.getData('option') + url.getData('view') + url.getData('start') + url.getData('limit');
-            return key;            
-        }        
+        	this.options.container.empty();
+        	this.currentColumn = 0;
+        	this.columns = new Array();
+        }
     });
     
-    Behavior.addGlobalFilter('ScrollPagination',{
-        defaults : {
-            set         : '!div !+ .an-entities',
-            record      : '.an-entity',
-            cacheCount  : 2 
+    
+    var Paginator = new Class({
+    	
+    	Implements : [Options, Events],
+    	
+    	options : {
+    		resultHandler : null,
+    		/*
+    		onPageReady   : $empty
+    		*/
+    	},
+    	
+    	/**
+    	 * Initializes a paginator 
+    	 * 
+    	 * Hash options {}
+    	 */
+    	initialize : function(options) 
+    	{
+    		this.setOptions(options);
+    		this.spinner   = options.spinner;    		
+    		this.pages     = new Paginator.Pages(options.url, options);
+    		//set the next page that's supposed to show
+    		this.nextPage = 1;
+    	},
+    	
+    	/**
+    	 * Shows the next page
+    	 */
+    	showNextPage : function() 
+    	{
+    		this.pages.get(this.nextPage, function(page) {    			
+    			//console.log('handling results for page ' + page.number)
+    			this.fireEvent('pageReady',[page]);
+        		this.nextPage++;
+    		}.bind(this));
+    	},
+    });
+    
+    Paginator.Pages = new Class({
+    	
+    	Implements : [Options],
+        
+        /**
+         * pages 
+         */
+        pages    : {},
+        
+        /**
+         * Default options
+         */
+        options : {
+        	limit	 	    : 20,
+        	resultSelector  : null,
+        	startImmediatly : true,
+        	batchSize	    : 2
         },
-        setup  : function(el, api) 
-        {	      
-            var currentSet = el.getElement(api.get('set'));
-            if ( !currentSet )
-            	return;
-            var pagination = currentSet.retrieve('paginatinCache:instance');
-            if ( !pagination )
-                pagination = new Pagination();
-            currentSet.store('paginatinCache:instance', pagination);
-            pagination.cache(el.get('href'), api.getAs(Number, 'cacheCount'));
-            Object.append(el,{
-                paginate : function() 
-                {
-                    if ( this.paginating ||  !currentSet.isVisible() )
-                        return;
-                    this.paginating = true;
-                    var self        = this;
-                    el.spin();
-                    pagination.getPage(this.get('href'), {
-                        spinner   : el,
-                        onSuccess : function() 
-                        {
-                            el.get('spinner').hide(true);
-                            var html          = this.response.text.parseHTML();                            
-                            var records       = html.getElements(api.get('record'));
-                            if (records.length == 0) {                            	
-                                html.getElement('.alert').replaces(self.getParent());
-                            } else 
-                            {
-                                var mEl = html.getElement('.an-get-more-records')
-                                if ( mEl) 
-                                {
-                                    mEl.replaces(self);
-                                    window.behavior.apply(mEl.getParent());
-                                } 
-                                else self.dispose();
-                                currentSet.adopt(records);
-                                window.behavior.apply(currentSet);
-                            }
-                        }
-                    });
+        
+        /**
+         * Initalizes the a pagination request using a base URL
+         * 
+         * String  url   pages base url
+         * int     limit limit per page
+         */
+        initialize : function(url, options) 
+        {
+        	//console.log('create pages for base url ' + url);
+        	this.url 	 = new URI(url);
+        	this.setOptions(options);        	
+        	this.requests = new Request.Queue({
+        		concurrent : this.options.batchSize
+        	});
+        	this.limit    = this.options.limit;
+        	this.resultSelector  = this.options.resultSelector;
+        	this.currentBatch = 0;
+        	if ( this.startImmediatly )
+        		this._getBatch();
+        },
+        
+        get  : function(number, onsuccess) 
+        {
+        	var page = this._getPage(number);
+        	
+        	if ( onsuccess ) 
+        	{
+        		//if the request is still running then add a success event
+        		if ( page.request.isRunning() ) 
+        		{
+        			if ( !page.request.registered ) {
+        				page.request.addEvent('success', onsuccess.bind(null,[this.pages[number]]));
+        				page.request.registered = true;
+        			}
+            	}
+        		else 
+        		{
+        			//if the request has finished running and hasn't been registered
+        			//then call on onsuccess
+        			if ( !page.request.registered ) {
+        				onsuccess(page);
+        			}
+            	}
+        	}        	
+        	
+        	return page;
+        },
+        
+        /**
+         * Gets a next batch
+         */
+        _getBatch : function()
+        {
+        	var start = (this.options.batchSize * this.currentBatch) + 1;
+        	var end = start + this.options.batchSize;
+        	//console.log('getting a batch ' + start + ' to ' + end, this.options.batchSize, this.currentBatch);
+        	//always create a batch of pages
+        	for(i=start;i<=end;i++) {
+        		this._getPage(i);
+        	}
+        },
+        
+        /**
+         * Creates a page using a number. 
+         *  
+         */
+        _getPage : function(number)
+        {
+        	//if a page doesn't exists then queue batchSize of pages
+        	if ( !this.pages[number] ) 
+        	{        		
+        		
+        		var self  = this;
+        		var page  = {
+            		number   : number,
+            		entities : null,
+            		request  : new Request({
+                		url 	: Object.clone(this.url).setData({start:number * this.limit, limit:this.limit}, true).toString(),
+                		method  : 'get',
+                		onSuccess : function() {
+                			self.pages[number].entities = this.response.text.parseHTML().getElements(self.resultSelector);                			
+                	//		console.log('fetched page ' + number + ' with ' + self.pages[number].entities.length + ' entities');
+                		}
+                	})
+            	};
+        		this.pages[number] = page;
+        		//console.log('fetching page ' + number );
+        		this.requests.addRequest(number, page.request).send(number);
+        	}
+        	return this.pages[number];
+        }
+        
+    });
+    
+    Behavior.addGlobalFilter('InfinitScroll', {
+    	defaults : {
+    		record  	: '.an-entity',
+    		numColumns 	: 3,
+    		limit		: 20,
+    		url			: null,
+    		scrollArea	: 400,
+    		scrollable  : window
+    	},
+    	
+    	setup : function(el, api)
+    	{    		
+    		var paginator = new Paginator({
+    			resultSelector 	  : api.get('record'),
+    			url		  		  : api.get('url'),
+    			limit			  : api.getAs(Number, 'limit'),
+    			startImmediatly   : el.isVisible()
+    		});
+    		
+    		var masonry = new MasonryLayout({
+    			container  : el,
+    			numColumns : api.getAs(Number, 'numColumns'),
+    			record	   : api.get('record')
+    		});
+    		    		    		
+    		paginator.addEvent('pageReady', function(page){
+    			this.add(page.entities);
+    		}.bind(masonry));
+    		
+    		this.resizeTo = null;
+    		window.addEvent('resize', function(){
+    			if(this.resizeTo)
+    				clearTimeout(this.resizeTo);
+    			
+    			this.resizeTo = setTimeout(function(){
+    				masonry.update();
+    			}, 50);
+    		}.bind(this));
+
+    		el.store('paginator', paginator);
+    		el.store('masonry', masonry);
+    		
+    		var scroller = new ScrollLoader({
+                area       : api.getAs(Number, 'scrollArea'),
+                scrollable : api.get('scrollable'),
+                container  : el,
+                onScroll   : function() {
+                	if ( this.isVisible() ) {
+                		this.retrieve('paginator').showNextPage();	
+                	}
                 }.bind(el)
             });
-                        
-            el.addEvent('click:once', function(event) {
-                event.stop();
-                el.paginate();
-            });
-            
-            var scroller = new ScrollLoader({
-                area      : 400,
-                onScroll  : function() {
-                    el.paginate();
-                }
-            });
-        }
+    	}
     });
 })()
 
 Behavior.addGlobalFilter('Pagination', {
+	defaults: {
+		'container' : '!.an-entities'
+	},
+	
 	setup : function(el, api) {
+		var container = el.getElement(api.get('container'));
 		var links = el.getElements('a');
 		links.addEvent('click', function(e){
 			e.stop();
@@ -776,14 +962,17 @@ Behavior.addGlobalFilter('Pagination', {
 					hash[key] = value;
 				}
  			});
+			
 			document.location.hash = Object.toQueryString(hash);
+			
 			this.ajaxRequest({			
-				method 	  :  'get'  ,
-				onSuccess : function() {					
+				method 	  :  'get',
+				onSuccess : function() {
 					var html = this.response.html.parseHTML();
+					
 					html.getElements('.pagination').replaces(document.getElements('.pagination'));
-					html.getElement('.an-entities')
-					.replaces(document.getElement('.an-entities'));
+					html.getElement('.an-entities').replaces(document.getElement('.an-entities'));
+					var scrollTop = new Fx.Scroll(window).toTop();
 				}
 			}).send();
 		})
@@ -898,8 +1087,8 @@ var ScrollLoader = new Class({
     Implements: [Options, Events],
 
     options: {
-        /*onScroll: fn,*/
-        area: 50,
+    //     onScroll: fn,
+        area: 750,
         mode: 'vertical',
         container  : null,
         scrollable : window

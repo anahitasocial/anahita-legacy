@@ -66,9 +66,10 @@ Behavior.addGlobalFilter('ComposerForm', {
                     element.focus();
                 }
             }
+            window.behavior.applyFilter(el.getParent(), Behavior.getFilter('BS.Dropdown'));
             window.behavior.applyFilter(el, Behavior.getFilter('BS.Tabs'));
             var nagivation  = document.getElement('.sidelinks');
-            composerTabs    = el.getBehaviorResult('BS.Tabs');            
+            composerTabs    = el.getBehaviorResult('BS.Tabs');
             //if there's a navigation
             if ( nagivation )
             {
@@ -78,15 +79,16 @@ Behavior.addGlobalFilter('ComposerForm', {
                 {
                     profileTabs.addEvent('active', function(idx, nav, section){
                         if ( idx == 0 ) {
-                            document.id('com-composer-container').show();
+                            el.getParent().show();
                         } else {
-                            document.id('com-composer-container').hide();
+                            el.getParent().hide();
                         }                
                     });
                 }                
             }
           
             composerTabs.addEvent('active', function(idx,section,tab) {
+				el.getElement('.composer-button-title').set('text', tab.get('text'));
                 if ( section.get('data-content-url') )
                 {
                     if ( !section.retrieve('request'))
