@@ -387,7 +387,7 @@ Behavior.addGlobalFilter('Editable',{
 			else
 				var inputText  = new Element('input', {type:'text'});
 			
-			inputText.set({name:inputName, value:value.trim(), 'class':'input-xxlarge'});
+			inputText.set({name:inputName, value:value.trim(), 'class':'input-block-level'});
 			
 			if(dataValidators)
 				inputText.set({'data-validators':dataValidators});
