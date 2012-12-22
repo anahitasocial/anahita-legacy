@@ -17,6 +17,10 @@
         
         <div class="entity-meta">
             <?= @date($timestamp) ?>
+            
+            <div class="vote-count-wrapper" id="vote-count-wrapper-<?= $story->id ?>">
+				<?= @helper('ui.voters', $story); ?>
+			</div>
         </div>
     </div>
 </div>
