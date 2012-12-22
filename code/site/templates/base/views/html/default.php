@@ -7,12 +7,8 @@
   	<?= @render('style') ?>
   </head>
 
-  <body>
-	<script src="media://lib_anahita/js/min/mootools.js"></script>
-	<script src="media://lib_anahita/js/min/bootstrap.js"></script>
-	<script src="media://lib_anahita/js/anahita.js"></script>
-	<script src="media://lib_anahita/js/site.js"></script>
-	
+  <body>	
+	<script src="media://lib_anahita/js/min/site.js"></script>	
     <?= @template('tmpl/navbar') ?>
     
     <div id="container-system-message" class="container">       
