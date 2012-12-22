@@ -15,9 +15,20 @@
         <div class="entity-meta">
             <?= @date($timestamp) ?>
             
-            <div class="vote-count-wrapper" id="vote-count-wrapper-<?= $item->id ?>">
-			<?= @helper('ui.voters', $item); ?>
-			</div>
+            <?php
+               $votable_item = null;               
+               if ( $item->hasObject() && !is_array($item->object) ) { 
+                    $votable_item = $item->object;
+               }
+               elseif ( !$item->hasObject() ) {
+                    $votable_item = $item;
+               }
+            ?>
+            <?php if ( $votable_item && $votable_item->isVotable() ) : ?> 
+            <div class="vote-count-wrapper" id="vote-count-wrapper-<?= $votable_item->id ?>">
+            <?= @helper('ui.voters', $votable_item); ?>
+            </div>
+            <?php endif; ?>
         </div>
         
         <div class="entity-actions">    
