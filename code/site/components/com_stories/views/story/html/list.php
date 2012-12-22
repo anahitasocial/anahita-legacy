@@ -28,7 +28,7 @@
     
     <div id="<?= 'story-comments-'.$item->id?>" class="story-comments an-comments">
 		<?php if ( !empty($comments) || $can_comment ) : ?>
-	    <?= @helper('ui.comments', $story, array('comments'=>$comments, 'can_comment'=>$can_comment, 'pagination'=>false, 'show_guest_prompt'=>false, 'truncate_body'=>array('consider_html'=>true, 'read_more'=>true))) ?>
+	    <?= @helper('ui.comments', $item, array('comments'=>$comments, 'can_comment'=>$can_comment, 'pagination'=>false, 'show_guest_prompt'=>false, 'truncate_body'=>array('consider_html'=>true, 'read_more'=>true))) ?>
 	    <?php endif;?>
 	    
 	    <?php if( !empty($comments) && $can_comment ): ?>
