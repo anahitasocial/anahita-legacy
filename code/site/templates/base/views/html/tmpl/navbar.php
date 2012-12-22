@@ -1,13 +1,17 @@
 <?php defined('KOOWA') or die;?>
 
+<?php $mobile_nav = @helper('modules.render','mobile', array('style'=>'none')); ?>
+
 <div class="navbar <?= ($this->getView()->getParams()->navbarInverse) ? 'navbar-inverse' : '' ?> navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
+        	<?php if($mobile_nav): ?>
         	<a type="button" class="btn btn-navbar" data-trigger="ShowMainmenu">
         		<span class="icon-bar"></span>
         		<span class="icon-bar"></span>
         		<span class="icon-bar"></span>
         	</a>
+        	<?php endif; ?>
         	
             <?= @render('logo') ?>
             <div id="desktop-main-menu" class="nav-collapse collapse">
@@ -17,22 +21,21 @@
 	            <?php endif; ?>
             </div>
             
+            <?php if($mobile_nav): ?>
             <div id="mobile-main-menu" class="hidden-desktop">
-            <?php if( $mobile_nav = @helper('modules.render','mobile', array('style'=>'none'))): ?>
             <?= $mobile_nav ?>
-            <?php endif; ?>
             </div>
+            <script>
+            var mobileMenuToggle = new Fx.Slide(document.getElement('#mobile-main-menu ul')).hide();
+			
+			Delegator.register('click', {
+				'ShowMainmenu' : function(event, el, api) {
+					event.stop();
+					mobileMenuToggle.toggle();
+				},
+			});
+			</script>
+            <?php endif; ?>
         </div>
     </div>            
 </div>
-
-<script>
-var mobileMenuToggle = new Fx.Slide(document.getElement('#mobile-main-menu ul')).hide();
-
-Delegator.register('click', {
-	'ShowMainmenu' : function(event, el, api) {
-		event.stop();
-		mobileMenuToggle.toggle();
-	},
-});
-</script>
