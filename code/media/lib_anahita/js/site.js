@@ -882,8 +882,8 @@ Request.Options = {};
     		numColumns 	: 3,
     		limit		: 20,
     		url			: null,
-    		scrollArea	: 400,
-    		scrollable  : window
+    		scrollable  : window,
+    		fixedheight : 0
     	},
     	
     	setup : function(el, api)
@@ -921,7 +921,7 @@ Request.Options = {};
     		var scroller = new ScrollLoader({
                 area       : api.getAs(Number, 'scrollArea'),
                 scrollable : api.get('scrollable'),
-                container  : el,
+                fixedheight: api.get('fixedheight'),
                 onScroll   : function() {
                 	if ( this.isVisible() ) {
                 		this.retrieve('paginator').showNextPage();	
@@ -1088,16 +1088,15 @@ var ScrollLoader = new Class({
 
     options: {
     //     onScroll: fn,
-        area: 750,
+    	area: .5,
         mode: 'vertical',
-        container  : null,
+        fixedheight: 0,
         scrollable : window
     },
     initialize: function(options) 
     {
         this.setOptions(options);
         this.scrollable = document.id(this.options.scrollable) || window;
-        this.element    = document.id(this.options.container)  || this.scrollable;
         this.bounds     = {
             scroll : this.scroll.bind(this)
         }
@@ -1113,7 +1112,17 @@ var ScrollLoader = new Class({
         this.scrollable.removeEvent('scroll', this.bounds.scroll);
         return this;
     },
-    scroll: function() 
+    scroll: function()
+    {
+    	var orientation = ( this.options.mode == 'vertical' ) ? 'y' : 'x';
+    	var scroll 		= this.scrollable.getScroll()[orientation];
+    	var scrollSize	= this.scrollable.getScrollSize()[orientation];
+    	
+    	if( (this.options.fixedheight && scroll < scrollSize) || scroll > Math.floor(scrollSize * .6) )
+    		this.fireEvent('scroll');
+    },
+    
+    scroll____: function() 
     {
         var z = (this.options.mode == 'vertical') ? 'y' : 'x';
 
