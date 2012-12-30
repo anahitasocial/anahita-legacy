@@ -78,9 +78,8 @@
      
         <params addpath="/templates/shiraz/elements">
             <param name="cssStyle" type="list" default="style1" label="Style">
-                <option value="style1">Light</option>
-                <option value="style2">Dark</option>
-                <option value="style3">Custom</option>
+                <option value="style1">Style 1</option>
+                <option value="style2">Style 2</option>
             </param>
             <param name="compilestyle" type="list" default="0" description="Flag to when compile the less style file" label="Compile Style">
                 <option value="0">Never (good for production)</option>
