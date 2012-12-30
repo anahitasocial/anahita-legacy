@@ -1094,7 +1094,7 @@ var ScrollLoader = new Class({
     initialize: function(options) 
     {
         this.setOptions(options);
-        this.scrollable = document.id(this.options.scrollable) || window;
+        this.scrollable = document.id(this.options.scrollable) || window; 
         this.bounds     = {
             scroll : this.scroll.bind(this)
         }
@@ -1117,26 +1117,12 @@ var ScrollLoader = new Class({
     	var scrollSize	= this.scrollable.getScrollSize()[orientation];
     	
     	//console.log('scroll size: ' + scrollSize);
-    	//console.log('fire :' + Math.floor(scrollSize * 0.66));
+    	//console.log('fire :' + Math.floor(scrollSize * 0.6));
     	//console.log('scroll: ' + scroll);
     	//console.log('---');
     	
-    	if( (this.options.fixedheight && scroll < scrollSize) || scroll > Math.floor(scrollSize * 0.66) )
+    	if( (this.options.fixedheight && scroll < scrollSize) || scroll > Math.floor(scrollSize * 0.6) )
     		this.fireEvent('scroll');
-    },
-    
-    scroll____: function() 
-    {
-        var z = (this.options.mode == 'vertical') ? 'y' : 'x';
-
-        var element = this.element,
-            size = element.getSize()[z],
-            scroll = element.getScroll()[z],
-            scrollSize = element.getScrollSize()[z];
-
-        if (scroll + size < scrollSize - this.options.area) return;
-        
-        this.fireEvent('scroll');
     }
 });
 
