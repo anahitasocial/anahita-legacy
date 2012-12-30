@@ -1,8 +1,6 @@
-/**
- * @depends min/mootools.js
- * @depends min/bootstrap.js
- * @depends anahita.js
-*/
+//@depends min/mootools.js
+//@depends min/bootstrap.js
+//@depends anahita.js
 
 /**
  * Handling displaying ajax message notifications
@@ -883,7 +881,7 @@ Request.Options = {};
     		limit		: 20,
     		url			: null,
     		scrollable  : window,
-    		fixedheight : 0
+    		fixedheight : false
     	},
     	
     	setup : function(el, api)
