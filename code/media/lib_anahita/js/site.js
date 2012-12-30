@@ -919,7 +919,6 @@ Request.Options = {};
     		el.store('masonry', masonry);
     		
     		var scroller = new ScrollLoader({
-                area       : api.getAs(Number, 'scrollArea'),
                 scrollable : api.get('scrollable'),
                 fixedheight: api.get('fixedheight'),
                 onScroll   : function() {
@@ -1088,7 +1087,6 @@ var ScrollLoader = new Class({
 
     options: {
     //     onScroll: fn,
-    	area: .5,
         mode: 'vertical',
         fixedheight: 0,
         scrollable : window
@@ -1118,7 +1116,12 @@ var ScrollLoader = new Class({
     	var scroll 		= this.scrollable.getScroll()[orientation];
     	var scrollSize	= this.scrollable.getScrollSize()[orientation];
     	
-    	if( (this.options.fixedheight && scroll < scrollSize) || scroll > Math.floor(scrollSize * .6) )
+    	//console.log('scroll size: ' + scrollSize);
+    	//console.log('fire :' + Math.floor(scrollSize * 0.66));
+    	//console.log('scroll: ' + scroll);
+    	//console.log('---');
+    	
+    	if( (this.options.fixedheight && scroll < scrollSize) || scroll > Math.floor(scrollSize * 0.66) )
     		this.fireEvent('scroll');
     },
     
