@@ -30,7 +30,7 @@
 			Delegator.register('click', {
 				'ShowMainmenu' : function(event, el, api) {
 					event.stop();
-					document.getElement('#mobile-main-menu ul').show();
+					document.getElement('#mobile-main-menu ul').toggle();
 				},
 			});
 			</script>
