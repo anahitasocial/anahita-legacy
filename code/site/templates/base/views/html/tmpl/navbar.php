@@ -26,12 +26,11 @@
             <?= $mobile_nav ?>
             </div>
             <script>
-            var mobileMenuToggle = new Fx.Slide(document.getElement('#mobile-main-menu ul')).hide();
-			
+            document.getElement('#mobile-main-menu ul').hide();
 			Delegator.register('click', {
 				'ShowMainmenu' : function(event, el, api) {
 					event.stop();
-					mobileMenuToggle.toggle();
+					document.getElement('#mobile-main-menu ul').show();
 				},
 			});
 			</script>
