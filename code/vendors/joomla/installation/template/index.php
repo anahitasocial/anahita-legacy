@@ -10,7 +10,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 		<link href="../templates/shiraz/css/style1/style.css" rel="stylesheet" type="text/css" />
 		<link href="template/css/template.css" rel="stylesheet" type="text/css" />
 
-		<script type="text/javascript" src="../media/lib_anahita/js/min/mootools.js"></script>
+		<script type="text/javascript" src="../media/lib_anahita/js/production/mootools.js"></script>
 		<script type="text/javascript" src="includes/js/installation.js"></script>
 		<script type="text/javascript" src="template/js/validation.js"></script>
 
