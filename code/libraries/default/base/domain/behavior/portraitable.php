@@ -69,12 +69,7 @@ class LibBaseDomainBehaviorPortraitable extends LibBaseDomainBehaviorStorable
 	 * @return boolean
 	 */
 	public function setPortraitImage($config = array())
-	{
-		if ( $this->state() == AnDomain::STATE_NEW ) {
-			$this->__image_options = $config;
-			return $this;
-		}
-				
+	{				
 		$config = new KConfig($config);
 		
 		$config->append(array(
@@ -98,39 +93,65 @@ class LibBaseDomainBehaviorPortraitable extends LibBaseDomainBehaviorStorable
         if ( !isset($mimetypes[$config->mimetype]) ) {
             $config->mimetype = 'image/jpeg';   
         }
-         
-        $data = $config->data;
         
         //first remove the existing avatar. 
         //only remove exisitng if the entity hasn't been
         //just inserted
-        if ( $this->state() != AnDomain::STATE_INSERTED ) {            
+        if ( $this->state() != AnDomain::STATE_INSERTED && 
+        	 $this->state() != AnDomain::STATE_NEW ) {            
             //remove existing portrait image
             $this->removePortraitImage();            
         }
-        
-        //if data is null or mimetype is invalid then 
-        //existing avatar is deleted
-        if ( empty($data) ) {            
-            return;            
+
+        if ( $config->data ) {
+        	
+        	$data = $config->data;
+        	
+        	//if data is null or mimetype is invalid then
+        	//existing avatar is deleted
+        	if ( empty($data) ) {
+        		if ( $this->state() == AnDomain::STATE_NEW) {
+        			$this->reset();
+        		}
+        		return false;
+        	}
+        	
+        	$config->append(array(
+        		'image' => 	imagecreatefromstring($data)
+        	));        	
         }
-        
+		
+        $image = $config->image;
+				
+		if ( empty($image) ) {
+			if ( $this->state() == AnDomain::STATE_NEW) {
+				$this->reset();
+			}
+			return false;	
+		}	
+		
+		if ( $this->state() == AnDomain::STATE_NEW ) {
+			$config['image'] = $image;
+			unset($config['data']);
+			unset($config['url']);
+			$this->__image_options = $config;
+			return $this;
+		}
+		
 		$rotation  = $config->rotation;
-	
+		
 		switch($rotation)
 		{
 			case 3:$rotation=180;break;
 			case 6:$rotation=-90;break;
 			case 8:$rotation=90 ;break;
 			default :
-				$rotation = 0;			
+				$rotation = 0;
 		}
-	
-		$image 	= imagecreatefromstring($data);
 		
 		if($rotation != 0 ) {
 			$image = imagerotate($image, $rotation, 0);
-        }
+		}		
                     
         $extension = $mimetypes[$config->mimetype];
         
