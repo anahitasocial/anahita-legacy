@@ -29,6 +29,22 @@
  */
 class LibBaseTemplateHelperJavascript extends KTemplateHelperAbstract 
 {
+	/**
+	 * Compress a javascript file and put the output in the 
+	 *
+	 * @param array $config Configuration.
+	 *  $files   The file to compress
+	 *  $output The output file
+	 *
+	 * @return void
+	 */	
+	public function combine($config = array())
+	{		
+		$this->getService('com:base.template.helper.javascript.file', $config)
+			->write($config['output']);
+		;
+	}
+	
     /**
      * Loads an aray of javascript language
      * 
