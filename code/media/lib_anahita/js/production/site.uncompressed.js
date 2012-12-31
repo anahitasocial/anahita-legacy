@@ -20743,7 +20743,7 @@ Request.Options = {};
         	this.limit    = this.options.limit;
         	this.resultSelector  = this.options.resultSelector;
         	this.currentBatch = 0;
-        	if ( this.startImmediatly )
+        	if ( this.options.startImmediatly )
         		this._getBatch();
         },
         
