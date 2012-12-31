@@ -1,4 +1,4 @@
-<?php if(defined('JDEBUG')) : ?>
+<?php if(defined('JDEBUG') && JDEBUG ) : ?>
 	<?php @helper('javascript.combine', array(
   				'file'   => JPATH_ROOT.'/media/lib_anahita/js/site.js',
   				'output' => JPATH_ROOT.'/media/lib_anahita/js/production/site.uncompressed.js'
