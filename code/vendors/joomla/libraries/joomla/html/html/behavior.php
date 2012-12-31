@@ -51,7 +51,7 @@ class JHTMLBehavior
 		$konkcheck = isset($_SERVER['HTTP_USER_AGENT']) ? strpos(strtolower($_SERVER['HTTP_USER_AGENT']), "konqueror") : null;
 
         if ( JFactory::getApplication()->isAdmin() ) {
-            JHTML::script('lib_anahita/js/min/mootools.js', 'media/', false);
+            JHTML::script('lib_anahita/js/production/mootools.js', 'media/', false);
         }
         
 		if ($debug || $konkcheck) {
