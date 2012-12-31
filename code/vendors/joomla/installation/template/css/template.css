@@ -88,7 +88,7 @@ form {
 	font-size: 20px;
 	color: #098ED1;
 	font-weight: bold;
-	background: url(../images/j_divider.png) 0 100% repeat-x;
+	/*background: url(../images/j_divider.png) 0 100% repeat-x;*/
 }
 
 .step-on, .step-off, .step-grey {
