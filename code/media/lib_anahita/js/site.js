@@ -1,7 +1,11 @@
-//@depends min/mootools.js
-//@depends min/bootstrap.js
+//@depends vendors/mootools-core.js
+//@depends vendors/mootools-more.js
+//@depends vendors/clientcide.js
+//@depends vendors/bootstrap/bootstrap.js
+//@depends vendors/Scrollable.js
+//@depends vendors/purr.js
 //@depends anahita.js
-
+ 
 /**
  * Handling displaying ajax message notifications
  */
