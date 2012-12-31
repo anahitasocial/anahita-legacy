@@ -134,8 +134,8 @@ class ComBaseControllerComment extends ComBaseControllerService
 		if ( !pick($parent, $comment) )
 			return false;		
 		
-		if ( !$parent->allows(get_viewer() , 'access')) {
-			return false;
+		if ( !$parent->authorize('access') ) {
+			return false;	
 		}
         
         return $this->__call('canExecute', array($context));
