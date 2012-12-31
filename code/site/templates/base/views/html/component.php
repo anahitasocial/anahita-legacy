@@ -7,8 +7,7 @@
 		<?= @render('style') ?>        
     </head>
     <body id="tmpl-component">        
-        <script src="media://lib_anahita/js/min/site.js"></script>
-        
+  		<?= @template('tmpl/js') ?>        
         <div id="container-system-message" class="container">       
     		<?= @render('messages') ?>
     	</div>

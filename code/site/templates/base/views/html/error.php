@@ -5,7 +5,7 @@
         <?= @render('style') ?>                
     </head>
     <body>
-        <script src="media://lib_anahita/js/min/site.js"></script>
+        <?= @template('tmpl/js') ?>
         <?= @template('tmpl/navbar') ?>
       
         <?= @render('component') ?>

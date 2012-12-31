@@ -5,7 +5,7 @@
         <?= @render('style') ?>                
     </head>
     <body>
-        <script src="media://lib_anahita/js/min/site.js"></script>
+        <?= @template('tmpl/js') ?>
         <div class="navbar <?= ($this->getView()->getParams()->navbarInverse) ? 'navbar-inverse' : '' ?> navbar-fixed-top">
         	<div class="navbar-inner">
         		<div class="container">
