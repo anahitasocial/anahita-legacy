@@ -1066,7 +1066,7 @@ Class.refactor(Bootstrap.Dropdown, {
             var parent = el.match('.dropdown-toggle') ? el.getParent() : el.getParent('.dropdown-toggle');
             if (parent) {
                 e.preventDefault();
-                if (!open) this.show(el.getParent('.dropdown') || parent);
+                if (!open) this.show(el.getParent('.dropdown,.btn-group') || parent);
             }
         }
     }
