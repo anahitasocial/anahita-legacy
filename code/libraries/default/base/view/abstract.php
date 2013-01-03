@@ -346,7 +346,7 @@ abstract class LibBaseViewAbstract extends KObject
             //the state
             $data = $this->_state->getData($this->_state->isUnique());
             
-            $route = array_merge($data, $route);
+            $route = array_merge($route, $data);
 	    }
 	    
 	    //Add the format information to the route only if it's not 'html'
