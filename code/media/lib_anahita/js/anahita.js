@@ -532,6 +532,10 @@ Delegator.register(['click'],'Request',
 			options.replace = el.getElement(options.replace);
 		}
 		
+		if ( update = document.getElement(options.update) ) {
+			options.update = update;	
+		}
+		
 		if ( instanceOf(options.remove, String) ) {
 			options.remove = el.getElement(options.remove);
 		}
