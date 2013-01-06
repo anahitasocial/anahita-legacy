@@ -4,8 +4,6 @@
 
 <?= @helper('ui.searchbox', @route('layout=list'))?>
 
-<div class="an-entities-wrapper">
-	<div data-behavior="InfinitScroll" data-infinitscroll-options="{'url':'<?= @route('layout=list') ?>'}" class="an-entities" id="an-entities-main">
+<div class="an-entities-wrapper">	
 	<?= @template('list') ?>
-	</div>
 </div>

@@ -2,8 +2,8 @@
 
 <module position="sidebar-b" style="none"></module>
 
-<?= @helper('ui.searchbox', @route('layout=list'))?>
+<?= @helper('ui.searchbox', @route('layout=list'), array('update_container'=>'.an-entities-wrapper'))?>
 
 <div class="an-entities-wrapper">
-	<div data-behavior="InfinitScroll" data-infinitscroll-options="{'url':'<?= @route('layout=list') ?>'}" class="an-entities" id="an-entities-main"></div>
+
 </div>
