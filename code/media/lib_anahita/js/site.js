@@ -686,6 +686,7 @@ Request.Options = {};
         
         add : function(entities)
         {
+        	entities = entities || [];
         	entities.each(function(entity) {
         		this.columns[this.currentColumn].adopt(entity);
         		window.behavior.apply(entity);
@@ -694,6 +695,11 @@ Request.Options = {};
         			this.currentColumn = this.currentColumn % this.numColumns;
         		}	
         	}.bind(this));        	
+        },
+        
+        getEntities : function() 
+        {
+        	return this.options.container.getElements(this.options.record);
         },
         
         update: function()
@@ -864,14 +870,19 @@ Request.Options = {};
                 		url 	: Object.clone(this.url).setData({start:number * this.limit, limit:this.limit}, true).toString(),
                 		method  : 'get',
                 		onSuccess : function() {
-                			self.pages[number].entities = this.response.text.parseHTML().getElements(self.resultSelector);                			
+                			self.pages[number].entities = this.response.text.parseHTML().getElements(self.resultSelector);
+                			if ( self.pages[number].entities.length < self.limit ) {
+                				self.stopPagination = true;
+                			}
                 	//		console.log('fetched page ' + number + ' with ' + self.pages[number].entities.length + ' entities');
                 		}
                 	})
             	};
         		this.pages[number] = page;
         		//console.log('fetching page ' + number );
-        		this.requests.addRequest(number, page.request).send(number);
+        		if ( !this.stopPagination ) {
+        			this.requests.addRequest(number, page.request).send(number);
+        		}
         	}
         	return this.pages[number];
         }
@@ -890,17 +901,22 @@ Request.Options = {};
     	
     	setup : function(el, api)
     	{    		
+    		var masonry = new MasonryLayout({
+    			container  : el,
+    			numColumns : api.getAs(Number, 'numColumns'),
+    			record	   : api.get('record')
+    		});
+    		
+    		//only instantiate a paginator if
+    		//if the current number of entities > limit
+    		if ( masonry.getEntities().length < api.getAs(Number, 'limit') )
+    			return null
+    			
     		var paginator = new Paginator({
     			resultSelector 	  : api.get('record'),
     			url		  		  : api.get('url'),
     			limit			  : api.getAs(Number, 'limit'),
     			startImmediatly   : el.isVisible()
-    		});
-    		
-    		var masonry = new MasonryLayout({
-    			container  : el,
-    			numColumns : api.getAs(Number, 'numColumns'),
-    			record	   : api.get('record')
     		});
     		    		    		
     		paginator.addEvent('pageReady', function(page){
