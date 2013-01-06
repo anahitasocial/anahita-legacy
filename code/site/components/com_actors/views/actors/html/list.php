@@ -1,6 +1,10 @@
 <?php defined('KOOWA') or die ?>
-
-<div data-behavior="InfinitScroll" data-infinitscroll-options="{'url':'<?= @route('layout=list') ?>'}" class="an-entities" id="an-entities-main">
+<?php 
+	if ( empty($pagination_url) ) {
+		$pagination_url = @route('layout=list');
+	}
+?>
+<div data-behavior="InfinitScroll" data-infinitscroll-options="{'url':'<?= $pagination_url ?>'}" class="an-entities" id="an-entities-main">
 	<?php @listItemView()->layout('list') ?>
 	
 	<?php if(count($items)) :?>

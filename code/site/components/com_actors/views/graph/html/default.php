@@ -26,14 +26,8 @@
 </module>
 
 
-<?php 
-$url = $item->getURL().'&layout=list&get=graph&type='.$type;
-if ( !empty($q) ) {
-    $url .= '&q='.$q;   
-}
-?>
 
-<div data-behavior="InfinitScroll" data-infinitscroll-options="{'url':'<?= @route($url) ?>'}" class="an-entities" id="an-entities-main">
+<div>
 	<?= @template('list') ?>
 </div>
 	
