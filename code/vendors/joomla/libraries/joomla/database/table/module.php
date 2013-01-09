@@ -96,7 +96,7 @@ class JTableModule extends JTable
 	*/
 	function bind($array, $ignore = '')
 	{
-		if (is_array( $array['params'] ))
+		if (isset($aray['params']) && is_array( $array['params'] ))
 		{
 			$registry = new JRegistry();
 			$registry->loadArray($array['params']);
