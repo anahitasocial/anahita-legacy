@@ -4,8 +4,8 @@
 /**
  * @since Version 1.6
  */
-function anahita_1() {
-    #dbexec(dbparse(file_get_contents(dirname(__FILE__).'/data.sql')));
+function anahita_1() {	
+    dbexec(dbparse(file_get_contents(dirname(__FILE__).'/data.sql')));
 }
 
 /**
@@ -58,6 +58,7 @@ function anahita_8() {
     //remove the mod_roknavmenu 
     dbexec('DELETE menu, module FROM jos_modules_menu AS menu,jos_modules AS module WHERE module.id = menu.moduleid AND module.module = "mod_roknavmenu" ');
     //remove the files. easier 
+    /*
     $remove[] = JPATH_ROOT . '/language/en-GB/en-GB.mod_roknavmenu.ini';
     $remove[] = JPATH_ROOT . '/modules/mod_roknavmenu';
     jimport('joomla.filesystem.file');
@@ -68,7 +69,7 @@ function anahita_8() {
         elseif (is_dir($item)) {
             JFolder :: delete($item);
         }
-    }
+    */
 
     $module = dbfetch("SELECT id,params FROM jos_modules WHERE module = 'mod_mainmenu' AND params LIKE '%menutype=mainmenu%'", KDatabase :: FETCH_ARRAY);
 
@@ -88,6 +89,33 @@ function anahita_8() {
             dbexec("INSERT INTO jos_modules_menu VALUES({$module['id']},0)");
         }
     }
+    
+    //migrating discussions to topics
+    
+    dbexec("UPDATE jos_anahita_nodes SET `name` = 'topic_add'  WHERE `component` LIKE 'com_discussions' AND `name` LIKE 'new_topic'");
+    dbexec("DELETE FROM jos_anahita_nodes WHERE `component` LIKE 'com_discussions' AND `name` IN ('edit_topic','new_reply','new_board')");
+    
+    //migrate nodes: type, parent_type, owner_type, story_object_type, component
+    dbexec("UPDATE `jos_anahita_nodes` SET 
+                `parent_type`       = REPLACE(`parent_type`, 'com.discussions', 'com.topics'),
+                `story_object_type` = REPLACE(`story_object_type`, 'com.discussions', 'com:topics'), 
+                `type`              = REPLACE(REPLACE(`type`, 'ComDiscussions', 'ComTopics'),'com.discussions','com:topics'),
+                `component`         = 'com_topics' WHERE `component` LIKE 'com_discussions' ");
+        
+    dbexec("UPDATE `jos_anahita_nodes` SET `permissions` = REPLACE(permissions,'com_discussions','com_topics') 
+            WHERE `permissions` LIKE '%com_discussions%' AND `type` LIKE 'AnSeEntityNode,AnSeEntityActor%'");
+    
+    //migrate edges
+    dbexec("UPDATE `jos_anahita_edges` SET `node_b_type` = REPLACE(`node_b_type`, 'com:discussions', 'com:topics')");
+    dbexec("UPDATE `jos_anahita_edges` SET `component` = 'com_topics' WHERE `component` LIKE 'com_discussions' ");
+    
+    dbexec("RENAME TABLE `jos_discussions_topics` TO `jos_topics_topics`");
+    dbexec("ALTER TABLE `jos_topics_topics` CHANGE `discussions_topic_id` `id` BIGINT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT");
+    
+    dbexec("RENAME TABLE `jos_discussions_boards` TO `jos_topics_boards`");
+    dbexec("ALTER TABLE `jos_topics_boards` CHANGE `discussions_board_id` `topics_board_id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT");
+    
+    dbexec("DELETE FROM `jos_components` WHERE `option`='com_discussions'");
 }
 
 /**

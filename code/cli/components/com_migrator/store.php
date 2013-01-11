@@ -117,7 +117,6 @@ class ComMigratorStore extends KObject
      */
     protected function _loadVersions()
     {
-        /*
        $db  = KService::get('koowa:database.adapter.mysqli');
        $sql = <<<EOF
         CREATE TABLE IF NOT EXISTS `#__migrator_migraitons` (
@@ -127,7 +126,6 @@ class ComMigratorStore extends KObject
         ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=0;
 EOF;
         $db->execute($sql);
-       */
         $db = KService::get('koowa:database.adapter.mysqli');
         $entity = $db->select("SELECT * FROM #__migrator_migraitons", KDatabase::FETCH_OBJECT);
         if ( !$entity ) {
