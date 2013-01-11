@@ -366,6 +366,7 @@ DROP TABLE IF EXISTS jos_poll_menu;
 DROP TABLE IF EXISTS jos_polls;
 
 DROP TABLE IF EXISTS jos_rokadminaudit;
+DROP TABLE IF EXISTS jos_rokuserstats;
 
 DROP TABLE IF EXISTS jos_weblinks;
 
