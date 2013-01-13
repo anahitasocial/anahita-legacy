@@ -402,3 +402,10 @@ function anahita_18()
 	dbexec("DELETE FROM jos_components WHERE `option`='com_media'");
 	dbexec("DELETE FROM jos_plugins WHERE `folder`='editors-xtd' AND `element`='image'");
 }
+
+function anahita_19()
+{
+	//performs a cleanup to remove the dangling edges
+	dbexec("delete edge.* from jos_anahita_nodes as node right join jos_anahita_edges as edge on edge.node_b_id = node.id where node.id is null");
+	dbexec("delete edge.* from jos_anahita_nodes as node right join jos_anahita_edges as edge on edge.node_a_id = node.id where node.id is null");
+}
