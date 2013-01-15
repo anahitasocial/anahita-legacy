@@ -135,8 +135,8 @@ class PlgSystemAnahita extends JPlugin
 	 */
 	public function onAfterRoute()
 	{
-		$type 	= strtolower(KRequest::get('request.format', 'cmd', 'html'));
-				
+		$type 	= strtolower(pick(KRequest::format(),'html'));
+	
 		$format = $type;
 		
 		if ( KRequest::type() == 'AJAX' ) {
@@ -361,7 +361,7 @@ class AnExceptionHandler
                 'version'  => '1.0', 
                 'errors' => array($properties)
             ));
-            
+            JResponse::setHeader('Status', $error->code.' '.$error->message, true);
             JResponse::setHeader('Content-Type','application/json');
             JResponse::setBody($data);
             
