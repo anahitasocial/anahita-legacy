@@ -318,6 +318,7 @@ DELETE FROM `jos_plugins` WHERE
     (`folder` LIKE 'xmlrpc') OR
     (`folder` LIKE 'roknavmenu') OR
     (`folder` LIKE 'socialshare') OR
+    (`element` LIKE 'tagmeta') OR
     (`folder` LIKE 'content' AND `element` IN ('vote','geshi', 'jw_allvideos', 'slideshare15')) OR
     (`folder` LIKE 'search' AND `element` IN ('contacts','newsfeeds', 'weblinks')) OR
     (`folder` LIKE 'system'  AND `element` IN ('mtupgrade','roktracking', 'backlink', 'rokbox')) OR
@@ -327,7 +328,8 @@ DELETE FROM `jos_plugins` WHERE
 DELETE FROM `jos_components` WHERE `option` IN ( 
    'com_socialengine', 'com_banners', 'com_roknavmenubundle', 'com_massmail', 
    'com_messages', 'com_banners', 'com_weblinks', 'com_contact', 'com_poll', 'com_newsfeeds',
-   'com_wrapper', 'com_massmail', 'com_messages', 'com_rokmodule', 'com_media'
+   'com_wrapper', 'com_massmail', 'com_messages', 'com_rokmodule', 'com_media', 'com_tagmeta',
+   'com_invites'
 );  
   
 DELETE FROM `jos_modules` WHERE 
@@ -373,3 +375,5 @@ DROP TABLE IF EXISTS jos_weblinks;
 DROP TABLE IF EXISTS jos_newsfeeds;
 DROP TABLE IF EXISTS jos_contact_details;
 DROP TABLE IF EXISTS jos_content_rating;
+
+UPDATE `jos_modules` SET `position` = REPLACE(`position`, 'content-bottom', 'maintop') WHERE `position` LIKE '%content-bottom%';
