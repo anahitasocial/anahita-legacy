@@ -3,7 +3,7 @@
 <?php if ( count($pages) > 1 ) : ?>
 <div class="pagination" data-behavior="Pagination" data-pagination-options="<?= htmlspecialchars(json_encode($options), ENT_QUOTES, 'UTF-8') ?>">
 	<ul>	    	
-		<li class="prev <?= $prev_page ? '' : 'disabled'?>">
+		<li class="prev <?= $paginator['offset'] == 0 ? 'disabled' : ''?>">
 			<a href="<?= $prev_page ?>">
 				<?= @text('PREV') ?>
 			</a>
@@ -15,13 +15,15 @@
 				</a>			
 			</li>				
 		<?php endforeach; ?>
-		<li class="next <?= $next_page ? '' : 'disabled'?>">
+		<li class="next <?= ($paginator['total'] - $paginator['offset'] > $paginator['limit']) ? '' : 'disabled'?>">
 			<a href="<?= $next_page ?>">
 				<?= @text('NEXT') ?>
 			</a>
 		</li>						
 	</ul>
+	
+	<div class="an-meta">
+		<?= sprintf(@text('LIB-AN-RECORDS-AVAILABLE'), number_format($total)) ?>
+	</div>
 </div>
-
-<p><?= sprintf(@text('LIB-AN-RECORDS-AVAILABLE'), number_format($total)) ?></p>
 <?php endif; ?>
