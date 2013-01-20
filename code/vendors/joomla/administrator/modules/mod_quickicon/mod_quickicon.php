@@ -51,10 +51,7 @@ if (!defined( '_JOS_QUICKICON_MODULE' ))
 		quickiconButton( $link, 'icon-48-section.png', JText::_( 'Section Manager' ) );
 
 		$link = 'index.php?option=com_categories&amp;section=com_content';
-		quickiconButton( $link, 'icon-48-category.png', JText::_( 'Category Manager' ) );
-
-		$link = 'index.php?option=com_media';
-		quickiconButton( $link, 'icon-48-media.png', JText::_( 'Media Manager' ) );
+		quickiconButton( $link, 'icon-48-category.png', JText::_( 'Category Manager' ) );		
 
 		// Get the current JUser object
 		$user = &JFactory::getUser();

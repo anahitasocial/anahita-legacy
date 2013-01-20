@@ -32,9 +32,7 @@ class ConfigApplicationView
 		// Load component specific configurations
 		$table =& JTable::getInstance('component');
 		$table->loadByOption( 'com_users' );
-		$userparams = new JParameter( $table->params, JPATH_ADMINISTRATOR.DS.'components'.DS.'com_users'.DS.'config.xml' );
-		$table->loadByOption( 'com_media' );
-		$mediaparams = new JParameter( $table->params, JPATH_ADMINISTRATOR.DS.'components'.DS.'com_media'.DS.'config.xml' );
+		$userparams = new JParameter( $table->params, JPATH_ADMINISTRATOR.DS.'components'.DS.'com_users'.DS.'config.xml' );		
 
 		// Build the component's submenu
 		$contents = '';
@@ -79,14 +77,7 @@ class ConfigApplicationView
 								<legend><?php echo JText::_( 'User Settings' ); ?></legend>
 								<?php echo $userparams->render('userparams'); ?>
 							</fieldset>
-							<fieldset class="adminform">
-								<legend><?php echo JText::_( 'Media Settings' ); ?>
-				<span class="error hasTip" title="<?php echo JText::_( 'Warning' );?>::<?php echo JText::_( 'WARNPATHCHANGES' ); ?>">
-					<?php echo ConfigApplicationView::WarningIcon(); ?>
-				</span>
-								</legend>
-								<?php echo $mediaparams->render('mediaparams'); ?>
-							</fieldset>
+							
 						</td>
 						<td width="40%">
 							<?php require_once($tmplpath.DS.'config_debug.php'); ?>

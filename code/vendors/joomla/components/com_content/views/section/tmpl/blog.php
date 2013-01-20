@@ -12,7 +12,7 @@
 
 // no direct access
 defined('_JEXEC') or die('Restricted access');
-$cparams =& JComponentHelper::getParams('com_media');
+
 ?>
 
 <div class="rt-joomla <?php echo $this->escape($this->params->get('pageclass_sfx')); ?>">
@@ -26,9 +26,6 @@ $cparams =& JComponentHelper::getParams('com_media');
 		
 		<?php /** Begin Description **/ if ($this->params->def('show_description', 1) || $this->params->def('show_description_image', 1)) :?>
 		<div class="rt-description">
-			<?php if ($this->params->get('show_description_image') && $this->section->image) : ?>
-				<img class="<?php echo $this->section->image_position;?>" src="<?php echo $this->baseurl . '/' . $cparams->get('image_path') . '/'. $this->section->image;?>" align="<?php echo $this->section->image_position;?>" alt="" />
-			<?php endif; ?>
 			<?php if ($this->params->get('show_description') && $this->section->description) : ?>
 				<?php echo $this->section->description; ?>
 			<?php endif; ?>

@@ -151,18 +151,6 @@ class JToolBarHelper
 	}
 
 	/**
-	* Writes a media_manager button
-	* @param string The sub-drectory to upload the media to
-	* @since 1.0
-	*/
-	function media_manager($folder = '', $alt = 'Upload')
-	{
-		$bar = & JToolBar::getInstance('toolbar');
-		// Add an upload button
-		$bar->appendButton( 'Popup', 'upload', $alt, "index.php?option=com_media&tmpl=component&task=popupUpload&folder=$folder", 640, 520 );
-	}
-
-	/**
 	* Writes the common 'new' icon for the button bar
 	* @param string An override for the task
 	* @param string An override for the alt text

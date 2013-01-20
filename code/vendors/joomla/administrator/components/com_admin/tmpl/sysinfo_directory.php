@@ -6,7 +6,6 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.filesystem.folder');
-$cparams = JComponentHelper::getParams ('com_media');
 $config =& JFactory::getConfig();
 ?>
 <fieldset class="adminform">
@@ -45,8 +44,7 @@ $config =& JFactory::getConfig();
 			writableCell( 'administrator/modules' );
 			writableCell( 'administrator/templates' );
 			writableCell( 'components' );
-			writableCell( 'images' );
-			writableCell( $cparams->get('image_path'));
+			
 			writableCell( 'language' );
 
 			// List all site languages

@@ -64,8 +64,7 @@ class modMenuHelper
 		$menu->addSeparator();
 		if ($canManageUsers) {
 			$menu->addChild(new JMenuNode(JText::_('User Manager'), 'index.php?option=com_users&task=view', 'class:user'));
-		}
-		$menu->addChild(new JMenuNode(JText::_('Media Manager'), 'index.php?option=com_media', 'class:media'));
+		}		
 		$menu->addSeparator();
 		if ($canConfig) {
 			$menu->addChild(new JMenuNode(JText::_('Configuration'), 'index.php?option=com_config', 'class:config'));
@@ -132,8 +131,7 @@ class modMenuHelper
 
 			$query = 'SELECT *' .
 				' FROM #__components' .
-				' WHERE '.$db->NameQuote( 'option' ).' <> "com_frontpage"' .
-				' AND '.$db->NameQuote( 'option' ).' <> "com_media"' .
+				' WHERE '.$db->NameQuote( 'option' ).' <> "com_frontpage"' .				
 				' AND enabled = 1' .
 				' ORDER BY ordering, name';
 			$db->setQuery($query);
