@@ -31,7 +31,7 @@ class rokQuickLinksHelper {
 	}
 	
 	function getLinks(&$params) {
-		$default = '[{"icon":"newspaper_add.png","link":"index.php?option=com_content&amp;task=add","title":"Add Article"},{"icon":"images.png","link":"index.php?option=com_media","title":"Media Manager"},{"icon":"drawer_open.png","link":"index.php?option=com_categories&amp;section=com_content","title":"Category Manager"},{"icon":"cog.png","link":"index.php?option=com_config","title":"Configuration"},{"icon":"brick.png","link":"index.php?option=com_installer","title":"Install New"},{"icon":"color_management.png","link":"index.php?option=com_templates","title":"Templates"}]';
+		$default = '[{"icon":"newspaper_add.png","link":"index.php?option=com_content&amp;task=add","title":"Add Article"},{"icon":"drawer_open.png","link":"index.php?option=com_categories&amp;section=com_content","title":"Category Manager"},{"icon":"cog.png","link":"index.php?option=com_config","title":"Configuration"},{"icon":"brick.png","link":"index.php?option=com_installer","title":"Install New"},{"icon":"color_management.png","link":"index.php?option=com_templates","title":"Templates"}]';
 		
 		$links = array();
 		$fields = json_decode($params->get('quickfields', $default));

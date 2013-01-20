@@ -69,7 +69,7 @@ Delegator.register(['click'], 'Share', function(event, el, api) {
 	var textarea = el.form.getElement('textarea');
 	//before sumbmitting validate min and max leng of text area
 	//if ok then submit 	 
-	if ( el.form.get('validator').validateField(textarea) ) {
+	if ( el.form.get('validator').validateField(textarea) && textarea.value.match(/^(?!\s*$).+/) ) {
 		window.delegator.trigger('Request', el, event);
 		textarea.value = '';
 		el.form.getElements('input').set('checked', false);

@@ -3,11 +3,8 @@ For any of the *less files in the ROOT/templates/base/css
 directory you can create overwrite less files in this directory. 
 For example:
 
-style2/apps/stories.less
-style2/bootstrap/variables.less
-style2/colors/colors.less
-style2/core/actor.less
-style2/images/spinner.gif
+style2/core/template.less
+style2/images/logo.png
 
 Then go to the administration back-end > site templates > your template > parameters then
 - set "Style" = "Style 2",

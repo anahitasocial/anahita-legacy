@@ -43,20 +43,16 @@
 				<button data-trigger="Share" data-request-options="{inject:'an-stories'}" class="btn btn-primary" >
 					<?= @text('LIB-AN-ACTION-SHARE') ?>
 				</button> 
-			</div> 
+			</div>
 			
 			<?php if ( is_person($actor) && !is_viewer($actor) ) : ?>			
 			<div class="story-action pull-right"> 
 				<label class="checkbox" for="private-message"> 
 					<input id="private-flag" type="checkbox" name="private_message"> 
-					<?=@text('COM-STORIES-COMPOSER-PRIVATE-MESSAGE-FLAG')?>
+					<?=@text('COM-STORIES-COMPOSER-PRIVATE-MESSAGE-FLAG') ?> 
 				</label>
 			</div>
 			<?php endif; ?>
-			
-			<div class="story-action right"> 
-				<span class="counter"></span>
-			</div>
 		</div>
 	</form>
 </div>

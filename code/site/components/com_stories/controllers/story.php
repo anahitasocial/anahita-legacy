@@ -87,6 +87,10 @@ class ComStoriesControllerStory extends ComBaseControllerService
 			
 		$component = $actor->component ;
 		
+		if ( !preg_match('/^(?!\s*$).+/', $data->body) ) {
+			return false;	
+		}
+		
 		$story = $this->setItem($this->createStory(array(
 		    'component' => $component,
 			'name'		=> $name,
