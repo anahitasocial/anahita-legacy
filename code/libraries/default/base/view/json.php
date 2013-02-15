@@ -133,7 +133,7 @@ class LibBaseViewJson extends LibBaseViewAbstract
             }
             
             $data = array(
-                $this->getName() => $data,
+                'data' => $data,
                 'pagination'     => array(
                     'offset' => (int) $items->getOffset(),
                     'limit'  => (int) $items->getLimit(),
