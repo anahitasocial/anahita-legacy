@@ -135,8 +135,7 @@ class PlgSystemAnahita extends JPlugin
 	 */
 	public function onAfterRoute()
 	{
-		$type 	= strtolower(pick(KRequest::format(),'html'));
-	
+		$type 	= strtolower(pick(KRequest::format(),'html')); 
 		$format = $type;
 		
 		if ( KRequest::type() == 'AJAX' ) {
