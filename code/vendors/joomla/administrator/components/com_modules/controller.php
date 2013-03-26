@@ -285,6 +285,18 @@ class ModulesController extends JController
 		if (!$row->bind( $post, 'selections' )) {
 			return JError::raiseWarning( 500, $row->getError() );
 		}
+		
+		$params		= JRequest::getVar( 'params', null, 'post', 'array' );
+		
+		// Build parameter INI string
+		if (is_array($params))
+		{
+			$txt = array ();
+			foreach ($params as $k => $v) {
+				$txt[] = "$k=$v";
+			}
+			$row->params = implode("\n", $txt);
+		}
 
 		if (!$row->check()) {
 			return JError::raiseWarning( 500, $row->getError() );
