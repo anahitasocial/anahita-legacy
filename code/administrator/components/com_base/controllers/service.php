@@ -120,6 +120,8 @@ class ComBaseControllerService extends LibBaseControllerService
 	 */
 	protected function _actionPost($context)
 	{
+	    $data = $context->data;
+	    
 		if ( $context->action == 'save' ) {
 			$this->setRedirect(array('view'=>KInflector::pluralize($this->getIdentifier()->name)));			
 		}
