@@ -64,11 +64,17 @@ class AnDomainRelationshipManytomany extends AnDomainRelationshipOnetomany
 	 */
 	public function setConfig(KConfig $config)
 	{
+	    $identifier = $config->description->getRepository()->getIdentifier();
+	    
 		$config->child 	= $config->through;
 		
-		parent::setConfig($config);		
+		parent::setConfig($config);
 		
 		$this->_target  = KService::getIdentifier($config->target);
+		
+		if ( !$this->_target->application ) {
+		    $this->_target->application  = $identifier->application;
+		}
 		
 		$this->_target_child_key  = $config->target_child_key;
 		

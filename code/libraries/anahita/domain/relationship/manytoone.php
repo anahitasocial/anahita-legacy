@@ -228,6 +228,12 @@ class AnDomainRelationshipManytoone extends AnDomainRelationshipProperty impleme
 		{
 			$key   	= $this->_type_column->key();
 			$parent	= isset($data[$key]) ? $data[$key] : null;
+			if ( $parent ) {
+			    $parent = KService::getIdentifier($parent);
+			    if ( !$parent->application ) {
+			        $parent->application = $this->_child->application;
+			    }
+			}
 		} 
 		else $parent = $this->_parent;
 

@@ -99,7 +99,7 @@ class AnDomain
 	static public function getEntityIdentifier($identifier)
 	{
 	    $identifier = KService::getIdentifier($identifier);
-	    
+
 	    if ( !$identifier->basepath )
 	    {
 	        $adapters     = KService::get('koowa:loader')->getAdapters();

@@ -65,9 +65,18 @@ abstract class AnDomainRelationshipProperty extends AnDomainPropertyAbstract
 	 */
 	public function setConfig(KConfig $config)
 	{
-		if ( $config->parent )
+	    $identifier = $config->description->getRepository()->getIdentifier();
+	    
+		if ( $config->parent ) 
+		{
 			$this->_parent = KService::getIdentifier($config->parent);
-					
+			
+			//adopt the child application
+			if ( !$this->_parent->application ) {
+			    $this->_parent->application  = $identifier->application;
+			}
+		}
+				
 		parent::setConfig($config);
 
 		if ( $config->child ) 
@@ -79,6 +88,10 @@ abstract class AnDomainRelationshipProperty extends AnDomainPropertyAbstract
 				$config->child 	  = $identifier;				
 			}
 			$this->_child  = KService::getIdentifier($config->child);
+			//adopt the parent application 
+			if ( !$this->_child->application ) {			    
+			    $this->_child->application  = $identifier->application;
+			}
 		}
 			
 		$this->_parent_key    = $config->parent_key;
