@@ -182,7 +182,7 @@ class KMixinCallback extends KMixinAbstract implements KCommandInterface
  	 * @param 	callback		The callback function to unregister
  	 * @return  KObject The mixer object
  	 */
-	public function unregisterCallback($commands, $callback)
+	public function unregisterCallback($commands, $callback = null)
 	{
 		$commands  = (array) $commands;
 
@@ -192,9 +192,19 @@ class KMixinCallback extends KMixinAbstract implements KCommandInterface
 
 			if (isset($this->_callbacks[$command]) )
 			{
-				$key = array_search($callback, $this->_callbacks[$command], true);
-       	 		unset($this->_callbacks[$command][$key]);
-       	 		unset($this->_params[$command][$key]);
+			    if ( $callback )
+			    {
+			        $key = array_search($callback, $this->_callbacks[$command], true);
+			        if ( $key !== false ) {
+			            unset($this->_callbacks[$command][$key]);
+			            unset($this->_params[$command][$key]);
+			        }
+			    } 
+			    else 
+			    {
+			        unset($this->_callbacks[$command]);
+			        unset($this->_params[$command]);			        
+			    }
 			}
 		}
 

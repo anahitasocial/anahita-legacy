@@ -113,9 +113,9 @@ class KHttpResponse
      * @param  integer  An http status code
      * @return string   The http header
      */
-    public static function getHeader($code, $protocol = 'HTTP/1.1') 
+    public static function getHeader($code, $message = null, $protocol = 'HTTP/1.1') 
     {  
-        return $protocol.' '.$code.' '.self::$__messages[$code];  
+        return $protocol.' '.$code.' '.($message ? $message : self::getMessage($code));  
     }  
   
     /**
@@ -126,7 +126,7 @@ class KHttpResponse
      */
     public static function getMessage($code) 
     {  
-        return self::$__messages[$code];  
+        return isset(self::$__messages[$code]) ? self::$__messages[$code] : null;  
     }  
   
     /**

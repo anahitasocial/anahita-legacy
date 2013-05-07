@@ -122,7 +122,7 @@ class KEventDispatcher extends KObject
      * @param   object  An object implementing the KObjectHandlable interface
      * @return  KEventDispatcher
      */
-    public function removeEventListener($name, KObjectHandable $listener)
+    public function removeEventListener($name, KObjectHandlable $listener)
     {
         if(is_object($listener))
         {

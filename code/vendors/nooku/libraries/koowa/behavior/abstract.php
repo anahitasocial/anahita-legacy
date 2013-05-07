@@ -175,9 +175,18 @@ abstract class KBehaviorAbstract extends KMixinAbstract implements KBehaviorInte
 	 * @return	object  		Return object on success, throws exception on failure
 	 * @see 	KObjectServiceable
 	 */
-	final public function getService($identifier, array $config = array())
+	final public function getService($identifier = null, array $config = array())
 	{
-	    return $this->__service_container->get($identifier, $config);
+	    if(!isset($this->__service_container)) {
+	        throw new KObjectException("Failed to call ".get_class($this)."::getService(). No service_container object defined.");
+	    }
+	    if ( !isset($identifier) ) {
+	    	$result =  $this->__service_container;
+	    }
+	    else {
+	    	$result =  $this->__service_container->get($identifier, $config);
+	    }
+	    return $result;
 	}
 	
 	/**

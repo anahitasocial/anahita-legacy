@@ -131,7 +131,7 @@ class JDocumentRendererModules extends JDocumentRenderer
 		//Render the modules
 		$renderer = $this->_doc->loadRenderer('module');
 		
-		$contents = '';
+		$contents = $content;
 		foreach ($modules as $module)  {
 			$contents .= $renderer->render($module, $params, $content);
 		}

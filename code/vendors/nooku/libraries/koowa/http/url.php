@@ -343,7 +343,7 @@ class KHttpUrl extends KObject
      * @param   $query  string|array    The query string to use; for example `foo=bar&baz=dib`.
      * @return  KHttpUrl
      */
-    public function setQuery($query)
+    public function setQuery($query, $merge = false)
     {
         if(!is_array($query))
         {
@@ -352,10 +352,14 @@ class KHttpUrl extends KObject
             }
 
             //Set the query vars
-            parse_str($query, $this->_query);
+            parse_str($query, $query);
         }
 
-        if(is_array($query)) {
+        if(is_array($query)) 
+        {
+        	if ( $merge ) {
+        		$query = array_merge($this->_query, $query);
+        	}
             $this->_query = $query;
         }
 

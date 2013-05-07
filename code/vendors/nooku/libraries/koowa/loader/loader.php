@@ -250,13 +250,10 @@ class KLoader
             {
                 $result = self::$_adapters[self::$_prefix_map[$parts[0]]]->findPath( $class, $basepath);
 
-                if ($result !== false)
-                {
+                if ($result !== false) {
                    //Get the canonicalized absolute pathname
-                   $path = realpath($result);
-                   $result = $path !== false ? $path : $result;
+                   $result = realpath($result);
                 }
-
                 $this->_registry->offsetSet($base.'-'.(string) $class, $result);
             }
 
