@@ -38,9 +38,9 @@ class JEvent extends JObserver
 	 * @param object $subject The object to observe
 	 * @since 1.5
 	 */
-	function JEvent(& $subject) {
-		parent::__construct($subject);
-	}
+//	function JEvent(& $subject) {
+//		parent::__construct($subject);
+//	}
 
 	/**
 	 * Method to trigger events

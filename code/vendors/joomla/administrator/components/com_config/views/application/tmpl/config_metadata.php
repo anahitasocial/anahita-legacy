@@ -25,26 +25,6 @@ defined( '_JEXEC' ) or die( 'Restricted access' ); ?>
 				<textarea class="text_area" cols="50" rows="3" style="width:400px; height:50px" name="MetaKeys"><?php echo $row->MetaKeys; ?></textarea>
 			</td>
 		</tr>
-		<tr>
-			<td valign="top" class="key">
-				<span class="editlinktip hasTip" title="<?php echo JText::_( 'Show Title Meta Tag' ); ?>::<?php echo JText::_( 'TIPSHOWTITLEMETATAGITEMS' ); ?>">
-					<?php echo JText::_( 'Show Title Meta Tag' ); ?>
-				</span>
-			</td>
-			<td>
-				<?php echo $lists['MetaTitle']; ?>
-			</td>
-		</tr>
-		<tr>
-			<td valign="top" class="key">
-				<span class="editlinktip hasTip" title="<?php echo JText::_( 'Show Author Meta Tag' ); ?>::<?php echo JText::_( 'TIPSHOWAUTHORMETATAGITEMS' ); ?>">
-					<?php echo JText::_( 'Show Author Meta Tag' ); ?>
-				</span>
-			</td>
-			<td>
-				<?php echo $lists['MetaAuthor']; ?>
-			</td>
-		</tr>
 		</tbody>
 	</table>
 </fieldset>

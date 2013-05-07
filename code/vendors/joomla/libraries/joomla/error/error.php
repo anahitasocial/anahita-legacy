@@ -71,7 +71,7 @@ class JError
 	 * @return	boolean	True if argument is an exception, false otherwise.
 	 * @since	1.5
 	 */
-	function isError(& $object)
+	static public function isError(& $object)
 	{
 		if (!is_object($object)) {
 			return false;
@@ -88,7 +88,7 @@ class JError
 	 * @return	mixed	Last exception object in the error stack or boolean false if none exist
 	 * @since	1.5
 	 */
-	function & getError($unset = false)
+	static public function & getError($unset = false)
 	{
 		if (!isset($GLOBALS['_JERROR_STACK'][0])) {
 			$false = false;
@@ -110,7 +110,7 @@ class JError
 	 * @return	array 	Chronological array of errors that have been stored during script execution
 	 * @since	1.5
 	 */
-	function & getErrors()
+	static public function & getErrors()
 	{
 		return $GLOBALS['_JERROR_STACK'];
 	}
@@ -128,7 +128,7 @@ class JError
 	 *
 	 * @see		JException
 	 */
-	function & raise($level, $code, $msg, $info = null, $backtrace = false)
+	static public function & raise($level, $code, $msg, $info = null, $backtrace = false)
 	{
 		jimport('joomla.error.exception');
 
@@ -166,7 +166,7 @@ class JError
 	 * @return	object	$error	The configured JError object
 	 * @since	1.5
 	 */
-	function & raiseError($code, $msg, $info = null)
+	static public function & raiseError($code, $msg, $info = null)
 	{
 		$reference = & JError::raise(E_ERROR, $code, $msg, $info, true);
 		return $reference;
@@ -182,7 +182,7 @@ class JError
 	 * @return	object	$error	The configured JError object
 	 * @since	1.5
 	 */
-	function & raiseWarning($code, $msg, $info = null)
+	static public function & raiseWarning($code, $msg, $info = null)
 	{
 		$reference = & JError::raise(E_WARNING, $code, $msg, $info);
 		return $reference;
@@ -198,7 +198,7 @@ class JError
 	 * @return	object	$error	The configured JError object
 	 * @since	1.5
 	 */
-	function & raiseNotice($code, $msg, $info = null)
+	static public function & raiseNotice($code, $msg, $info = null)
 	{
 		$reference = & JError::raise(E_NOTICE, $code, $msg, $info);
 		return $reference;
@@ -212,7 +212,7 @@ class JError
 	* @return	array	All error handling details
 	* @since	1.5
 	*/
-    function getErrorHandling( $level )
+    static public function getErrorHandling( $level )
     {
 		return $GLOBALS['_JERROR_HANDLERS'][$level];
     }
@@ -242,7 +242,7 @@ class JError
 	 * @return	mixed	True on success, or a JException object if failed.
 	 * @since	1.5
 	 */
-	function setErrorHandling($level, $mode, $options = null)
+	static public function setErrorHandling($level, $mode, $options = null)
 	{
 		$levels = $GLOBALS['_JERROR_LEVELS'];
 
@@ -291,7 +291,7 @@ class JError
   	 * @access public
   	 * @see set_error_handler
   	 */
-	function attachHandler()
+	static public function attachHandler()
 	{
 		set_error_handler(array('JError', 'customErrorHandler'));
 	}
@@ -302,7 +302,7 @@ class JError
   	 * @access public
   	 * @see restore_error_handler
   	 */
-	function detachHandler()
+	static public function detachHandler()
 	{
 		restore_error_handler();
 	}
@@ -322,7 +322,7 @@ class JError
 	* @return	boolean	True on success; false if the level already has been registered
 	* @since	1.5
 	*/
-	function registerErrorLevel( $level, $name, $handler = 'ignore' )
+	static public function registerErrorLevel( $level, $name, $handler = 'ignore' )
 	{
 		if( isset($GLOBALS['_JERROR_LEVELS'][$level]) ) {
 			return false;
@@ -341,7 +341,7 @@ class JError
 	* @return	mixed	Human readable error level name or boolean false if it doesn't exist
 	* @since	1.5
 	*/
-	function translateErrorLevel( $level )
+	static public function translateErrorLevel( $level )
 	{
 		if( isset($GLOBALS['_JERROR_LEVELS'][$level]) ) {
 			return $GLOBALS['_JERROR_LEVELS'][$level];
@@ -361,7 +361,7 @@ class JError
 	 *
 	 * @see	raise()
 	 */
-	function & handleIgnore(&$error, $options)
+	static public function & handleIgnore(&$error, $options)
 	{
 		return $error;
 	}
@@ -378,7 +378,7 @@ class JError
 	 *
 	 * @see	raise()
 	 */
-	function & handleEcho(&$error, $options)
+	static public function & handleEcho(&$error, $options)
 	{
 		$level_human = JError::translateErrorLevel($error->get('level'));
 
@@ -408,7 +408,7 @@ class JError
 	 *
 	 * @see	raise()
 	 */
-	function & handleVerbose(& $error, $options)
+	static public function & handleVerbose(& $error, $options)
 	{
 		$level_human = JError::translateErrorLevel($error->get('level'));
 		$info = $error->get('info');
@@ -443,7 +443,7 @@ class JError
 	 *
 	 * @see	raise()
 	 */
-	function & handleDie(& $error, $options)
+	static public function & handleDie(& $error, $options)
 	{
 		$level_human = JError::translateErrorLevel($error->get('level'));
 
@@ -473,7 +473,7 @@ class JError
 	 *
 	 * @see	raise()
 	 */
-	function & handleMessage(& $error, $options)
+	static public function & handleMessage(& $error, $options)
 	{
 		global $mainframe;
 		$type = ($error->get('level') == E_NOTICE) ? 'notice' : 'error';
@@ -493,7 +493,7 @@ class JError
 	 *
 	 * @see	raise()
 	 */
-	function & handleLog(& $error, $options)
+	static public function & handleLog(& $error, $options)
 	{
 		static $log;
 
@@ -525,7 +525,7 @@ class JError
 	 *
 	 * @see	raise()
 	 */
-	function &handleCallback( &$error, $options )
+	static public function &handleCallback( &$error, $options )
 	{
 		$result = call_user_func( $options, $error );
 		return $result;
@@ -539,7 +539,7 @@ class JError
 	 * @return	void
 	 * @since	1.5
 	 */
-	function customErrorPage(& $error)
+	static public function customErrorPage(& $error)
 	{
 		// Initialize variables
 		jimport('joomla.document.document');
@@ -563,7 +563,7 @@ class JError
 		$document->setError($error);
 
 		@ob_end_clean();
-		$document->setTitle(JText::_('Error').': '.$error->code);
+		$document->setTitle(JText::_('Error').': '.$error->getCode());
 		$document->setLanguage($language->getTag());
 		$document->setDirection($dir);
 		$data = $document->render(false, array (
@@ -577,7 +577,7 @@ class JError
 		$app->close(0);
 	}
 
-	function customErrorHandler($level, $msg)
+	static public function customErrorHandler($level, $msg)
 	{
 		JError::raise($level, '', $msg);
 	}

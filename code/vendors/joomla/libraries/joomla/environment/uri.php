@@ -794,6 +794,11 @@ class JURI extends JObject
 		}
 		return $parts;
 	}
+	
+	public function __toString()
+	{
+		return $this->toString();
+	}
 
 
 }

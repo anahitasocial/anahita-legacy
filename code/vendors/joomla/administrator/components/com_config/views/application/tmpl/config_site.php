@@ -46,36 +46,6 @@ defined( '_JEXEC' ) or die( 'Restricted access' ); ?>
 				<?php echo $lists['editor']; ?>
 			</td>
 		</tr>
-		<tr>
-			<td class="key">
-				<span class="editlinktip hasTip" title="<?php echo JText::_( 'List Length' ); ?>::<?php echo JText::_( 'TIPSETSDEFAULTLENGTHLISTS' ); ?>">
-					<?php echo JText::_( 'List Length' ); ?>
-				</span>
-			</td>
-			<td>
-				<?php echo $lists['list_limit']; ?>
-			</td>
-		</tr>
-		<tr>
-			<td width="185" class="key">
-				<span class="editlinktip hasTip" title="<?php echo JText::_( 'Feedlimit' ); ?>::<?php echo JText::_( 'TIPFEEDLIMIT' ); ?>">
-					<?php echo JText::_( 'Feed Length' ); ?>
-				</span>
-			</td>
-			<td>
-				<?php echo $lists['feed_limit']; ?>
-			</td>
-		</tr>
-		<tr>
-			<td class="key">
-				<span class="editlinktip hasTip" title="<?php echo JText::_( 'Feed Email' ); ?>::<?php echo JText::_( 'TIPFEEDEMAIL' ); ?>">
-			<?php echo JText::_( 'Feed Email' ); ?>
-			</span>
-			</td>
-			<td>
-				<?php echo $lists['feed_email']; ?>
-			</td>
-		</tr>
 	</tbody>
 	</table>
 </fieldset>

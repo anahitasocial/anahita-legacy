@@ -58,11 +58,10 @@ class ConfigApplicationView
 			<div id="page-site">
 				<table class="noshow">
 					<tr>
-						<td width="65%">
+						<td width="66%">
 							<?php require_once($tmplpath.DS.'config_site.php'); ?>
-							<?php require_once($tmplpath.DS.'config_metadata.php'); ?>
 						</td>
-						<td width="35%">
+						<td width="36%">
 							<?php require_once($tmplpath.DS.'config_seo.php'); ?>
 						</td>
 					</tr>
@@ -71,15 +70,14 @@ class ConfigApplicationView
 			<div id="page-system">
 				<table class="noshow">
 					<tr>
-						<td width="60%">
+						<td width="66%">
 							<?php require_once($tmplpath.DS.'config_system.php'); ?>
 							<fieldset class="adminform">
 								<legend><?php echo JText::_( 'User Settings' ); ?></legend>
 								<?php echo $userparams->render('userparams'); ?>
-							</fieldset>
-							
+							</fieldset>							
 						</td>
-						<td width="40%">
+						<td width="33%">
 							<?php require_once($tmplpath.DS.'config_debug.php'); ?>
 							<?php require_once($tmplpath.DS.'config_cache.php'); ?>
 							<?php require_once($tmplpath.DS.'config_session.php'); ?>
@@ -90,12 +88,12 @@ class ConfigApplicationView
 			<div id="page-server">
 				<table class="noshow">
 					<tr>
-						<td width="60%">
+						<td width="65%">
 							<?php require_once($tmplpath.DS.'config_server.php'); ?>
 							<?php require_once($tmplpath.DS.'config_locale.php'); ?>
-							<?php require_once($tmplpath.DS.'config_ftp.php'); ?>
+							
 						</td>
-						<td width="40%">
+						<td width="35%">
 							<?php require_once($tmplpath.DS.'config_database.php'); ?>
 							<?php require_once($tmplpath.DS.'config_mail.php'); ?>
 						</td>
@@ -117,10 +115,6 @@ class ConfigApplicationView
 
 	function WarningIcon()
 	{
-		global $mainframe;
-
-		$tip = '<img src="'.JURI::root().'includes/js/ThemeOffice/warning.png" border="0"  alt="" />';
-
-		return $tip;
+		return '';
 	}
 }

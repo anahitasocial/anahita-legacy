@@ -65,8 +65,10 @@ class JHTMLIcon
 	}
 
 	function email($article, $params, $access, $attribs = array())
-        {
-                require_once(JPATH_SITE.DS.'components'.DS.'com_mailto'.DS.'helpers'.DS.'mailto.php');
+    {
+        deprecated('this method has been deprecated');
+        return;
+        require_once(JPATH_SITE.DS.'components'.DS.'com_mailto'.DS.'helpers'.DS.'mailto.php');
 		$uri	=& JURI::getInstance();
 		$base	= $uri->toString( array('scheme', 'host', 'port'));
                 $link	= $base.JRoute::_( ContentHelperRoute::getArticleRoute($article->slug, $article->catslug, $article->sectionid) , false );

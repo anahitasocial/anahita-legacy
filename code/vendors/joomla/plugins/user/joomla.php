@@ -85,7 +85,7 @@ class plgUserJoomla extends JPlugin
 
 		// If the user is blocked, redirect with an error
 		if ($instance->get('block') == 1) {
-			return JError::raiseWarning('SOME_ERROR_CODE', JText::_('E_NOLOGIN_BLOCKED'));
+			return new JException('SOME_ERROR_CODE', JText::_('E_NOLOGIN_BLOCKED'));
 		}
 
 		// Get an ACL object
@@ -106,7 +106,7 @@ class plgUserJoomla extends JPlugin
 		}
 
 		if(!$acl->is_group_child_of( $grp->name, $options['group'])) {
-			return JError::raiseWarning('SOME_ERROR_CODE', JText::_('E_NOLOGIN_ACCESS'));
+			return new JException('SOME_ERROR_CODE', JText::_('E_NOLOGIN_ACCESS'));
 		}
 
 		//Mark the user as logged in

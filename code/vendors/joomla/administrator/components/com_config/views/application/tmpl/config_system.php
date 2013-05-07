@@ -25,22 +25,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' ); ?>
 					<input class="text_area" type="text" size="50" name="log_path" value="<?php echo $row->log_path; ?>" />
 				</td>
 			</tr>
-			<tr>
-				<td class="key">
-					<span class="editlinktip hasTip" title="<?php echo JText::_( 'ENABLE WEB SERVICES' ); ?>::<?php echo JText::_( 'TIPENABLEWEBSERVICES' ); ?>">
-					<?php echo JText::_( 'ENABLE WEB SERVICES' ); ?>
-				</span>
-				</td>
-				<td>
-					<?php echo $lists['xmlrpc_server']; ?>
-				</td>
-			</tr>
-			<tr>
-			<td class="key">
-				<span class="editlinktip hasTip" title="<?php echo JText::_( 'Help Server' ); ?>::<?php echo JText::_( 'TIPHELPSERVER' ); ?>">
-					<?php echo JText::_( 'Help Server' ); ?>
-				</span>
-			</td>			
+					
 		</tr>
 		</tbody>
 	</table>

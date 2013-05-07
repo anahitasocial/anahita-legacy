@@ -11,26 +11,26 @@
  * source software licenses. See COPYRIGHT.php for copyright notices and
  * details.
  */
-
-// no direct access
 defined('_JEXEC') or die('Restricted access');
-
-// Require the com_content helper library
-require_once(JPATH_COMPONENT.DS.'controller.php');
-require_once(JPATH_COMPONENT.DS.'helpers'.DS.'query.php');
-require_once(JPATH_COMPONENT.DS.'helpers'.DS.'route.php');
-
-// Component Helper
-jimport('joomla.application.component.helper');
-
-// Create the controller
-$controller = new ContentController();
-
-// Register Extra tasks
-$controller->registerTask( 'new'  , 	'edit' );
-$controller->registerTask( 'apply', 	'save' );
-$controller->registerTask( 'apply_new', 'save' );
-
-// Perform the Request task
-$controller->execute(JRequest::getVar('task', null, 'default', 'cmd'));
-$controller->redirect();
+if ( KRequest::get('get.view', 'cmd') != 'frontpage')
+{
+    // Require the com_content helper library
+    require_once(JPATH_COMPONENT.DS.'controller.php');
+    require_once(JPATH_COMPONENT.DS.'helpers'.DS.'query.php');
+    require_once(JPATH_COMPONENT.DS.'helpers'.DS.'route.php');
+    
+    // Component Helper
+    jimport('joomla.application.component.helper');
+    
+    // Create the controller
+    $controller = new ContentController();
+    
+    // Register Extra tasks
+    $controller->registerTask( 'new'  , 	'edit' );
+    $controller->registerTask( 'apply', 	'save' );
+    $controller->registerTask( 'apply_new', 'save' );
+    
+    // Perform the Request task
+    $controller->execute(JRequest::getVar('task', null, 'default', 'cmd'));
+    $controller->redirect();    
+}

@@ -34,7 +34,7 @@ class JRegistryFormat extends JObject
 	 * @return	object	Registry format handler
 	 * @since	1.5
 	 */
-	function &getInstance($format)
+	static public function &getInstance($format)
 	{
 		static $instances;
 

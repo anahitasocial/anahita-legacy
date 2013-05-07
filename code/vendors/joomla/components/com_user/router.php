@@ -11,38 +11,42 @@
 * See COPYRIGHT.php for copyright notices and details.
 */
 
-function UserBuildRoute(&$query)
+class ComUserRouter extends ComBaseRouterDefault
 {
-	$segments = array();
-
-	if(isset($query['view']))
+	
+	public function build(&$query)
 	{
-		if(empty($query['Itemid'])) {
-			$segments[] = $query['view'];
-		} else {
-			$menu = &JSite::getMenu();
-			$menuItem = &$menu->getItem( $query['Itemid'] );
-			if(!isset($menuItem->query['view']) || $menuItem->query['view'] != $query['view']) {
+		$segments = array();
+	
+		if(isset($query['view']))
+		{
+			if(empty($query['Itemid'])) {
 				$segments[] = $query['view'];
+			} else {
+				$menu = &JSite::getMenu();
+				$menuItem = &$menu->getItem( $query['Itemid'] );
+				if(!isset($menuItem->query['view']) || $menuItem->query['view'] != $query['view']) {
+					$segments[] = $query['view'];
+				}
 			}
+			unset($query['view']);
 		}
-		unset($query['view']);
+		return $segments;
 	}
-	return $segments;
-}
-
-function UserParseRoute($segments)
-{
-	$vars = array();
-
-	$count = count($segments);
-	if(!empty($count)) {
-		$vars['view'] = $segments[0];
-	}
-
-	if($count > 1) {
-		$vars['id']    = $segments[$count - 1];
-	}
-
-	return $vars;
+	
+	public function parse($segments)
+	{
+		$vars = array();
+	
+		$count = count($segments);
+		if(!empty($count)) {
+			$vars['view'] = $segments[0];
+		}
+	
+		if($count > 1) {
+			$vars['id']    = $segments[$count - 1];
+		}
+	
+		return $vars;
+	}	
 }

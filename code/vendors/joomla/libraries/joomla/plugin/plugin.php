@@ -65,9 +65,9 @@ class JPlugin extends JEvent
 	 * (this list is not meant to be comprehensive).
 	 * @since 1.5
 	 */
-	function JPlugin(& $subject, $config = array())  {
-		parent::__construct($subject);
-	}
+//	function JPlugin(& $subject, $config = array())  {
+//		parent::__construct($subject);
+//	}
 
 	/**
 	 * Constructor

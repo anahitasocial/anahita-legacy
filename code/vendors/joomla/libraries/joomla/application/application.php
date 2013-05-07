@@ -130,21 +130,20 @@ class JApplication extends JObject
 			//Load the router object
 			jimport('joomla.application.helper');
 			$info =& JApplicationHelper::getClientInfo($client, true);
+            $classname = $prefix.ucfirst($client);
+            if ( !class_exists($classname) )
+            {
+                $path = $info->path.DS.'includes'.DS.'application.php';
+                if(file_exists($path))
+                    require_once $path;
+            }
 
-			$path = $info->path.DS.'includes'.DS.'application.php';
-			if(file_exists($path))
-			{
-				require_once $path;
-
-				// Create a JRouter object
-				$classname = $prefix.ucfirst($client);
-				$instance = new $classname($config);
-			}
-			else
-			{
-				$error = JError::raiseError(500, 'Unable to load application: '.$client);
-				return $error;
-			}
+            if ( !class_exists($classname) ) {
+                $error = JError::raiseError(500, 'Unable to load application: '.$client);
+                return $error;
+            }
+            
+            $instance = new $classname($config);
 
 			$instances[$client] =& $instance;
 		}

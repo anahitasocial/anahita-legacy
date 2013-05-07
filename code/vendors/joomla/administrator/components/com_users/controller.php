@@ -390,6 +390,9 @@ class UsersController extends JController
 				{
 					$user =& JUser::getInstance((int)$id);
 					$user->block = $block;
+					if ( $block ) {
+					    $user->activation = null;
+					}
 					$user->save();
 
 					if($block)

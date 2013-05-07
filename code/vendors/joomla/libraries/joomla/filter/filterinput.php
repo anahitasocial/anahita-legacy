@@ -77,7 +77,7 @@ class JFilterInput extends JObject
 	 * @return	object	The JFilterInput object.
 	 * @since	1.5
 	 */
-	function & getInstance($tagsArray = array(), $attrArray = array(), $tagsMethod = 0, $attrMethod = 0, $xssAuto = 1)
+	static public function & getInstance($tagsArray = array(), $attrArray = array(), $tagsMethod = 0, $attrMethod = 0, $xssAuto = 1)
 	{
 		static $instances;
 
@@ -105,7 +105,7 @@ class JFilterInput extends JObject
 	 * @since	1.5
 	 * @static
 	 */
-	function clean($source, $type='string')
+	public function clean($source, $type='string')
 	{
 		// Handle the type constraint
 		switch (strtoupper($type))

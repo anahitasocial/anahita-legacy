@@ -14,10 +14,6 @@
   <param name="useractivation" type="radio" default="1" label="New User Account Activation" description="TIPIFYESUSERMAILEDLINK">
    <option value="0">No</option>
    <option value="1">Yes</option>
-  </param>
-  <param name="frontend_userparams" type="radio" default="1" label="Front-end User Params" description="TIPFRONTENDUSERPARAMS">
-   <option value="0">Hide</option>
-   <option value="1">Show</option>
-  </param>
+  </param>  
  </params>
 </config>

@@ -42,9 +42,17 @@ class JRouterAdministrator extends JRouter
 	 */
 	function &build($url)
 	{
+	    if ( is_string($url) && strpos($url,'index.php') === false ) {
+	        $url = 'index.php?'.$url;
+	    }
 		//Create the URI object
 		$uri =& $this->_createURI($url);
-
+        if ( $uri->getVar('format') == 'html' ) 
+        {    
+            $query = $uri->getQuery(true);
+            unset($query['format']);
+            $uri->setQuery($query);
+        }
 		return $uri;
 	}
 }
