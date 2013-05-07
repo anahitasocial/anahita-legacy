@@ -193,12 +193,12 @@ class RTCore
         if (isset($redirect) && $redirect != '') {
             setcookie(_COOKIENAME, '', time() - 3600);
 
-            $messages =& $mainframe->getMessageQueue();
+//             $messages =& $mainframe->getMessageQueue();
 
-            if (strpos($redirect, 'com_login')===false
-                && empty($messages)
-                && strtolower(JRequest::getString('process')) != 'ajax')
-                $mainframe->redirect($redirect);
+//             if (strpos($redirect, 'com_login')===false
+//                 && empty($messages)
+//                 && strtolower(JRequest::getString('process')) != 'ajax')
+//                 $mainframe->redirect($redirect);
         }
     }
 

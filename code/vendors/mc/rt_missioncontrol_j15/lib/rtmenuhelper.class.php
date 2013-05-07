@@ -59,7 +59,7 @@ class RTMenuHelper {
 		/*
 		 * Dashboard
 		 */
-		$menu->addChild(new JMenuNode(JText::_('Dashboard'), 'index.php', 'dashboard'));
+		$menu->addChild(new JMenuNode(JText::_('Dashboard'), 'index.php?', 'dashboard'));
 		
 		/*
 		 * Manage Users

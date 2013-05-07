@@ -7,7 +7,9 @@
  */
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted index access' );
-
+JHTML::script('lib_koowa/js/koowa.js',     'media/');
+JHTML::script('lib_anahita/js/anahita.js', 'media/');
+JHTML::script('lib_anahita/js/admin.js',   'media/'); 
 // load and init the MissioControl Class
 require_once('lib/missioncontrol.class.php');
 

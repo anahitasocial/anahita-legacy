@@ -215,10 +215,10 @@ table.admintable td,table.adminform td {padding:5px;}
 table.admintable input[type=text], table.admintable textarea, table.admintable select, table.admintable input[type=password],
 table.adminform input[type=text], table.adminform textarea, table.adminform select, table.adminform input[type=password] {font-family:Helvetica, Arial, sans-serif;}
 table.admintable input[type=text], table.admintable input[type=password],
-table.adminform input[type=text], table.adminform input[type=password] {line-height:24px;height:24px;border:1px solid #DEDEDE;font-size:13px;color:#333;padding:0 5px;background: url(../images/input-bg.png) repeat-x;}
+table.adminform input[type=text], table.adminform input[type=password] {line-height:24px;height:24px;border:1px solid #DEDEDE;font-size:13px;color:#333;padding:0 5px;}
 table.admintable input:focus[type=text], table.admintable input:focus[type=password],
 table.adminform input:focus[type=text], table.adminform input:focus[type=password], table.mc-filter-table input:focus[type=text] {background: #fff;}
-table.admintable textarea, table.admintable select, table.adminform textarea, table.adminform select, table.mc-filter-table input[type=text], .mc-search-form .inputbox {line-height: 18px;border:1px solid #DEDEDE;font-size:13px;color:#333;padding:0 5px;background: url(../images/input-bg.png) repeat-x;}
+table.admintable textarea, table.admintable select, table.adminform textarea, table.adminform select, table.mc-filter-table input[type=text], .mc-search-form .inputbox {line-height: 18px;border:1px solid #DEDEDE;font-size:13px;color:#333;padding:0 5px;}
 table.paramlist td.paramlist_key {width:100px !important;}
 table.paramlist td.paramlist_value hr {border: 1px solid #e3e3e3;padding:0;}
 table.noshow td {vertical-align:top;}
