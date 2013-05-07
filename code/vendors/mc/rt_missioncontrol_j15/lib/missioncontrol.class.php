@@ -85,6 +85,13 @@ class MissionControl extends RTCore {
 	
 	
 	function displaySubMenu() {
+		// global $option;
+		// if ($option == 'com_config' ||
+		// 	$option == 'com_admin' ||
+		// 	$option == 'com_media')
+		// 	echo '<jdoc:include type="modules" name="submenu" style="rounded" id="submenu-box" />';
+		// else
+		// 	require_once('rtsubmenu.class.php');
 		echo '<jdoc:include type="modules" name="submenu" style="rounded" id="submenu-box" />';	
 	}
 	
