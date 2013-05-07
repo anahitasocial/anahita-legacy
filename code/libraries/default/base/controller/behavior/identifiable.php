@@ -141,10 +141,25 @@ class LibBaseControllerBehaviorIdentifiable extends KControllerBehaviorAbstract
     /**
      * Return the controller identifiable item
      * 
+     * @param boolean $create Return an entity if there's none  
+     * 
      * @return mixed
      */
-    public function getItem()
+    public function getItem($create = false)
     {
+    	$item = $this->_mixer->getState()->getItem();
+    	
+    	if ( $item  == null && $this->_mixer->getState()->isUnique()	
+    			) {
+    		
+    		$item = $this->fetchEntity(new KCommandContext()); 
+    	}
+    	
+    	//create an new entity
+    	if ( $item == null && $create ) {
+    		$this->_mixer->getState()->setItem( $this->getRepository()->getEntity() );
+    	}
+    	
         return $this->_mixer->getState()->getItem();
     }
     
@@ -221,14 +236,26 @@ class LibBaseControllerBehaviorIdentifiable extends KControllerBehaviorAbstract
             else
                 $mode = AnDomain::FETCH_ENTITY;
                    
-            $entity = $this->getRepository()->fetch($scope, $mode);
+            $query  = $this->getRepository()->getQuery();
+            $query->where($scope);
+            
+            $entity = $this->getRepository()->fetch($query, $mode);
             
             if ( empty($entity) || !count($entity)) 
             {
-                $context->setError(new KHttpException(
-                    'Resource Not Found', KHttpResponse::NOT_FOUND
-                ));
-                return false;                       
+                $exception = new LibBaseControllerExceptionNotFound('Resource Not Found');
+                
+                //see if the entity exits or not
+                if ( $query->disableChain()->fetch() ) 
+                {
+                    if ( $this->viewer && !$this->viewer->guest() ) {
+                        $exception = new  LibBaseControllerExceptionForbidden('Forbidden');
+                    } else {
+                        $exception = new  LibBaseControllerExceptionUnauthorized('Not authorized');
+                    }
+                }
+                
+                throw $exception;
             }
             
             $this->setItem($entity);

@@ -70,6 +70,13 @@ class AnDomainResourceColumn
 	public $unique = false;
 		
 	/**
+	 * Is the column a primary column
+	 * 
+	 * @var boolean
+	 */
+	public $primary = false;
+	
+	/**
 	 * Return a string represntation of a column
 	 * 
 	 * @return string

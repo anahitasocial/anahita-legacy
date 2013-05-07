@@ -197,6 +197,25 @@ function is()
 }
 
 /**
+ * When __toString throws error it's a headahce for debuggin
+ * this method safely converts an object to string that if it
+ * throws an error it can be caught 
+ * 
+ * @param mixed $object
+ */
+function to_str($object)
+{
+    if ( is_object($object) && 
+            is_callable(array($object, '__toString') ))
+    {
+        $string = $object->__toString();
+    } else 
+        $string = (string)$object;
+            
+    return $string;
+}
+
+/**
  * Check if a value is within range of $min, $max
  *
  * @param int $value         An integer value
@@ -706,6 +725,133 @@ function print_query($query)
     }
     
     print str_replace('#__','jos_', $query)."\G";
+}
+
+function trace_mark($message)
+{
+    global $_checkpoints;
+    
+    if ( !$_checkpoints ) {
+        $_checkpoints = array();
+    }
+    
+    $traces = debug_backtrace();
+    array_shift($traces);
+    $trace = array_shift($traces);
+    $called_method = '';
+    if ( isset($trace['class']) ) {
+        $called_method = $trace['class'].'::';
+    }
+    if ( isset($trace['function']))
+        $called_method .= $trace['function'].'()';
+
+    $trace = array_shift($traces);
+
+    $calling_method = '';
+    
+    if ( isset($trace['object']) ) {
+        $calling_method = get_class($trace['object']).'::';
+    }
+    elseif ( isset($trace['class']) ) {
+        $calling_method = $trace['class'].'::';
+    }
+
+    if ( isset($trace['function']) && $trace['function'] != 'include') {
+        $calling_method .= $trace['function'].'()';
+    }
+    if ( empty($calling_method) && isset($trace['file']) ) {
+        if ( isset($trace['function']) && $trace['function'] == 'include') {
+            $calling_method = $trace['args'][0];
+        } else
+            $calling_method = $trace['file'];
+    }
+
+    if ( isset($trace['line']) )
+        $calling_method = $calling_method.' line:'.$trace['line'];
+    $index = count($_checkpoints) + 1;
+    $message =  $index.' - '.$calling_method.' '.$message;     
+    array_push($_checkpoints,$message);
+}
+
+function get_marked_traces()
+{
+    global $_checkpoints;
+    return pick($_checkpoints, array());
+}
+
+
+
+if (!function_exists('fastcgi_finish_request'))
+{
+    function fastcgi_finish_request()
+    {
+        if (PHP_SAPI !== 'cli')
+        {
+            for ($i = 0; $i < ob_get_level(); $i++) {
+                ob_end_flush();
+            }
+        
+            flush();
+        }        
+    }
+}
+
+/**
+ * Return if an arary is a hash array
+ *
+ * @param array $array
+ *
+ * @return boolean
+ */
+function is_hash_array($array)
+{
+    $count = count($array);   
+    foreach($array as $key => $value) 
+    {
+        if ( !is_int($key) || $key >= $count ) {
+            return true;
+        }
+    }
+    return false;    
+}
+
+/**
+ * Return the value of an array at $index or null of not found. A negative number
+ * can be passed to return the value from am index counting from the end of the 
+ * array
+ * 
+ * @param array $array The array
+ * @param int   $index The index
+ */
+function array_value($array, $index)
+{
+    $index = (int)$index;
+    if ( $index < 0 ) {
+        $index = count($array) + $index;
+    }
+    return isset($array[$index]) ? $array[$index] : null;
+}
+
+/**
+ * Fix config bug when hash array and list array are mixed together
+ * 
+ * @param array $array
+ * 
+ * @return array
+ */
+function to_hash($array, $default = array())
+{
+    $array     = (array)$array;
+    $new_array = array();
+    foreach($array as $key => $value) 
+    {
+        if ( is_int($key) ) {
+            $key   = $value;
+            $value = $default;
+        }
+        $new_array[$key] = $value;
+    }
+    return $new_array;
 }
 
 ?>

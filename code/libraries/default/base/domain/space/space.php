@@ -45,45 +45,36 @@ class LibBaseDomainSpace extends AnDomainSpace implements KServiceInstantiatable
         }
         
         return $container->get($config->service_identifier);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param KConfig $config An optional KConfig object with configuration options.
-     *
-     * @return void
-     */
-    public function __construct(KConfig $config)
-    {
-        parent::__construct($config);
-        
-        $this->registerCallback('after.commit', array($this, 'performCleanup'));
     }    
     
     /**
-     * Performs a cleanup after destoryed nodes by deleting any possible related
-     * nodes
-     *
-     * @param KCommandContext $context
+     * After a succesfull commit perform a cleanup of nodes
      * 
-     * @return void
+     * @param mixed &$failed Return the failed set
+     * 
+     * @return boolean Return if all the entities passed the validations
      */
-    public function performCleanup(KCommandContext $context)
+    public function commitEntities(&$failed = null)
     {
-        $entities = $context->entities;
-        $ids       = array();
-        $actor_ids = array();
-        foreach($entities as $entity)
+        if ( $ret = parent::commitEntities($failed) )
         {
-            if ( $entity->state() ==  AnDomain::STATE_DESTROYED )
-            {
-                if ( is($entity, 'ComBaseDomainEntityNode') )
-                    $ids[] = $entity->id;
+            $ids  = array();
+             
+            foreach($this->_entities as $entity)
+            {    
+                if ( $entity->getEntityState() ==  AnDomain::STATE_DESTROYED )
+                {
+                    if ( is($entity, 'ComBaseDomainEntityNode') )
+                        $ids[] = $entity->id;
+                }
+            }
+            
+            if ( !empty($ids) ) {
+                $this->cleanupNodesWithIds($ids);
             }
         }
         
-        $this->cleanupNodesWithIds($ids);
+        return $ret;
     }
     
     /**
@@ -112,11 +103,82 @@ class LibBaseDomainSpace extends AnDomainSpace implements KServiceInstantiatable
                 $this->getService('repos:base.node')->destroy($ids);
                         
                 //clean up any related nodes
-                $this->cleanupNodesWithIds($ids);
+                if ( !empty($ids) ) {
+                    $this->cleanupNodesWithIds($ids);
+                }                
             }
         }
     }
+
+    /**
+     * Get an array of related nodes ids 
+     * 
+     * @param array $ids An array of ids
+     * 
+     * @return array
+     */
+    public function getRelatedNodeIds($ids)
+    {
+        $cols = array(
+                'story_object_id' ,
+                'story_subject_id',
+                'story_comment_id',
+                'story_target_id' ,
+                'parent_id',
+                'owner_id'
+        );
+        
+        foreach($cols as $key => $value) {
+            $cols[$key] = $value.' IN ('.implode(',',$ids).')';
+        }
+        
+        $cols  = implode(' OR ', $cols);
+        
+        //all the nodes ids that are somehow related to deleted nodes
+        //possible objects (comments/stories/medium nodes)
+        $nids  = $this->getService('repos:base.node')
+                    ->getQuery()
+                    ->disableChain()
+                    ->where($cols)->fetchValues('id');
+
+        if ( !empty($nids) ) 
+        {
+            $story_ids   = $this->getService('repos:stories.story')->getQuery()->disableChain()->where(array('object.id'=>$nids))->fetchValues('id');            
+            $nids        = array_merge($nids, $story_ids);
             
+            //if there are any medium nodes in the related nodes
+            //check if they have any comments
+            $comment_ids = $this->getService('repos:base.comment')->getQuery()->disableChain()->where(array('parent.id'=>$nids))->fetchValues('id');            
+            $nids        = array_merge($nids, $comment_ids);
+        }
+        
+        return array_unique($nids);
+    }
+    
+    /**
+     * Return an array of node repositories for a list of ids
+     * 
+     * @param array $ids
+     * 
+     * @return array
+     */
+    public function getNodeRepositories($ids)
+    {
+        $types = $this->getService('repos:base.node')
+                ->getQuery()
+                ->disableChain()
+                ->id($ids);
+        
+        $types->distinct = true;
+        $repositories    = array();
+        foreach($types->fetchValues('type') as $key => $type)
+        {
+            $identifier = end(explode(',',$type));
+            $repositories[] = AnDomain::getRepository($identifier);            
+        }
+        return $repositories;
+    }
+    
     /**
      * Clean up node, edge table for the deleted nodes with passed ids
      * 
@@ -126,86 +188,44 @@ class LibBaseDomainSpace extends AnDomainSpace implements KServiceInstantiatable
      */
     public function cleanupNodesWithIds($ids)
     {
+        $ids = array_merge($this->getRelatedNodeIds($ids), $ids);
+        
         if ( !empty($ids) )
         {
-            //get all the nodes ids whose parent/owner/object/target/comment/subject is one of the deleted nodes
-            $cols = array(
-                    'story_object_id' ,
-                    'story_subject_id',
-                    'story_comment_id',
-                    'story_target_id' ,
-                    'parent_id',
-                    'owner_id'
-            );
-        
-            foreach($cols as $key => $value) {
-                $cols[$key] = $value.' IN ('.implode(',',$ids).')';
-            }
-        
-            $cols  = implode(' OR ', $cols);
-        
-            //all the nodes ids that are somehow related to deleted nodes
-            //possible objects (comments/stories/medium nodes)
-            $nids  = $this->getService('repos:base.node')->getQuery()->disableChain()
-            ->where($cols)->fetchValues('id');
-        
-            if ( !empty($nids) )
-            {
-                //if there are any medium nodes in the related nodes
-                //check if they are mentioned in any stories
-                $story_ids   = $this->getService('repos:stories.story')->getQuery()->disableChain()->where(array('object.id'=>$nids))->fetchValues('id');
-        
-                //if there are any stories, queue them to be deleted
-                if ( !empty($story_ids) ) {
-                    //merge the commment ids to be deleted
-                    $nids = array_merge($nids, $story_ids);
-                }
-        
-                //if there are any medium nodes in the related nodes
-                //check if they have any comments
-                $comment_ids = $this->getService('repos:base.comment')->getQuery()->disableChain()->where(array('parent.id'=>$nids))->fetchValues('id');
-        
-                //if there are any comments, queue them to be deleted
-                if ( !empty($comment_ids) ) {
-                    //merge the commment ids to be deleted
-                    $nids = array_merge($nids, $comment_ids);
-                }
-        
-                //delete all the nodes
-                $this->getService('repos:base.node')->destroy($nids);
-        
-                //cleanup any relationship any of the deleted nodes may have had
-                $ids   = array_merge($ids, $nids);
-            }
-        
-            //if set the last_commentor, created_by, modified_by, last_comment_id to NULL
-            //if th nodes are being deleted
-            if ( !empty($ids) )
-            {
-                $in      = '('.implode(',', $ids).')';
-                $query[] = "last_comment_id = IF(last_comment_id IN $in, NULL, last_comment_id)";
-                $query[] = "created_by = IF(created_by IN $in, NULL, created_by)";
-                $query[] = "modified_by = IF(modified_by IN $in, NULL, modified_by)";
-                $query[] = "last_comment_by = IF(last_comment_by IN $in, NULL, last_comment_by)";
-                $query   = implode(', ', $query);
-                $query   = $this->getService('repos:base.node')->getQuery()
-                ->where("last_comment_by IN $in OR created_by IN $in OR modified_by IN $in OR last_comment_by IN $in")
-                ->update($query)
-                ;
-                $this->getService('repos:base.node')->getStore()->execute($query);
-            }
-        
+            $repositories = $this->getNodeRepositories($ids);
+            
+            //delete all the nodes
+            $this->getService('repos:base.node')->destroy($ids);
+            
+            //set the creator,updator,authors to null
+            $in      = '('.implode(',', $ids).')';
+            $query[] = "last_comment_id = IF(last_comment_id IN $in, NULL, last_comment_id)";
+            $query[] = "created_by = IF(created_by IN $in, NULL, created_by)";
+            $query[] = "modified_by = IF(modified_by IN $in, NULL, modified_by)";
+            $query[] = "last_comment_by = IF(last_comment_by IN $in, NULL, last_comment_by)";
+            $query   = implode(', ', $query);
+            $where   = $this->getService('repos:base.node')
+                        ->getQuery()
+                        ->where("last_comment_by IN $in OR created_by IN $in OR modified_by IN $in OR last_comment_by IN $in");
+            
+            $this->getService('repos:base.node')->update($query, $where);
+            
             //cleanup all the relationship of every deleted node
-            $query = $this->getService('repos:base.edge')->getQuery()->disableChain()->where('nodeA.id','IN',$ids)->where('nodeB.id','IN',$ids,'OR');
-        
+            $query = $this->getService('repos:base.edge')
+                ->getQuery()
+                ->where('nodeA.id','IN',$ids)
+                ->where('nodeB.id','IN',$ids,'OR');
+            
             $this->getService('repos:base.edge')->destroy($query);
-        
-            global $affected_node_ids;
-        
-            $affected_node_ids = $ids;
-        
-            $this->getService('anahita:event.dispatcher')->dispatchEvent('onDestroyNodes',
-                    array('affected_node_ids'=>$affected_node_ids));
-        }
+            
+            //now lets the repositories know so they can
+            //handle the cleanup
+            foreach($repositories as $repository)
+            {
+                $context = $repository->getCommandContext();
+                $context->node_ids = $ids;
+                $repository->getCommandChain()->run('after.deletenodes', $context);
+            }            
+        }        
     }
 }

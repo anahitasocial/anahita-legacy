@@ -76,7 +76,7 @@ abstract class AnDomainDescriptionAbstract
 	 * 
 	 * @var array
 	 */
-	protected $_keys = array();
+	protected $_identifying_properties = array();
 	
 	/**
 	 * Entity identifier
@@ -143,7 +143,7 @@ abstract class AnDomainDescriptionAbstract
 		}
 
 		$this->_inheritance_column      = $config->inheritance_column;		
-		$this->_identity_property       = $config->identity_property;		
+				
 		$this->_entity_identifier       = $this->_repository->getIdentifier($config->entity_identifier);
 		
 		//an object can only be abstract if it's 
@@ -151,18 +151,46 @@ abstract class AnDomainDescriptionAbstract
 		if ( $this->_inheritance_column ) {
 		    $this->_abstract_identifier = $config->abstract_identifier;
 		}
+
+		if ( !$config->identity_property )
+		{
+		    $columns = $this->_repository->getResources()->main()->getColumns();
+		    foreach($columns as $column)
+		    {
+		        if ( $column->primary ) {
+		            $config->identity_property = KInflector::variablize($column->name);
+		            break;
+		        }
+		    }
+		}
+				
+		$this->_identity_property       = $config->identity_property;
 		
-		//if there's no propoerty set
-		//then set the properties automatically from the its columns
+		//try to generate some of the propreties
+        //from the database columns
 		if ( $config->auto_generate )
 		{
-		    $attributes = array();
-		    $attributes[$this->_identity_property] = array('key'=>true);		    
+            //if auto generate default set the identity property with the primary key 
+            $config->append(array(
+                'attributes' => array(
+                    $this->_identity_property => array('key'=>true)
+                )
+            ));
+            
+		    $attributes = $config['attributes'];
+            
 		    $columns = $this->_repository->getResources()->main()->getColumns();
-		    foreach($columns as $column) {
-		        $attributes[KInflector::variablize($column->name)] = array('required'=>$column->required, 'column'=>$column, 'type'=>$column->type, 'default'=>$column->default);
+            
+		    foreach($columns as $column) 
+            {
+                $name    = KInflector::variablize($column->name);
+                //merge the existing attributes
+		        $attributes[$name] = array_merge(
+                        array('required'=>$column->required, 'column'=>$column, 'type'=>$column->type, 'default'=>$column->default),
+                        isset($attributes[$name]) ? $attributes[$name] : array());
 		    }
-		    $config['attributes'] = $attributes;
+		    
+            $config['attributes'] = $attributes;
 		}
 	}
 	
@@ -180,9 +208,9 @@ abstract class AnDomainDescriptionAbstract
    	    	   
 		$config->append(array(
 		    'auto_generate'            => false,
-			'identity_property'        => 'id',
+			'identity_property'        => null,
 			'aliases'	 		       => array()
-		));		
+		));
 	}	
 
 	/**
@@ -195,6 +223,16 @@ abstract class AnDomainDescriptionAbstract
 	{
 	    return is_null($this->getInheritanceColumnValue()->getIdentifier());
 	}
+    
+    /**
+     * Return if the entity is inheritable
+     * 
+     * @return boolean
+     */
+    public function isInheritable()
+    {
+       return !is_null($this->getInheritanceColumnValue()); 
+    }
 	
 	/**
 	 * Set a property description
@@ -206,6 +244,15 @@ abstract class AnDomainDescriptionAbstract
 	public function setProperty($property)
 	{
 		$this->_properties[$property->getName()] = $property;
+        
+        //if property name is the same as the identity property
+        //then set the identity property
+        if ( is_string($this->_identity_property) && 
+             $property->getName() == $this->_identity_property ) 
+        {             
+             $this->setIdentityProperty($property);   
+        }
+		
 		return $this;
 	}
 	
@@ -284,21 +331,35 @@ abstract class AnDomainDescriptionAbstract
 	}
 
 	/**
-	 * Set a property as a key
+	 * Add a property that can uniquely identifies a property. This property is
+	 * set to required and its value be unique
 	 *
 	 * @param AnDomainPropertyKeyable $property The property to be used as the key
 	 * 
 	 * @return void
 	 */
-	public function setKey($property)
+	public function addIdentifyingProperty($property)
 	{
 		if ( $property->isSerializable() )
-			$this->_keys[$property->getName()] = $property;
+			$this->_identifying_properties[$property->getName()] = $property;
 			
 		//the proeprty as required
 		$property->setRequired(true);
 		
 		return $this;
+	}
+	
+	/**
+	 * Removes a proeprty as key
+	 *
+	 * @param AnDomainPropertyKeyable $property The property to be used as the key
+	 *
+	 * @return void
+	 */	
+	public function removeIdentifyingProperty($property)
+	{
+	    unset($this->_identifying_properties[$property->getName()]);
+	    return $this;
 	}
 	
 	/**
@@ -312,13 +373,34 @@ abstract class AnDomainDescriptionAbstract
 	}
 	
 	/**
+	 * Materialize an array of identifying values from a row data
+	 * 
+	 * @param array $data Row data
+	 * 
+	 * @return array
+	 */
+	public function getIdentifyingValues(array $data)
+	{
+	    $keys   = array();
+	    
+	    foreach($this->getIdentifyingProperties() as $key)
+	    {
+	        if ( $key->isMaterializable($data) ) {
+	            $keys[$key->getName()] = $key->materialize($data, null);
+	        }
+	    }
+	    
+	    return $keys;
+	}
+	
+	/**
 	 * Return an array of properties that uniquely define an entity
 	 * 
 	 * @return array
 	 */
-	public function getKeys()
-	{
-		return $this->_keys;		
+	public function getIdentifyingProperties()
+	{        
+		return $this->_identifying_properties;		
 	}
 	
 	/**
@@ -329,18 +411,23 @@ abstract class AnDomainDescriptionAbstract
 	 */
 	public function setIdentityProperty($property)
 	{
+	    $this->_identity_property = null;
+	    
 		if ( is_string($property) ) {
-			$property = $this->getProperty($property);
-			if ( !$property )
-				return;
+			$property = $this->getProperty($property);			
 		}
 		
-		$this->setKey($property);
-		
-		//don't allow direct write
-		$property->setWriteAccess(AnDomain::ACCESS_PRIVATE);
-		
-		$this->_identity_property = $property;
+		if ( $property )
+		{
+		    //an identitying property can be used as 
+		    //an identifying property
+		    $this->addIdentifyingProperty($property);
+		    
+		    //don't allow direct write
+		    $property->setWriteAccess(AnDomain::ACCESS_PRIVATE);
+		    
+		    $this->_identity_property = $property;
+		}
 				
 		return $this;
 	}

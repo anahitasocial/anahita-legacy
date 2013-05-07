@@ -47,12 +47,7 @@
 	
 	document.addEvents({
 		'click:relay(.an-actions .comment)' : open,
-		'click:relay(.action-comment-overtext)' : open,
-		'click:relay(.connect-service-share a)' : function(e){
-		    e.stop();
-		    e.target.toggleClass('selected');
-		    e.target.getElement('+input').set('checked', e.target.hasClass('selected'));
-		}
+		'click:relay(.action-comment-overtext)' : open		
 	});
 }).apply();
 
@@ -71,8 +66,6 @@ Delegator.register(['click'], 'Share', function(event, el, api) {
 	//if ok then submit 	 
 	if ( el.form.get('validator').validateField(textarea) && textarea.value.match(/^(?!\s*$).+/) ) {
 		window.delegator.trigger('Request', el, event);
-		textarea.value = '';
-		el.form.getElements('input').set('checked', false);
-		el.form.getElements('.connect-service').removeClass('selected');
+		el.form.reset();
 	}
 });

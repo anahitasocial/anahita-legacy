@@ -68,33 +68,16 @@ class LibBaseTemplateHelperController extends KTemplateHelperAbstract
        
 	    if ( !isset(self::$_controllers['controller.'.$name]) )
 	    {
-	        if ( strpos($name,'.') == false )
-	        {
+	        if ( strpos($name,'.') == false ) {
 	            $identifier = clone $this->getIdentifier();
 	            $identifier->name = $name;
 	            $identifier->path = array('controller');	            
 	        } 
-	        else $identifier = $this->getIdentifier($name);
-	        
-	        $entity = clone $identifier;
-	        $entity->path = array('domain','entity');
-            
-	        try
-	        {
-	            $repository = AnDomain::getRepository($entity);
-	            $entity     = $repository->getClone();
-                $default    = array('prefix'=>$entity, 'fallback'=>'ComBaseControllerService'); 	            
+	        else { 
+	            $identifier = $this->getIdentifier($name);
 	        }
-	        catch(Exception $e)
-	        {
-                $default = array('default'=>'ComBaseControllerResource');
-	        }
-	        
-            $default['identifier'] = $identifier;
-            register_default($default);
-            	        	        
-	        $controller = $this->getService($identifier, array('request' => array()));
-	        
+            	        
+            $controller = $this->getService($identifier, array('request' => array()));
 	        self::$_controllers['controller.'.$name] = $controller;
 	    }
 	    

@@ -61,15 +61,5 @@ class ComBaseViewHtml extends LibBaseViewHtml
         ));
         
         parent::_initialize($config);
-    }     
-    
-    /**
-     * Rendered before form layout
-     * 
-     * @return void
-     */
-    protected function _layoutForm()
-    {
-    	
     }
 }

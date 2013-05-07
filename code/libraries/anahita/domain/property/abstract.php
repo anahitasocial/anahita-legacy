@@ -101,7 +101,7 @@ abstract class AnDomainPropertyAbstract
 	/**
 	 * If set to true, the property can not have a null or empty value
 	 * 
-	 * @var boolean
+	 * @var int
 	 */
 	protected $_required;
 
@@ -327,6 +327,15 @@ abstract class AnDomainPropertyAbstract
 	{
 		return $this instanceof AnDomainRelationshipProperty;
 	}
+	
+	/**
+	 * Provides a test to see if a property is materializable given data
+	 *
+	 * @param array $data
+	 * 
+	 * @return boolean
+	 */	
+	abstract public function isMaterializable(array $data);
 	
 	/**
 	 * Materilize a property from the raw data. If the entity object has been

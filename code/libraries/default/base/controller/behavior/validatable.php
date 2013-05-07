@@ -147,20 +147,12 @@ class LibBaseControllerBehaviorValidatable extends KControllerBehaviorAbstract
         $output    = $this->getValidator()->getMessage();
 		if ( $result === false ) 
 		{
-			$context->status = KHttpResponse::PRECONDITION_FAILED;
+			$context->response->status     = KHttpResponse::PRECONDITION_FAILED;
 			if ( is_string($output)  ) 
 			    $output = array('errorMsg'=>$output);
-			$context->append(array(
-				'headers' => array(
-					'Validation'  => $output
-				)
-			));
+			$context->response->validation = json_encode($output);			
 		} else {
-			$context->append(array(
-				'headers' => array(
-					'Validation' => $output,					
-				)
-			));			
+		    $context->response->validation = json_encode($output);;
 		}
 	}	
 }

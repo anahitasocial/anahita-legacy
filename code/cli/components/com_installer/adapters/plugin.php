@@ -100,11 +100,11 @@ class ComInstallerAdapterPlugin extends ComInstallerAdapterAbstract
         foreach($files as $file)
         {
             $source = $this->_path.'/'.$file;
-            $dest   = JPATH_BASE.'/plugins/'.$this->_group.'/'.$file;
+            $dest   = JPATH_SITE.'/plugins/'.$this->_group.'/'.$file;
             $this->_copy($source, $dest);
         }
         
         if ( isset($this->_xml->languages) )
-            $this->_copyLangs($this->_xml->languages, JPATH_BASE.'/administrator/language');
+            $this->_copyLangs($this->_xml->languages, JPATH_SITE.'/administrator/language');
     }    
 }

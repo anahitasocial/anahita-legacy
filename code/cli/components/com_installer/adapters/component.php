@@ -82,23 +82,23 @@ class ComInstallerAdapterComponent extends ComInstallerAdapterAbstract
         if ( isset($this->_xml->files) )
         {
             $folder = $this->_path.'/'.$this->_xml->files->attributes()->folder;
-            $this->_copy($folder, JPATH_BASE.'/components/'.$this->_name);
+            $this->_copy($folder, JPATH_SITE.'/components/'.$this->_name);
         }
         
         if ( isset($this->_xml->administration->languages) )
             $this->_copyLangs($this->_xml->administration->languages, JPATH_ADMINISTRATOR.'/language');
         if ( isset($this->_xml->languages) )
-            $this->_copyLangs($this->_xml->languages, JPATH_BASE.'/language');
+            $this->_copyLangs($this->_xml->languages, JPATH_SITE.'/language');
         if ( isset($this->_xml->libraries) )        
-            $this->_copyLibs($this->_xml->libraries, JPATH_BASE.'/libraries');
+            $this->_copyLibs($this->_xml->libraries, JPATH_SITE.'/libraries');
 
         $components = KService::get('repos:components.component', array('resources'=>'components'));
         
         //find or create a component
-        $component  = $components->findOrCreate(array('option'=>$this->_name,'parent'=>0), array('data'=>array('params'=>'')));
+        $component  = $components->findOrAddNew(array('option'=>$this->_name,'parent'=>0), array('data'=>array('params'=>'')));
         
         //remove any child component
-        $components->getQuery()->option($this->_name)->parent('0','>')->destroy();
+        $components->getQuery()->option($this->_name)->parent('0','>')->delete()->save();
         
         //save the component
         //$component->save();

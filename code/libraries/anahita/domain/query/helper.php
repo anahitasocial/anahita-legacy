@@ -58,7 +58,7 @@ class AnDomainQueryHelper
      * @param $columns
      * @return array 
      */
-    public function parseColumns($query, $columns)
+    static public function parseColumns($query, $columns)
     {
     	if (  $columns instanceof AnDomainResourceColumn )
     	{
@@ -71,14 +71,22 @@ class AnDomainQueryHelper
     	{
     		 $result    = strpos($column, ' ') !== false ? null : AnDomainQueryHelper::parseColumn($query, $column);
     		 $cols		= $result['columns'];
-    		 if ( !isset($result['property']) )
-    		 	 $array[$key] = $column;
-    		 elseif ( !is_array($cols) )
-    		 	 $array[$key] = $cols;
-    		 else {
-    		 	foreach($cols as $col)
-    		 		$array[] = $col;
+    		 if ( empty($cols) ) {
+    		     $cols = array($column);    
     		 }
+    		 elseif ( !is_array($cols) ) {
+    		     $cols = array($cols);
+    		 }
+    		 foreach($cols as $col)
+    		     $array[] = $col;
+    		     		 
+//     		 if ( !isset($result['property']) )
+//     		 	 $array[$key] = $column;
+//     		 elseif ( !is_array($cols) )
+//     		 	 $array[$key] = $cols;
+//     		 else {
+
+//     		 }
     	}
     	return $array;
     }

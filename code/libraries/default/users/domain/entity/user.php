@@ -39,9 +39,29 @@ class LibUsersDomainEntityUser extends AnDomainEntityDefault
 	protected function _initialize(KConfig $config)
 	{
 		$config->append(array(
-			'resources'   => array('users')
+			'resources'   => array('users'),
+            'attributes'  => array(
+                'params'     => array('required'=>false, 'default'=>''),
+                'activation' => array('required'=>false, 'default'=>''),                
+            ),
+            'auto_generate' => true            
 		));
 		
 		return parent::_initialize($config);
+	}	
+	
+	/**
+	 * Automatically sets the activation token for the user 
+	 * 
+	 * @return LibUsersDomainEntityUser
+	 */
+	public function requiresActivation()
+	{
+		jimport('joomla.user.helper');
+		$token = JUtility::getHash(JUserHelper::genRandomPassword());
+		$salt  = JUserHelper::getSalt('crypt-md5');
+		$hashedToken = md5($token.$salt).':'.$salt;
+		$this->activation = $hashedToken;
+		return $this;		
 	}
 }

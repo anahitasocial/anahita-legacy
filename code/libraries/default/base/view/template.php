@@ -25,7 +25,7 @@
  * @license    GNU GPLv3 <http://www.gnu.org/licenses/gpl-3.0.html>
  * @link       http://www.anahitapolis.com
  */
-abstract class LibBaseViewTemplate extends LibBaseViewAbstract
+class LibBaseViewTemplate extends LibBaseViewAbstract
 {
     /**
      * Template identifier (APP::com.COMPONENT.template.NAME)
@@ -86,7 +86,7 @@ abstract class LibBaseViewTemplate extends LibBaseViewAbstract
         }
         
         // Add default template paths
-        $this->getTemplate()->addPath(KConfig::unbox($config->template_paths));        
+        $this->getTemplate()->addSearchPath(KConfig::unbox($config->template_paths));        
          
         //Add alias filter for media:// namespace
         $this->getTemplate()->getFilter('alias')->append(
@@ -211,10 +211,11 @@ abstract class LibBaseViewTemplate extends LibBaseViewAbstract
 	 * 
 	 * @return void
 	 */
-	final public function load($template, array $data = array())
+	public function load($template, array $data = array())
 	{
-		if ( method_exists($this, '_beforeLayout') )
+		if ( method_exists($this, '_beforeLayout') ) {
 			$this->_beforeLayout($template);
+		}
 					
 		$method = '_layout'.KInflector::camelize($template);
 		

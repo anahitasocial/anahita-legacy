@@ -118,7 +118,7 @@ abstract class ComInstallerAdapterAbstract extends KObject
     public function install()
     {
         if ( isset($this->_xml->media) )
-            $this->_copyMedia($this->_xml->media, JPATH_BASE.'/media/');
+            $this->_copyMedia($this->_xml->media, JPATH_SITE.'/media/');
     }
     
     /**

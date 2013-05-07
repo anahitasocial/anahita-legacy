@@ -321,8 +321,8 @@ DELETE FROM `jos_plugins` WHERE
     (`element` LIKE 'tagmeta') OR
     (`folder` LIKE 'content' AND `element` IN ('vote','geshi', 'jw_allvideos', 'slideshare15')) OR
     (`folder` LIKE 'search' AND `element` IN ('contacts','newsfeeds', 'weblinks')) OR
-    (`folder` LIKE 'system'  AND `element` IN ('mtupgrade','roktracking', 'backlink', 'rokbox')) OR
-    (`folder` LIKE 'editors-xtd'  AND `element` IN ('image'))
+    (`folder` LIKE 'system'  AND `element` IN ('mtupgrade','roktracking', 'backlink', 'rokbox'))
+    (`folder` LIKE 'editors-xtd'  AND `element` IN ('image'))    
     ;
     
 DELETE FROM `jos_components` WHERE `option` IN ( 

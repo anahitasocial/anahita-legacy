@@ -65,9 +65,9 @@ class ComInstallerAdapterModule extends ComInstallerAdapterAbstract
         
         if ( !$module ) return; 
 
-        $this->_copy($this->_path, JPATH_BASE.'/modules/'.$module);
+        $this->_copy($this->_path, JPATH_SITE.'/modules/'.$module);
         
-        $this->_copyLangs($this->_xml->languages, JPATH_BASE.'/language');
-        $this->_copyMedia($this->_xml->media, JPATH_BASE.'/media/');
+        $this->_copyLangs($this->_xml->languages, JPATH_SITE.'/language');
+        $this->_copyMedia($this->_xml->media, JPATH_SITE.'/media/');
     }
 }

@@ -187,7 +187,7 @@ class LibPeopleHelperPerson extends KObject
 			
 		$person = self::createFromUser($user);
 		
-		$person->save();		
+		$person->saveEntity();		
 		
 		return $person;
 	}

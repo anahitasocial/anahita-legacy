@@ -47,15 +47,19 @@ class LibBaseDomainBehaviorParentable extends AnDomainBehaviorAbstract
 		//if parent is set, then set the base parent
 		if ( isset($config['parent']) ) 
 		{
-			$identifier 	   = clone $config->service_identifier;
-			$identifier->path  = array('domain','entity');
-			$identifier->name  = $config['parent'];
+		    if ( strpos($config['parent'], '.') === false )
+		    {
+		        $identifier 	   = clone $config->service_identifier;
+		        $identifier->path  = array('domain','entity');
+		        $identifier->name  = $config['parent'];		        
+		    } else {
+		        $identifier        = $this->getService($config['parent']);
+		    }			    		
 			$relationship['parent'] = $identifier;
 			unset($config['parent']);
 			$config->append(array(
 			    'aliases' => array($identifier->name => 'parent')       
             ));
-			
 		}
 
 		$config->append(array(

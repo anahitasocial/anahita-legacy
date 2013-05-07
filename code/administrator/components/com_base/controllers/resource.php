@@ -59,5 +59,19 @@ class ComBaseControllerResource extends LibBaseControllerResource
 				
 		parent::_initialize($config);
 		
-	}
+	}	
+
+	/**
+	 * Cancel action
+	 *
+	 * This function will unlock the row(s) and set the redirect to the referrer
+	 *
+	 * @param	KCommandContext	A command context object
+	 * @return 	KDatabaseRow	A row object containing the data of the cancelled object
+	 */
+	protected function _actionCancel(KCommandContext $context)
+	{
+	    //Create the redirect
+	    $context->response->setRedirect(JRoute::_('option=com_'.$this->getIdentifier()->package.'&view='.KInflector::pluralize($this->getIdentifier()->name)));
+	}	
 }

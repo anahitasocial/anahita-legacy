@@ -64,11 +64,11 @@ class AnDomain
 	/**
 	 * Fetch Mode
 	 */
-	const FETCH_DATA        = 1;
+	const FETCH_ROW         = 1;
 	const FETCH_VALUE	    = 2;
 	const FETCH_ENTITY 		= 4;	
 	const FETCH_VALUE_LIST	= 8;	
-	const FETCH_DATA_LIST   = 16;	
+	const FETCH_ROW_LIST    = 16;	
 	const FETCH_ENTITY_SET  = 32;
 	const FETCH_ENTITY_LIST = 64;
 	
@@ -86,7 +86,16 @@ class AnDomain
 	const OPERATION_UPDATE  = 4;
 	const OPERATION_DELETE  = 8;
     const OPERATION_DESTROY = 16;
-	const OPERATION_COMMIT  = 32;	
+	const OPERATION_COMMIT  = 30;
+    
+    
+    /**
+     * Require Flags. A NOT_NULL value can be empty such as 0 or '' 
+     * A NOT_EMPTy value can not be '', 0 or null. The requireds are by 
+     * default VALUE_NO_NULL unless explicitly set in the entity description
+     */
+    const VALUE_NOT_NULL  = true;
+    const VALUE_NOT_EMPTY = 1;	
 	
 	/**
 	 * Entity Identifers must have application in their path. This method set the 
@@ -124,20 +133,28 @@ class AnDomain
      * @return AnDomainRepositoryAbstract 
      */
 	static public function getRepository($identifier, $config = array())
-	{
-	    $strIdentifier = (string) $identifier;
-	    
-	    if ( !KService::has($identifier) )
-	    {
-	        $identifier = self::getEntityIdentifier($identifier);
+	{	    	    
+	    if ( strpos($identifier,'repos:') === 0 ) {
+	    	$repository = KService::get($identifier);
+	    } 
+	    else {
+	    	
+	    	$strIdentifier = (string) $identifier;
+	    	
+		    if ( !KService::has($identifier) )
+		    {
+		        $identifier = self::getEntityIdentifier($identifier);
+		    }
+		      
+		    if ( !KService::has($identifier) )
+		    {
+		        KService::set($strIdentifier, KService::get($identifier, $config));
+		    }	
+		    
+		    $repository = KService::get($identifier)->getRepository();    
 	    }
-	      
-	    if ( !KService::has($identifier) )
-	    {
-	        KService::set($strIdentifier, KService::get($identifier, $config));
-	    }	    
 	    
-	    return KService::get($identifier)->getRepository();
+	    return $repository;
 	}
 }
 

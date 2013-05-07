@@ -25,24 +25,7 @@
  * @license    GNU GPLv3 <http://www.gnu.org/licenses/gpl-3.0.html>
  * @link       http://www.anahitapolis.com
  */
-class LibBaseDispatcherDefault extends LibBaseDispatcherAbstract
+class LibBaseDispatcherDefault extends LibBaseDispatcherComponent
 {
-	/**
-	 * Return a dispatcher object
-	 * 
-	 * @param array $config Configuration
-	 * 
-	 * @return LibBaseDispatcherAbstract
-	 */	
-	static public function getInstance($config = array())
-	{
-		$config = new KConfig($config);
-		$config->append(array(
-	        'component' 	=> substr(KRequest::get('get.option', 'cmd'), 4)
-		));
-		$identifier = KService::getIdentifier('com:'.$config->component.'.dispatcher');		
-		$identifier->application = JFactory::getApplication()->isAdmin() ? 'admin' : 'site';
-		register_default(array('identifier'=>$identifier, 'default'=>'ComBaseDispatcher'));
-		return KService::get($identifier, KConfig::unbox($config));
-	}
+	
 }

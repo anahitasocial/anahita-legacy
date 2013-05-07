@@ -12,7 +12,7 @@
  * @version    SVN: $Id$
  * @link       http://www.anahitapolis.com
  */
-
+ 
 /**
  * Abstract storage plugin 
  * 

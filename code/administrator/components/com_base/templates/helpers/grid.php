@@ -111,7 +111,7 @@
 		}
 		else
 		{
-		    $column = $config->row->description()->getIdentityProperty()->getName();
+		    $column = $config->row->getEntityDescription()->getIdentityProperty()->getName();
 		    $value  = $config->row->{$column};
 
 		    $html = '<input type="checkbox" class="-koowa-grid-checkbox" name="'.$column.'[]" value="'.$value.'" />';

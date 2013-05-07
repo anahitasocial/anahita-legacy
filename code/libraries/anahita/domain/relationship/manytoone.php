@@ -110,7 +110,7 @@ class AnDomainRelationshipManytoone extends AnDomainRelationshipProperty impleme
 			if  ( $entity instanceof KMixinAbstract )
 					$entity = $entity->getMixer();
 			
-			$data[(string)$this->_type_column] = $entity ? (string)$entity->description()->getInheritanceColumnValue()->getIdentifier() : null;
+			$data[(string)$this->_type_column] = $entity ? (string)$entity->getEntityDescription()->getInheritanceColumnValue()->getIdentifier() : null;
 		}
 
 		return $data;
@@ -198,6 +198,16 @@ class AnDomainRelationshipManytoone extends AnDomainRelationshipProperty impleme
 	}
 		
 	/**
+	 * (non-PHPdoc)
+	 * @see AnDomainPropertyAbstract::isMaterializable()
+	 */
+	public function isMaterializable(array $data)
+	{
+	    $child_key =  $this->_child_column->key();
+	    return array_key_exists($child_key, $data);
+	}
+		
+	/**
 	 * Materialize a many-to-one relationship for the entity and the data from 
 	 * the database
 	 * 
@@ -207,17 +217,17 @@ class AnDomainRelationshipManytoone extends AnDomainRelationshipProperty impleme
 	 * @return AnDomainProxyEntity
 	 */
 	public function materialize(array $data, $instance)
-	{	
+	{
 		if ( empty($data) ) {
 			return null;
-		}
-		
-		$child_key =  $this->_child_column->key();
+		}	
 			
-		if ( !array_key_exists($child_key, $data) ) {
+		if ( !$this->isMaterializable($data) ) {
 			throw new AnDomainExceptionMapping($this->getName().' Mapping Failed');
 		}
 
+		$child_key =  $this->_child_column->key();
+		
 		//get parent value
 		$parent_value = $data[$child_key];
 		
@@ -247,7 +257,8 @@ class AnDomainRelationshipManytoone extends AnDomainRelationshipProperty impleme
 		$config['relationship'] = $this;
 		$config['value']        = $parent_value;
 		$config['property']     = $this->_parent_key;
-		$config['service_identifier']   = AnDomain::getRepository($parent)->getDescription()->getEntityIdentifier();
+		$config['service_identifier']   = AnDomain::getRepository($parent)
+					->getDescription()->getEntityIdentifier();
 				
 		return new AnDomainEntityProxy(new KConfig($config));		
 	}		

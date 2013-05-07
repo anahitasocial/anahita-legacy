@@ -58,11 +58,11 @@ class LibBaseDomainBehaviorOrderable extends AnDomainBehaviorAbstract
 	 */
 	protected function _beforeEntityUpdate(KCommandContext $context)
 	{
-		if ( $this->modifications()->ordering ) {
+		if ( $this->getModifiedData()->ordering ) {
 			
 			$store    = $this->getRepository()->getStore();
 			$query	  = $this->getRepository()->getQuery();
-			$change   = $this->modifications()->ordering;
+			$change   = $this->getModifiedData()->ordering;
 		
 			if( $change->new - $change->old < 0 ) 
 			{
@@ -115,7 +115,7 @@ class LibBaseDomainBehaviorOrderable extends AnDomainBehaviorAbstract
 	 */
 	protected function _afterEntityUpdate(KCommandContext $context)
 	{
-		if ( $this->modifications()->ordering )
+		if ( $this->getModifiedData()->ordering )
 			$this->reorder();
 	}
 	

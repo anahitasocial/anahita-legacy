@@ -167,7 +167,7 @@ class AnDomainEntityProxy extends KObjectDecorator implements ArrayAccess
  	 * 
  	 * @return mixed
 	 */
-	public function get($key, $default = null)
+	public function get($key = null, $default = null)
 	{
 		if ( !isset($this->_object) && $key == $this->_property ) 		
 			return $this->_value;
@@ -180,7 +180,7 @@ class AnDomainEntityProxy extends KObjectDecorator implements ArrayAccess
  	 * 
  	 * @return class instance
 	 */
-	public function set($key, $value)
+	public function set($key = null, $value = null)
 	{
 		$this->getObject()->set($key, $value);
 		return $this;
@@ -246,7 +246,7 @@ class AnDomainEntityProxy extends KObjectDecorator implements ArrayAccess
 				$query = $repository->getQuery()->where($condition)->limit(1);
 				
 				if ( $repository->hasBehavior('cachable') ) {
-				    $repository->getCache()->offsetSet((string)$query, null);
+				    $repository->emptyCache($query);
 				}
 				
 				$this->_object = false;
@@ -277,7 +277,7 @@ class AnDomainEntityProxy extends KObjectDecorator implements ArrayAccess
 	 * @param  array  	The function arguments
 	 * @return mixed The result of the function
 	 */
-	public function __call($method, array $arguments)
+	public function __call($method,  $arguments)
 	{
 	    $object = $this->getObject();
 	    if ( $object ) {

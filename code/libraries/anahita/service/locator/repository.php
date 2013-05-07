@@ -90,6 +90,11 @@ class AnServiceLocatorRepository extends KServiceLocatorAbstract implements KSer
     protected function _identifier(KServiceIdentifier $identifier)
     {
         $identifier = clone $identifier;
+        
+        if ( !$identifier->name ) {
+            $identifier->name = KInflector::singularize($identifier->package);
+        }
+        
         $identifier->type = 'com';
         $identifier->path = array('domain','entity');
         return $identifier;        

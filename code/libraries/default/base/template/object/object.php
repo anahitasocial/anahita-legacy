@@ -40,7 +40,7 @@ class LibBaseTemplateObject extends KConfig implements LibBaseTemplateObjectInte
         static $instance;
     
         if ( !$instance ) {
-            $instance = new self();
+            $instance = new static();
         }
     
         $object = clone $instance;
@@ -55,6 +55,19 @@ class LibBaseTemplateObject extends KConfig implements LibBaseTemplateObjectInte
         ));
     
         return $object;
+    }
+    
+    /**
+     * Sets the name of the command
+     * 
+     * @param string $name
+     * 
+     * @return void
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
     }
     
     /**

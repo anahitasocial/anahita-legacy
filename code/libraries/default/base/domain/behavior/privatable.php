@@ -289,7 +289,7 @@ class LibBaseDomainBehaviorPrivatable extends AnDomainBehaviorAbstract
 	 * 
 	 * @return string
 	 */
-	protected function _createWhere($actor_id, $config ,$access = '@col(access)')
+	public function buildCondition($actor_id, $config ,$access = '@col(access)')
 	{
 	    $store      = $this->_repository->getStore();
 		$viewer 	= $config->viewer;

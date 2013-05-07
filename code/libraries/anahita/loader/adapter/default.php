@@ -51,6 +51,17 @@ class AnLoaderAdapterDefault extends KLoaderAdapterAbstract
 	{
 		$path = false;
         
+		/*
+		 * Exception rule for Exception classes
+		*
+		* Transform class to lower case to always load the exception class from the /exception/ folder.
+		*/
+		if($pos = strpos($classname, 'Exception'))
+		{
+		    $filename       = substr($classname, $pos + strlen('Exception'));
+		    $classname      = str_replace($filename, ucfirst(strtolower($filename)), $classname);		    
+		}
+				
 		$word  = strtolower(preg_replace('/(?<=\\w)([A-Z])/', ' \\1', $classname));
 		
 		$parts = explode(' ', $word);

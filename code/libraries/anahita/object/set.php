@@ -42,6 +42,26 @@
 class AnObjectSet extends KObjectSet
 {
     /**
+     * Constructor
+     *
+     * @param KConfig|null $config  An optional KConfig object with configuration options
+     * @return \KObjectSet
+     */
+    public function __construct(KConfig $config = null)
+    {
+        //If no config is passed create it
+        if(!isset($config)) $config = new KConfig();
+
+        parent::__construct($config);
+                    
+        if ( $config->data ) {
+            foreach($config->data as $object) 
+                $this->insert($object);
+        }
+        
+    }
+        
+    /**
      * Individually set the column value of each object
      *
      * @param string $column The column to set a value for

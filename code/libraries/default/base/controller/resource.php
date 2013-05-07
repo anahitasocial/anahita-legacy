@@ -33,14 +33,7 @@ class LibBaseControllerResource extends LibBaseControllerAbstract
      * @var string|object
      */
     protected $_view;
-                
-    /**
-     * Redirect options
-     *
-     * @var KConfig
-     */
-    protected $_redirect;
-    
+        
     /**
      * Constructor.
      *
@@ -48,13 +41,11 @@ class LibBaseControllerResource extends LibBaseControllerAbstract
      */
     public function __construct( KConfig $config)
     {            
-        parent::__construct($config);
-        
-        $this->_redirect = new KConfig();
+        parent::__construct($config);        
         
         //set the view
         $this->_view     = $config->view;
-                
+      
         //register display as get so $this->display() return
         //$this->get()
         $this->registerActionAlias('display', 'get');
@@ -63,13 +54,9 @@ class LibBaseControllerResource extends LibBaseControllerAbstract
         if($config->dispatch_events) {
             $this->mixin(new KMixinToolbar($config->append(array('mixer' => $this))));
         }
-        
-        //Made the executable behavior read-only
-        if($this->isExecutable()) {
-            $this->getBehavior('executable')->setReadOnly($config->readonly);
-        }        
     }
         
+    
     /**
      * Initializes the default configuration for the object
      *
@@ -81,9 +68,12 @@ class LibBaseControllerResource extends LibBaseControllerAbstract
      */
     protected function _initialize(KConfig $config)
     {
+    	$permission       = clone $this->getIdentifier();
+    	$permission->path = array($permission->path[0], 'permission');
+    	register_default(array('identifier'=>$permission, 'prefix'=>$this));
+    	    	
         $config->append(array(
-            'readonly'  => true,
-            'behaviors' => array('sanitizable','executable'),
+            'behaviors' => array($permission),
             'request'   => array('format' => 'html'),
         ))->append(array(
             'view'      => $config->request->get ? $config->request->get : ($config->request->view ? $config->request->view : $this->getIdentifier()->name)
@@ -103,7 +93,8 @@ class LibBaseControllerResource extends LibBaseControllerAbstract
     {
         $action = null;
         
-        if ( $this->_request->get ) {
+        if ( $this->_request->get ) 
+        {
             $action = strtolower('get'.$this->_request->get);
         }        
         else {
@@ -112,18 +103,37 @@ class LibBaseControllerResource extends LibBaseControllerAbstract
        
         $result = null;
            
-        if ( in_array($action, $this->getActions()) ) {
+        if ( in_array($action, $this->getActions()) ) 
+        {
             $result = $this->execute($action, $context);
+            
+            if ( is_string($result) || $result === false ) {
+                $context->response->setContent($result.' ');
+            }
         }
         
-        //if the result of the previous actions is not
-        //string and not false then display the view
-        if ( !is_string($result) && $result !== false ) {
-            $result = $this->getView()->display();
+        JFactory::getLanguage()->load($this->getIdentifier()->package);
+        
+        $view = $this->getView();
+        
+        if ( !$context->response->getContent() )
+        {            
+            if ( $context->params ) {
+                foreach($context->params as $key => $value) {
+                    $view->set($key, $value);
+                }
+            }
+                        
+            $content = $view->display();
+
+            //Set the data in the response
+            $context->response->setContent($content);                       
         }
- 
-        return (string) $result;
-    }   
+        
+        $context->response->setContentType($view->mimetype);
+                                
+        return $context->response->getContent();
+    }
     
     /**
      * Get the view object attached to the controller
@@ -143,15 +153,15 @@ class LibBaseControllerResource extends LibBaseControllerAbstract
             $config = array(                
                 'media_url' => KRequest::root().'/media',
                 'base_url'  => KRequest::url()->getUrl(KHttpUrl::BASE),
-                'state'     => $this->getState()                
+                'state'     => $this->getState()                             
             );
-
+            
+            if ( $this->_request->has('layout') ) {
+                $config['layout'] = $this->_request->get('layout');
+            }
+            
             $this->_view = $this->getService($this->_view, $config);
             
-            //Set the layout
-            if(isset($this->_state->layout)) {
-                $this->_view->setLayout($this->_state->layout);
-            }
         }
         
         return $this->_view;
@@ -175,11 +185,11 @@ class LibBaseControllerResource extends LibBaseControllerAbstract
             {
                 $identifier          = clone $this->getIdentifier();
                 $identifier->path    = array('view', $view);
-                $identifier->name    = pick($this->format, 'html');
+                $identifier->name    = $this->_request->getFormat();
             }
             else $identifier = $this->getIdentifier($view);
             
-            register_default(array('identifier'=>$identifier, 'prefix'=>$this, 'name'=>'View'.ucfirst($identifier->name)));
+            register_default(array('identifier'=>$identifier, 'prefix'=>$this, 'name'=>array('View'.ucfirst($identifier->name),'ViewDefault')));
             
             $view = $identifier;
         }
@@ -187,67 +197,6 @@ class LibBaseControllerResource extends LibBaseControllerAbstract
         $this->_view = $view;
                 
         return $this;
-    }
-            
-    /**
-     * Set a URL for browser redirection.
-     *
-     * @param array $url     The url to set the controller redirect to
-     * @param array $options Options to set the message and type for the redirect
-     * 
-     * @return void
-     */
-    public function setRedirect($url = 'back', $options = array())
-    {
-        if ( !is_array($options) )
-            $options = array('message'=>$options);
-            
-        $options['url'] = (string)$url;
-        
-        $options         = new KConfig($options);
-        
-        $options->append(array(
-            'message'    => '',
-            'type'        => null
-        ));
-        
-        if ( $options->url == 'back') {
-            $options->url = (string)KRequest::referrer();
-        }
-            
-        $options->url = LibBaseHelperUrl::getRoute($url);
-
-        $this->_redirect = $options;
-            
-        if ( KRequest::method() == 'GET' )
-        {
-            JFactory::getApplication()->redirect($options->url, $options->message, $options->type);
-        }
-        
-        return $this;
-    }  
-            
-    /**
-     * Returns an array with the redirect url, the message and the message type
-     *
-     * @return KConfig Named array containing url, message and messageType, or null 
-     * if no redirect was set
-     */
-    public function getRedirect()
-    {
-        return $this->_redirect;
-    }
-
-    /**
-     * Renders the controller's view by passing the $data to the view
-     *
-     * @param KCommandContext $context Context 
-     *
-     * @return string
-     */
-    public function render(KCommandContext $context)
-    {        
-        return (string) $this->getView()->display();
     }
     
     /**
@@ -262,6 +211,12 @@ class LibBaseControllerResource extends LibBaseControllerAbstract
     {
         if ( $key == 'view' ) {
             $this->_view = $value;    
+        }
+        //Check for layout, view or format property
+        if(in_array($key, array('layout', 'format')))
+        {
+            $this->getRequest()->set($key, $value);
+            return $this;
         }
         
         return parent::__set($key, $value);        
@@ -278,7 +233,6 @@ class LibBaseControllerResource extends LibBaseControllerAbstract
            return $this->display();
         } catch(Exception $e) {
             trigger_error('Exception in '.get_class($this).' : '.$e->getMessage(), E_USER_WARNING);
-            throw $e;
         }
     }
     
@@ -301,6 +255,6 @@ class LibBaseControllerResource extends LibBaseControllerAbstract
             }
         }       
         
-        return parent::__call('getToolbar', array($toolbar, $config));      
+        return parent::getToolbar($toolbar, $config);      
     }     
 }

@@ -304,7 +304,10 @@ class AnDomainQueryBuilder extends KObject
 			
 			if ( $link['bind_type'] )
 			{
-			    $conditions[] = $link['bind_type'].' LIKE \''.$this->_inheritanceTree($description).'\'';
+			    $type = $this->_inheritanceTree($description);
+			    if ( !empty($type) && $type != '%' ) {
+			        $conditions[] = $link['bind_type'].' LIKE \''.$this->_inheritanceTree($description).'\'';
+			    }
 			}
 			
 			$name      = $this->_store->quoteName($link['resource_name']);
@@ -358,25 +361,30 @@ class AnDomainQueryBuilder extends KObject
 		$clauses	 = array();
 		if ( $description->getInheritanceColumn() && $type_check ) 
 		{
-			$array 		= array();
-			//get the main resource name
 			$resource 	= $description->getInheritanceColumn()->resource->getAlias();
-			$scope		= (array)KConfig::unbox($query->instance_of);
-			if ( !empty($scope) ) 
-			{
-				foreach($scope as $scope)
-					$array[] = $scope;
+			//the table type column name
+			$type_column_name = $resource.'.'.$description->getInheritanceColumn()->name;
+								
+			$scopes 	= KConfig::unbox($query->instance_of);
+			if ( empty($scopes) ) {
+				$scopes = array($description);
+			} else {
+				if ( !is_array($scopes) ) {
+					$scopes = array($scopes);
+				}
 			}
-			else $array[] = $description;
-			
-			foreach($array as $key => $description) 
-			{
-			    $inheritance = $this->_inheritanceTree($description);
-			    $inheritance = $resource.'.'.$description->getInheritanceColumn()->name.' LIKE \''.$inheritance.'\'';
-			    $array[$key] = $inheritance;
+            
+			foreach($scopes as $index => $scope) {
+			    $inheritance_type = $this->_inheritanceTree($scope);
+			    if ( !empty($inheritance_type) && $inheritance_type != '%' ) {
+                    $scopes[$index] = $type_column_name.' LIKE \''.$inheritance_type.'\'';;
+			    } else {
+			        unset($scopes[$index]);
+			    }
 			}
-						
-            $clauses[] = '('.implode(' OR ', $array).')';
+			if ( !empty($scopes) ) {
+                $clauses[] = '('.implode(' OR ', $scopes).')';
+			}
 		}
 		
 		if ( !empty($query->where) )
@@ -633,6 +641,16 @@ class AnDomainQueryBuilder extends KObject
 		$string = implode(' ', $parts);		
 		$string = $this->parseMethods($query, $string);
 		$string = str_replace('@MYSQL_JOIN_PLACEHOLDER', $this->join($query), $string);
+		$string = $this->parseMethods($query, $string);
+
+		if ( count($query->binds) ) {
+			foreach($query->binds as $key => $value) {
+				$key    = ':'.$key;
+				$value  = $this->_store->quoteValue($value);
+				$string = str_replace($key, $value, $string);
+			}
+		}
+		
         $string = str_replace('@DISTINCT', $query->distinct ? 'DISTINCT' : '', $string);
 				
 		return 	$string;
@@ -648,15 +666,31 @@ class AnDomainQueryBuilder extends KObject
 	 */
 	protected function _inheritanceTree($description)
 	{
-	    if ( is_string($description) && strpos($description, '.') ) {
+        $inheritance = '';
+        
+	    if ( $description instanceof KServiceIdentifier || 
+	    		(is_string($description) && strpos($description, '.') && !strpos($description, ',')) 	    		
+	    		) {
 	        $description = KService::get($description)->getRepository()->getDescription();
 	    }
 	    
-        $inheritance = (string) $description->getInheritanceColumnValue();
-        
-        if ( $description->isAbstract() ) {
-            $inheritance .= '%';
+        else if ( $description instanceof AnDomainRepositoryAbstract ) {
+        	$description = $description->getDescription();
         }
+         	    
+        if ( $description instanceof AnDomainDescriptionAbstract ) 
+        {
+            $inheritance = (string) $description->getInheritanceColumnValue();
+            
+            if ( $description->isAbstract() ) {
+                $inheritance .= '%';
+            }
+            
+        } 
+        
+        elseif ( is_string($description) ) {
+            $inheritance = strpos($description,'.') ? $description : $description.'%';
+        }        
         
         return $inheritance;
 	}
@@ -768,15 +802,7 @@ class AnDomainQueryBuilder extends KObject
                 $string = str_replace($matches[0],$replaces,$string);
             }
         }        
-                
-        if ( count($query->binds) ) {
-            foreach($query->binds as $key => $value) {
-                $key    = ':'.$key;
-                $value  = $this->_store->quoteValue($value);
-                $string = str_replace($key, $value, $string);                               
-            }
-        }
-        
+                        
 	    return $string;	    
 	}
 }

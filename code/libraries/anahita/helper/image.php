@@ -24,7 +24,28 @@
  * @link       http://www.anahitapolis.com
  */
 class AnHelperImage extends KObject
-{    
+{   
+    /**
+     * Parses a string based size convention to width and height
+     * 
+     * @param string|array $size
+     * 
+     * @return array
+     */ 
+    static function parseSize($size)
+    {
+        $height = null;
+        $width  = null;
+        
+        if ( count((array) $size) == 2 || strpos($size,'x') ) {
+            list($width,$height) = is_array($size) ? $size : explode('x',$size);
+        } else {
+            $size =  (array) $size;
+            $width = (int) $size[0];
+        }
+        return array($width,$height);
+    }
+    
 	/**
 	 * Resizes an image using the passed size and return the resized image resource
 	 * 
@@ -39,15 +60,7 @@ class AnHelperImage extends KObject
 			return false;
         }
 		
-		$height = null;
-		$width  = null;
-		
-		if ( strpos($size,'x') || count((array) $size) == 2 ) {
-			list($width,$height) = is_array($size) ? $size : explode('x',$size); 
-		} else {
-			$size =  (array) $size;
-			$width = (int) $size[0];
-		}
+        list($width, $height) = self::parseSize($size);
 		
 		if ($height == 'auto' && $width == 'auto' )
 			return false;

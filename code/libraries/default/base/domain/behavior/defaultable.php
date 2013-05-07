@@ -98,7 +98,7 @@ class LibBaseDomainBehaviorDefaultable extends AnDomainBehaviorAbstract
 	protected function _beforeEntityUpdate(KCommandContext $context)
 	{
 	    //if default has changed
-	    if ( $this->_mixer->modifications()->isDefault )
+	    if ( $this->_mixer->getModifiedData()->isDefault )
 	    {
 	        $is_default = $this->_mixer->isDefault === true;
 	        //if it's true, then reset all existing to false

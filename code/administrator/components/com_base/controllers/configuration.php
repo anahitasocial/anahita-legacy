@@ -41,7 +41,9 @@ class ComBaseControllerConfiguration extends ComBaseControllerResource
         $config->append(array(
             'toolbars' => array('menubar')
         ));   
-
+        
+        $this->_action_map['post'] = 'save';
+        
         parent::_initialize($config);
     }
     
@@ -58,6 +60,28 @@ class ComBaseControllerConfiguration extends ComBaseControllerResource
     }
     
     /**
+     * Saves a configuration
+     * 
+     * @param KCommandContext $context
+     * 
+     * @return 
+     */
+    protected function _actionSave(KCommandContext $context)
+    {
+        $context->append(array('data'=>array('params'=>array())));
+        //find or create a new component        
+        $component = $this->getService('repos://admin/components.component')
+            ->findOrAddNew(array('option'=>'com_'.$this->getIdentifier()->package), 
+                    array('data'=>array(
+                         'name' => ucfirst($this->getIdentifier()->package)   
+                    )));
+        $params = new JParameter('');
+        $params->loadArray((array)$context->data['params']);
+        $component->params = $params->toString();        
+        $component->save();
+    }
+    
+    /**
      * Method to set a view object attached to the controller
      *
      * @param mixed $view An object that implements KObjectIdentifiable, an object that 
@@ -71,13 +95,8 @@ class ComBaseControllerConfiguration extends ComBaseControllerResource
     {
         parent::setView($view);
         
-        if( !($this->_view instanceof LibBaseViewAbstract) ) 
-        {
-            $defaults[] = 'ComBaseView'.ucfirst($this->view).ucfirst($this->_view->name);
-            $defaults[] = 'ComBaseView'.ucfirst($this->_view->name);
-            
-            //allows to select confiugration view
-            register_default(array('identifier'=>$this->_view, 'default'=>$defaults));                        
+        if( !($this->_view instanceof LibBaseViewAbstract) ) {
+            unregister_default($this->_view);
         }
     }    
 }

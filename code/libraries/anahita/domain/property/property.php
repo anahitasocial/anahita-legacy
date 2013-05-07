@@ -94,7 +94,7 @@ class AnDomainProperty extends KObject
         $property = AnDomainPropertyAbstract::getInstance('attribute.property', $config);
     
         if ( $config->key ) {
-            $description->setKey($property);
+            $description->addIdentifyingProperty($property);
         }        
     
         return $property;
@@ -177,7 +177,7 @@ class AnDomainProperty extends KObject
 				$property = $child_description->setRelationship($relationship->getChildKey(), array('type'=>'belongs_to','parent'=>$relationship->getParent()));
 	
 			if ( $relationship->isRequired() ) {
-				$child_description->setKey($property);
+				$child_description->addIdentifyingProperty($property);
 			}
 		} 
 		//if a through is not set then it's just one-to-many relationship
@@ -194,6 +194,9 @@ class AnDomainProperty extends KObject
 				if ( $config->child_column ) {
 					$belongs_to_options['child_column'] = $config->child_column;
 				}
+				if ( $config->parent_key ) {
+					$belongs_to_options['parent_key'] = $config->parent_key;
+				}	
 				
 				$property  = $relationship
 					->getChildRepository()

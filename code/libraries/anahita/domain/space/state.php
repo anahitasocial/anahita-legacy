@@ -55,29 +55,29 @@ class AnDomainSpaceState extends KObject
 		//the entity itself throught its reset/delete/update API
 		$this->_machine = array(
 		//clean
-			$clean.'=>'.$deleted  => array('validateId',	'validateDelete'),
-			$clean.'=>'.$modified  => array('validateId',	'validateChange'),
+			$clean.'=>'.$deleted      => array('validateId',	'validateDelete'),
+			$clean.'=>'.$modified     => array('validateId',	'validateChange'),
 		//new
-			$new.'=>'.$clean       => array('resetrelationships'),
-			$new.'=>'.$deleted     => array('reset', false),
-			$new.'=>'.$modified     => array(false),						
+			$new.'=>'.$clean          => array('resetrelationships'),
+			$new.'=>'.$deleted        => array('reset', false),
+			$new.'=>'.$modified       => array(false),						
 		//modified
-			$modified.'=>'.$deleted  => array('validateDelete'),
+			$modified.'=>'.$deleted   => array('validateDelete'),
 			$modified.'=>'.$modified  => array('validateChange'),
 		//inserted
-			$inserted.'=>'.$deleted  => array('validateDelete'),
+			$inserted.'=>'.$deleted   => array('validateDelete'),
 			$inserted.'=>'.$modified  => array('validateChange'),			
 		//updated
-			$updated.'=>'.$deleted  => array('validateDelete'),
-			$updated.'=>'.$modified  => array('validateChange'),
+			$updated.'=>'.$deleted    => array('validateDelete'),
+			$updated.'=>'.$modified   => array('validateChange'),
 		//deleted
-			$deleted.'=>'.$clean 	=> array(false),
-			$deleted.'=>'.$modified 	=> array(false),
-//			$deleted.'=>'.$deleted 	=> array(false),	
+			$deleted.'=>'.$clean 	  => array(false),
+			$deleted.'=>'.$modified   => array(false),
+//			$deleted.'=>'.$deleted 	  => array(false),	
 		//destoryed
-			$destroyed.'=>'.$clean 		=> array(false),
-			$destroyed.'=>'.$modified 	=> array(false),
-			$destroyed.'=>'.$deleted 	=> array(false)	
+			$destroyed.'=>'.$clean    => array(false),
+			$destroyed.'=>'.$modified => array(false),
+			$destroyed.'=>'.$deleted  => array(false)	
 		);
 	}
 	
@@ -134,7 +134,7 @@ class AnDomainSpaceState extends KObject
 		{
 			if ( $child->eql($entity) ) continue;
 			
-			$relationships = $child->description()->getRelationships();
+			$relationships = $child->getEntityDescription()->getRelationships();
 			
 			foreach($relationships as $relationship) 
 			{
@@ -159,7 +159,7 @@ class AnDomainSpaceState extends KObject
 	 */
 	protected function _validateId($entity)
 	{
-	    return !is_null($entity->getIdentityId());
+	    return $entity->persisted();
 	}	
 		
 	/**
@@ -169,7 +169,7 @@ class AnDomainSpaceState extends KObject
 	 */
 	protected function _validateChange($entity)
 	{
-		return count($entity->modified()) > 0;
+		return count($entity->getModifiedData()) > 0;		
 	}
 
 	/**
@@ -179,7 +179,7 @@ class AnDomainSpaceState extends KObject
 	 */
 	protected function _validateDelete($entity)
 	{
-		$relationships = $entity->description()->getRelationships();
+		$relationships = $entity->getEntityDescription()->getRelationships();
 	
 		foreach($relationships as $name => $relationship) 
 		{

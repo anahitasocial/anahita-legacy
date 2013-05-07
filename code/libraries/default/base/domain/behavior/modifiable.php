@@ -140,8 +140,8 @@ class LibBaseDomainBehaviorModifiable extends AnDomainBehaviorAbstract
 	protected function _beforeEntityUpdate(KCommandContext $context)
 	{
 		$entity   = $context->entity;
-        
-		$modified = count(array_intersect($this->_modifiable_properties, $entity->modified())) > 0;
+        $modified = array_keys(KConfig::unbox($entity->getModifiedData()));
+		$modified = count(array_intersect($this->_modifiable_properties, $modified)) > 0;
         
         if ( $modified && KService::has('com:people.viewer') ) {
             $entity->editor = get_viewer();

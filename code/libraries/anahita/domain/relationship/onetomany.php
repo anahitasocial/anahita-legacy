@@ -144,7 +144,16 @@ class AnDomainRelationshipOnetomany extends AnDomainRelationshipProperty
 		$this->_entityset  = $entityset;
 		return $this;
 	}
-		
+
+	/**
+	 * (non-PHPdoc)
+	 * @see AnDomainPropertyAbstract::isMaterializable()
+	 */
+	public function isMaterializable(array $data)
+	{
+	    return false;
+	}
+	
 	/**
 	 * Materialize a relationship for the parent entity 
 	 * 
@@ -215,8 +224,8 @@ class AnDomainRelationshipOnetomany extends AnDomainRelationshipProperty
 			'root'		 => $root,
 			'property'	 => $this->_child_key		
 		);
-
-		$set =  new AnDomainEntitysetOnetomany(new KConfig($options));
+        
+        $set = KService::get('anahita:domain.decorator.onetomany', $options);        
 		return $set;				
 	}
 }

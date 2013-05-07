@@ -111,6 +111,35 @@ class AnDomainQueryClause extends KObject implements IteratorAggregate, Countabl
 	}
 	
 	/**
+	 * Passthrough the bind
+	 * 
+	 * @param string $key   Bind key
+	 * @param string $value Bind value
+	 * 
+	 * @return AnDomainQueryClause
+	 */
+	public function bind($key, $value = null)
+	{
+		$this->_parent_query->bind($key, $value);
+		return $this;
+	}
+	
+	/**
+	 * Manually ends the clause. This is useful for when using in chain method calls
+	 * For example
+	 * $query->where($condition1)
+	 *  ->clause()
+	 * 	->where($subcondition)
+	 *  ->end()
+	 *  ->where($condition2)
+	 * 
+	 */
+	public function end()
+	{
+		return $this->_parent_query;
+	}
+	
+	/**
 	 * If the $method is one of the MySQL
 	 * 
 	 * @see KObject::__call()

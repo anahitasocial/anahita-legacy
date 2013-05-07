@@ -68,7 +68,7 @@ class ComBaseControllerToolbarDefault extends ComDefaultControllerToolbarDefault
     {
         $name = ucfirst($this->getController()->getIdentifier()->name);
         
-        if( $this->getController()->getItem() )
+        if( $this->getController()->getState()->isUnique() )
         {
             $saveable = $this->getController()->canEdit();
             $title    = 'Edit '.$name;
@@ -96,7 +96,7 @@ class ComBaseControllerToolbarDefault extends ComDefaultControllerToolbarDefault
      */
     public function onAfterControllerBrowse(KEvent $event)
     {        
-        if( $this->getController()->isExecutable() && $this->getController()->canAdd() )
+        if( $this->getController()->canAdd() )
         {
             $identifier = $this->getController()->getIdentifier();
             $config     = array('attribs' => array(

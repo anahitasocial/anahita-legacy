@@ -25,7 +25,7 @@
  * @license    GNU GPLv3 <http://www.gnu.org/licenses/gpl-3.0.html>
  * @link       http://www.anahitapolis.com
  */
-class AnDomainResourceSet extends KObject implements IteratorAggregate
+class AnDomainResourceSet extends KObject implements IteratorAggregate, Countable
 {
 	/**
 	 * Resources
@@ -94,6 +94,23 @@ class AnDomainResourceSet extends KObject implements IteratorAggregate
 		$this->_resources[$resource->getAlias()] = $resource; 
 		
 		return $this;
+	}
+	
+	/**
+	 * Return the resource with name
+	 * 
+	 * @param string $name The name of the resource
+	 * 
+	 * @return AnDomainResource
+	 */
+	public function getResource($name)
+	{
+	    foreach($this->_resources as $resource) 
+	    {
+	        if ( $resource->getName() == $name ) {
+	            return $resource;
+	        }
+	    }
 	}
 	
 	/**
@@ -167,6 +184,16 @@ class AnDomainResourceSet extends KObject implements IteratorAggregate
 		}
 		
 		//throw new KException('Column '.$name.' doesn\'t exists');
+	}
+	
+	/**
+	 * Return the count of the resources
+	 * 
+	 * @return int
+	 */
+	public function count()
+	{
+	    return count($this->_resources);
 	}
 	
 	/**

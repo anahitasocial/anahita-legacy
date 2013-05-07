@@ -16203,7 +16203,7 @@ provides: [Delegator]
 					}
 				}
 			} else {
-				this.fireEvent('error', 'Could not find a trigger with the name ' + name + ' for event: ' + event.type);
+			//	this.fireEvent('error', 'Could not find a trigger with the name ' + name + ' for event: ' + event.type);
 			}
 			return this;
 		},
@@ -19009,7 +19009,17 @@ var Purr = new Class({
 		} else {
 			this.wrapper.setStyle('bottom', (window.innerHeight / 2) - (this.getWrapperCoords().height / 2));			
 		}
-		document.id(document.body).grab(this.wrapper);
+		var parent = document.id(document.body)
+		if ( document.getElement('.modal') && document.getElement('.modal').isVisible() ) 
+		{			
+			var popup = document.getElement('.modal').retrieve('Bootstrap.Popup');
+			if ( popup ) {
+				popup.addEvent('hide', function(){
+					this.wrapper.hide();
+				}.bind(this));				
+			}
+		}
+		parent.grab(this.wrapper);
 		this.positionWrapper(this.options.position);
 	},
 
@@ -19043,9 +19053,9 @@ var Purr = new Class({
 
 	'getWrapperCoords': function(){
 		this.wrapper.setStyle('visibility', 'hidden');
-		var measurer = this.alert('need something in here to measure');
+		//var measurer = this.alert('need something in here to measure');
 		var coords = this.wrapper.getCoordinates();
-		measurer.destroy();
+//		measurer.destroy();
 		this.wrapper.setStyle('visibility','');
 		return coords;
 	},
@@ -19105,7 +19115,7 @@ var Purr = new Class({
 		}
 
 		this.wrapper.grab(alert, (this.options.mode == 'top') ? 'bottom' : 'top');
-
+		this.positionWrapper(this.options.position);
 		var fx = $merge(this.options.alert.fx, options.fx);
 		var alertFx = new Fx.Morph(alert, fx);
 		alert.store('fx', alertFx);
@@ -19228,6 +19238,482 @@ Element.implement({
 	}
 
 });
+
+/**
+ * Request constructor
+ */
+Request.from = function(element, options) {
+	options = options || {};
+	var spinnerTarget;
+	if ( element.get('tag') == 'a' ) 
+	{
+		spinnerTarget = element.getParent('ul') || this;
+		Object.add(options, {
+			method : 'get',
+			url	   : element.get('href')
+		});
+		if ( options.method != 'get' ) 
+		{
+			//legacy
+			var data = element.get('href').toURI().getData();
+			if ( element.get('data-data') ) {
+				data = JSON.decode(element.get('data-data'));
+			}
+			Object.add(options, {data : data});
+		}
+	} else 
+	{
+		if ( element.get('tag') == 'form' ) 
+			Object.add(options,{
+				method : element.get('method') || 'get',
+				form : element
+			});
+		else if ( element.form ) {
+			Object.add(options,{
+				form : element.form
+			});				
+		}
+		
+		if ( options.form ) {
+			Object.add(options,{
+				url  	: options.form.get('action'),
+				data 	: options.form,
+				method	: options.form.get('method')
+			});
+		}
+	}
+	
+	if ( instanceOf(options.url, Function) ) {
+		options.url = options.url.apply(element)
+	}
+	
+	Object.add(options,{
+	    fireSubmitEvent : true,
+		useSpinner	    : true,
+		spinnerTarget   : spinnerTarget || options.form || element
+	});
+	
+	if ( element.retrieve('request') ) 
+		element.retrieve('request').cancel();
+	
+	var request = null;
+	
+	//if json request create a json object
+	if ( (options.url && options.url.toURI().getData('format') == 'json') || options.format == 'json' )
+	    request = new Request.JSON(options);
+	else 
+		request = new Request.HTML(options);
+	
+	element.store('request', request);
+	
+	if ( options.form && options.fireSubmitEvent ) 
+	{
+		var event = {
+			_stop   : false,
+			mock	: true,
+			request : request,
+			stop    : function() {
+				event._stop = true;
+			},
+			preventDefault : function() {
+			
+			}
+		}
+		options.form.fireEvent('submit', [event]);
+		if ( event._stop ) 
+		{
+			Object.append(request, {
+				send : function() {
+					return false;
+				}
+			});
+			return request;
+		}
+	}
+	
+	if (  options.form && options.form.retrieve('validator') ) 
+	{
+		var validator = options.form.retrieve('validator');
+		var send 	  = request.send.bind(request);
+		options.form.addEvent('validationSuccessful', function(){
+			send();
+		});
+		Object.append(request, {
+			send : function() {
+				if  ( !validator.validate() ) {
+					return false;
+				}
+				else return send();
+			}
+		});
+	}
+	
+	return request;	
+}
+
+/**
+ * Creates an ajax request with the element as the spiner 
+ */
+Element.implement(
+{
+	/**
+	 * Returns a request object associated with a element, canceling an exsiting one,
+	 * it will set the element itself as a spinner target
+	 * 
+	 * @param  options
+	 * @return Request
+	 */
+	ajaxRequest : function(options) {
+		return Request.from(this, options);
+	}
+});
+
+/**
+ * Request Delegagor. Creates a AJAX request 
+ */
+(function() {
+	var getOptions = function(el) 
+	{
+		if ( !el.retrieve('raw-options') ) 
+		{
+			var rawOption = el.get('data-request-options') || '{}';
+			el.set('data-request-options','{}');
+			el.store('raw-options', rawOption);						
+		}
+		return JSON.decode.bind(el).attempt(el.retrieve('raw-options'));		
+	}
+	var request = function(el, api) 
+	{
+		if ( !el.retrieve('raw-options') ) 
+		{
+			var rawOption = el.get('data-request-options') || '{}';
+			el.set('data-request-options','{}');
+			el.store('raw-options', rawOption);						
+		}
+		var options   = getOptions(el);
+		//if option is a function then call it
+		if ( instanceOf(options, Function) ) {
+			options = options.apply(el);
+		}
+		
+		['form','replace','update','remove'].each(function(name){
+			var value = api.getAs(String, name) || options[name];
+			if ( value ) options[name] = value			
+			if ( instanceOf(options[name], String) ) {
+				options[name] = el.getElement(options[name]) || document.getElement(options[name]);
+			}
+		});	
+						
+		var autoFollow = api.getAs(Boolean, 'redirect') || false;
+		
+		Object.add(options,{
+			onTrigger : Function.from()
+		});
+		
+		var request = el.ajaxRequest(options),
+		uri		    = new URI();
+		options.onTrigger.apply(el, [request, event]);
+		request.addEvent('success', function() {			
+			if ( autoFollow ) 
+			{
+				location = this.xhr.getResponseHeader('Content-Location') ||
+					this.xhr.getResponseHeader('Location');
+				
+				if ( location ) {
+					window.location = location;
+				} 
+			}
+			
+		});
+		request.send();
+	};
+	Behavior.addGlobalFilter('Request', {
+    	setup : function(el, api)
+    	{
+    		var options = getOptions(el);    		
+    		var form    = document.getElement(api.get('form') || el);
+    		
+    		if ( !form ) { 
+    			return;
+    		}
+			
+    		var submit = function() {
+				request(el,api);
+			}
+    		if ( el != form ) {
+    			el.addEvent('click', submit);
+    		}
+    		form.addEvent('keyup', function(e) {
+    			if ( e.key == 'enter' ) {
+    				submit();
+    			}
+    		});    		
+    	}
+	});
+	Delegator.register(['click'],'Request', 
+	{
+		handler  : function(event, el, api) 
+		{
+			event.stop();
+			request(el,api);
+		}
+	});	
+})();
+
+
+/**
+ * Custom Form Validators
+ */
+
+Class.refactor(InputValidator, {
+	getSuccess: function(field, props) {
+		var msg = this.options.successMsg;
+		if ($type(msg) == 'function') msg = msg(document.id(field), props||this.getProps(field));
+		return msg;
+	}
+});
+
+Class.refactor(Form.Validator, {
+	options : {
+		warningPrefix : '',
+		errorPrefix	  : ''
+	}
+});
+
+Class.refactor(Form.Validator.Inline, {
+	
+	initialize: function(form, options) 
+	{
+		this.parent(form, options);
+		this.addEvent('onElementValidate', function(isValid, field, className, warn){
+			var validator = this.getValidator(className);
+			if (!isValid && validator.getError(field)) 
+			{
+				if (warn) field.addClass('warning');
+				var error  = validator.getError(field);
+				var advice = this.makeAdvice(className, field, error, warn);
+				advice.set('html', error);				
+				var cssClass = (warn) ? 'warning-advice' : 'validation-advice';
+				advice.set('class', cssClass);
+				this.insertAdvice(advice, field);
+				if ( advice.getParent('.control-group') )
+				    advice.getParent('.control-group').removeClass('success').addClass('error');
+				this.showAdvice(className, field);
+			} else if ( isValid && validator.getSuccess(field)) {
+			    var succes = validator.getSuccess(field);
+				var advice = this.makeAdvice(className, field, succes);
+				advice.set('html', succes);
+				advice.set('class', 'success-advice');				
+				this.insertAdvice(advice, field);
+				if ( advice.getParent('.control-group') )
+				    advice.getParent('.control-group').removeClass('error').addClass('success');
+				this.showAdvice(className, field);
+			} else {
+				this.hideAdvice(className, field);
+			}
+		});
+	}
+});
+
+/**
+ * Form Remote Validator 
+ */
+(function() {
+	
+	Class.refactor(Form.Validator, {
+		validate: function(event) 
+		{
+			var result = this.previous(event);
+			if ( result && event && event.target ) 
+			{
+				if ( !event.target.get('remoteValidators').isSuccess() )
+				{
+					event.preventDefault();
+					event.target.addEvent('validationSuccessful', function(){
+						event.target.submit();
+					});	
+				}
+			}
+			return result;
+		}
+	});
+	Element.Properties.remoteValidators = 
+	{
+		get  : function() {
+			if ( !this.retrieve('remoteValidators') ) {
+				var validators = new Array();
+				var element    = this;
+				Object.merge(validators, {
+					isSuccess   : function() {
+						return this.length == 0 || this.every(function(validator){
+							return validator.isSuccess()
+						});
+					},
+					validate  : function() {
+						this.each(function(validator){
+							validator.validate();
+						});
+					},
+					isPending : function() {						
+						return this.some(function(validator){
+							return validator.isPending()
+						});
+					},
+					add : function(validator) {
+						validators.include(validator);						
+						validator.addEvent('onValidationComplete', function() {
+							//validation is complete
+							//lets call the form validator in order to 
+							//get it to show the messsage
+							element.get('validator').validateField(validator.element);
+							if ( !validators.isPending() ) {
+								//no more pending								
+								if ( validators.isSuccess() ) {
+									element.fireEvent('validationSuccessful');
+								}
+								element.fireEvent('validationComplete');
+							}
+						})
+					}
+				});
+				this.store('remoteValidators', validators);
+			}
+			return this.retrieve('remoteValidators');
+		}
+	}
+
+	Element.Properties.remoteValidator = 
+	{
+		get  : function() {
+			if ( !this.retrieve('remoteValidator') ) {
+				this.set('remoteValidator', {});
+			}
+			return this.retrieve('remoteValidator');
+		},
+		set : function(props) {
+			if ( !this.retrieve('remoteValidator') ) {				
+				this.store('remoteValidator', new RemoteValidator(this, props));
+				this.form.get('remoteValidators').add(this.retrieve('remoteValidator'));				
+			}
+			return this;
+		}
+	}
+	var RemoteValidatorResponse = new Class({
+		initialize : function(value, type, msg) {
+			this.value = value;
+			this.type  = type;
+			this.msg   = msg;
+		}
+	});
+	var RemoteValidator = new Class({
+		Implements : [Events],
+		initialize : function(element, props) {
+			this.element = element;
+			this.props 	 = props || {};
+			this.status  = null;
+			this.result  = {};
+			this.requestUrl  = this.props.url || this.element.form.get('action');
+			this.responses	 = {};
+		},
+		isPending : function() {
+			return this.status == 'pending';
+		},
+		isSuccess : function() {
+			return this.status == 'success';
+		},
+		isFailed  : function() {
+			return this.status == 'error';
+		},
+		validate  : function() {			
+			var self    = this;
+			var value   = this.element.get('value');
+			if ( this.responses[value] ) {
+				this.result = this.responses[value];
+				this.status = this.result.status;
+				return;
+			}			
+			this.status  = 'pending';
+			this.request = new Request({
+				url    : this.requestUrl,
+				method : 'post',
+				data   : {action:'validate','key':this.props.key || this.element.get('name'),'value':value},
+				onFailure  : function() {
+					self.status = 'error';
+					self.result = JSON.decode(this.getHeader('Validation') || '{}') || {};
+					Object.add(self.result,{
+						errorMsg : self.props.errorMsg
+					});
+					self.result.status	  = self.status;
+					self.responses[value] = self.result;
+					self.fireEvent('validationComplete');
+				},
+				onSuccess : function() {
+					self.status = 'success';
+					self.result = JSON.decode(this.getHeader('Validation') || '{}') || {};
+					Object.add(self.result,{
+						successMsg : self.props.successMsg
+					});					
+					self.result.status	   = self.status;					
+					self.responses[value]  = self.result;					
+					self.fireEvent('validationComplete');
+				},
+				async : true
+			});
+			this.request.send();
+		},
+		getErrorMsg   : function() {
+			return this.result.errorMsg;
+		},
+		getSuccessMsg : function() {
+			return this.result.successMsg;
+		}
+	});
+	Form.Validator.add('validate-passwod', {
+		errorMsg : function(element, props) {
+			return 'Passwords will contain at least (1) upper case letter <br/>' +  
+			'Passwords will contain at least (1) lower case letter<br/>' +
+			'Passwords will contain at least (1) number or special character<br/>' + 
+			'Passwords will contain at least (8) characters in length<br/>' +
+			'Password maximum length should not be arbitrarily limited ';
+		},
+		test 	: function(element, props) {
+			var value = element.get('value');
+			return true;
+			return value.match(/(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/);
+		}
+	});
+	Form.Validator.add('validate-remote', {
+		successMsg : function(element, props) {
+			var remoteValidator = element
+			.set('remoteValidator', props)
+			.get('remoteValidator');
+			
+			return remoteValidator.getSuccessMsg();			
+		},	
+		errorMsg: function(element, props) {
+			var remoteValidator = element
+				.set('remoteValidator', props)
+				.get('remoteValidator');
+			
+			return remoteValidator.getErrorMsg();		    
+		},
+		test 	: function(element, props) 
+		{
+			var remoteValidator = element
+				.set('remoteValidator', props)
+				.get('remoteValidator');
+			
+			remoteValidator.validate();
+			if ( !remoteValidator.isPending() ) {
+				return !remoteValidator.isFailed();
+			} else {
+				return true;
+			}
+		}
+	});	
+})();
+
+
 /**
  * Initialize Global Behavior and Delegator
  */
@@ -19273,6 +19759,7 @@ Element.implement({
 	});	
 })();
 
+
 //parse language
 (function(){
 	//set the language
@@ -19299,7 +19786,14 @@ Object.extend({
             original[key] = value;
         });
         return Object;
-    }
+    },
+    add : function(original, extension) {
+        extension = Object.merge(extension, original);
+        Object.each(extension, function(value, key) {
+            original[key] = value;
+        });
+        return Object;
+    },
 });
 
 /**
@@ -19428,6 +19922,14 @@ Class.refactor(Spinner, {
 				data	: this.options.data
 			});
 			form.submit();
+		},
+		onFailure : function(xhr) 
+		{
+			this.previous.apply(this, arguments);
+			var method = 'on' + this.status;
+			if ( this.options[method] ) {
+				this.options[method].apply(this, [this]);
+			}
 		}
 	});
 	
@@ -19455,7 +19957,7 @@ Class.refactor(Spinner, {
 					}
 				}
 				
-				Object.set(options, {
+				Object.add(options, {
                     where    : 'top',
                     fx       : {
                         duration : 'long'                        
@@ -19523,7 +20025,7 @@ Class.refactor(Spinner, {
  */
 Element.Form = function(options)
 {
-	Object.set(options, {
+	Object.add(options, {
 		method : 'post',
 		data   : {}
 	});
@@ -19565,118 +20067,6 @@ Element.Form = function(options)
 }
 
 
-/**
- * Creates an ajax request with the element as the spiner 
- */
-Element.implement(
-{
-	/**
-	 * Returns a request object associated with a element, canceling an exsiting one,
-	 * it will set the element itself as a spinner target
-	 * 
-	 * @param  options
-	 * @return Request
-	 */
-	ajaxRequest : function(options) 
-	{
-		options = options || {};
-		var spinnerTarget;
-		if ( this.get('tag') == 'a' ) {
-			spinnerTarget = this.getParent('ul') || this;
-			Object.set(options, {
-				method : 'get',
-				url	   : this.get('href')
-			});
-			if ( options.method != 'get' ) {
-				Object.set(options, {
-					data : this.get('href').toURI().getData()
-				});
-			}
-		} else 
-		{
-			if ( this.get('tag') == 'form' ) 
-				Object.set(options,{
-					form : this
-				});
-			else if ( this.form ) {
-				Object.set(options,{
-					form : this.form
-				});				
-			}
-			
-			if ( options.form ) {
-				Object.set(options,{
-					url  	: options.form.get('action'),
-					data 	: options.form,
-					method	: options.form.get('method')
-				});
-			}
-		}
-		
-		if ( instanceOf(options.url, Function) ) {
-			options.url = options.url.apply(this)
-		}
-		
-		Object.set(options,{
-		    fireSubmitEvent : true,
-			useSpinner	    : true,
-			spinnerTarget   : spinnerTarget || options.form || this
-		});
-
-		if ( this.retrieve('request') ) 
-			this.retrieve('request').cancel();
-		
-		var request = null;
-		
-		//if json request create a json object
-		if ( (options.url && options.url.toURI().getData('format') == 'json') || options.format == 'json' )
-		    request = new Request.JSON(options);
-		else 
-			request = new Request.HTML(options);
-		
-		this.store('request', request);
-		
-		if ( options.form && options.fireSubmitEvent ) 
-		{
-			var event = {
-				_stop   : false,
-				request : request,
-				stop    : function() {
-					event._stop = true;
-				},
-				preventDefault : function() {
-				
-				}
-			}
-			options.form.fireEvent('submit', [event]);
-			if ( event._stop ) 
-			{
-				Object.append(request, {
-					send : function() {
-						return false;
-					}
-				});
-				return request;
-			}
-		}
-		
-		if (  options.form && options.form.retrieve('validator') ) 
-		{
-			var validator = options.form.retrieve('validator');
-			var send 	  = request.send.bind(request);
-			Object.append(request, {
-				send : function() {
-					if  ( !validator.validate() ) {
-						return false;
-					}
-					else return send();
-				}
-			});
-		}
-		
-		return request;
-	}
-});
 
 /**
  * Content Property
@@ -19742,50 +20132,6 @@ Behavior.addGlobalFilter('Hide',{
 	}
 });
 
-/**
- * Request Delegagor. Creates a AJAX request 
- */
-Delegator.register(['click'],'Request', 
-{
-	handler  : function(event, el, api) 
-	{
-		event.stop();
-		var options = (function() {
-			return JSON.decode.bind(el).attempt(el.get('data-request-options') || '{}');
-		}.bind(el)).apply();
-		
-		if ( instanceOf(options, Function) ) {
-			options = options.apply(el);
-		}
-		
-		if ( instanceOf(options.replace, String) ) {
-			options.replace = el.getElement(options.replace);
-		}
-		
-		if ( update = document.getElement(options.update) ) {
-			options.update = update;	
-		}
-		
-		if ( instanceOf(options.remove, String) ) {
-			options.remove = el.getElement(options.remove);
-		}
-		
-		Object.set(options,{
-			onTrigger : Function.from()
-		});
-		
-		var request = el.ajaxRequest(options),
-			uri		= new URI();
-		
-		options.onTrigger.apply(el, [request, event]);
-		
-		if ( uri.getData('submit') || options.submit )
-			request.submit();
-		else {
-			request.send();
-		}
-	}
-});
 
 /**
  * Countable Behavior for a textarea
@@ -19823,93 +20169,6 @@ Behavior.addGlobalFilter('Countable',{
 	}
 })
 
-/**
- * Custom Form Validators
- */
-
-Class.refactor(InputValidator, {
-	getSuccess: function(field, props) {
-		var msg = this.options.successMsg;
-		if ($type(msg) == 'function') msg = msg(document.id(field), props||this.getProps(field));
-		return msg;
-	}
-});
-
-Class.refactor(Form.Validator, {
-	options : {
-		warningPrefix : '',
-		errorPrefix	  : ''
-	}
-});
-
-Class.refactor(Form.Validator.Inline, {
-	
-	initialize: function(form, options) 
-	{
-		this.parent(form, options);
-		this.addEvent('onElementValidate', function(isValid, field, className, warn){
-			var validator = this.getValidator(className);
-			if (!isValid && validator.getError(field)) 
-			{
-				if (warn) field.addClass('warning');
-				var error  = validator.getError(field);
-				var advice = this.makeAdvice(className, field, error, warn);
-				advice.set('html', error);				
-				var cssClass = (warn) ? 'warning-advice' : 'validation-advice';
-				advice.set('class', cssClass);
-				this.insertAdvice(advice, field);
-				if ( advice.getParent('.control-group') )
-				    advice.getParent('.control-group').removeClass('success').addClass('error');
-				this.showAdvice(className, field);
-			} else if ( isValid && validator.getSuccess(field)) {
-			    var succes = validator.getSuccess(field);
-				var advice = this.makeAdvice(className, field, succes);
-				advice.set('html', succes);
-				advice.set('class', 'success-advice');				
-				this.insertAdvice(advice, field);
-				if ( advice.getParent('.control-group') )
-				    advice.getParent('.control-group').removeClass('error').addClass('success');
-				this.showAdvice(className, field);
-			} else {
-				this.hideAdvice(className, field);
-			}
-		});
-	}
-});
-
-/**
- * Form Remote Validator 
- */
-Form.Validator.add('validate-remote', {
-	successMsg : function(element, props) {
-		var validation = element.retrieve('remote:validation') || {};		
-		return  validation.successMsg || props.successMsg;
-	},	
-	errorMsg: function(element, props) {
-	    var validation = element.retrieve('remote:validation') || {};	    
-	    return  validation.errorMsg || props.errorMsg;
-	},
-	test 	: function(element, props) {		
-		if ( Form.Validator.getValidator('IsEmpty').test(element) )
-			return true;
-		var request = new Request({
-			url    : props.url || element.form.get('action'),
-			method : 'post',
-			data   : {action:'validate','key':props.key || element.get('name'),'value':element.get('value')},
-			onRequest : function(){
-			    element.spin();
-			},
-			onComplete : function() {
-			    element.unspin();
-			    element.store('remote:validation', JSON.decode(this.getHeader('Validation') || '{}'));
-			},
-			async : false
-		}).post();
-		
-		element.store('validation:request', request);
-		return request.status < 300
-	}
-});
 
 
 /**
@@ -19950,53 +20209,7 @@ var parseLess = function()
 			document.body.adopt(new Element('style',{html:css}));
     	});
 	});	
-}
- 
-/**
- * Handling displaying ajax message notifications
- */
-Class.refactor(Request.HTML, 
-{	
-	//check the header
-	onSuccess: function() {
-		var message 	= this.xhr.getResponseHeader('Redirect-Message');
-		var messageType = this.xhr.getResponseHeader('Redirect-Message-Type') || 'success';
-		if  ( message ) {
-			message.alert(messageType);
-		}
-		return this.previous.apply(this, arguments);
-	},
-	onFailure: function() {
-		var message 	= this.xhr.getResponseHeader('Redirect-Message');
-		var messageType = this.xhr.getResponseHeader('Redirect-Message-Type') || 'error';
-		if  ( message ) {
-			message.alert(messageType);
-		}
-		return this.previous.apply(this, arguments);
-	}
-});
-
-/**
- * String Alert using Purr
- */
-String.implement({
-	prompt : function(options) {
-		var options = {					
-				body    : '<h3>' + this.translate() + '</h3>',
-				buttons : [
-				   {name: 'Action.cancel'.translate(), dismiss:true},
-				   {name: 'Action.yes'.translate(), dismiss:true, click:options.onConfirm, type: 'btn-danger'}
-				]
-		};
-		return new Bootstrap.Popup.from(options).show();	
-	},
-	alert  : function(type) {
-		var div = new Element('div',{html:this});
-		div.set('data-alert-type', type);
-		window.behavior.applyFilter(div, Behavior.getFilter('Alert'));
-	}
-});
-
+};
 (function(){
 	Class.refactor(Bootstrap.Popup, {	
 		_animationEnd: function(){
@@ -20014,55 +20227,166 @@ String.implement({
 				}
 			}
 		},
-	});	
-	Bootstrap.Popup.from = function(data) 
-	{
-		Object.set(data, {buttons:[], header:''});
-		var html = '';
-		if ( data.header )
-			html += '<div class="modal-header">' + 
-//						'<a href="#" class="close dismiss stopEvent">x</a>' + 
-						'<h3>'+data.header+'</h3>' +
-					'</div>';
-					
-		html +=	'<div class="modal-body"><p>' + data.body  + '</p>' + 
-					'</div>' +
-					'<div class="modal-footer">' +
-					'</div>';			
-		element = new Element('div', {'html':html,'class':'modal fade'});
-		
-		data.buttons = data.buttons.map(function(button) {
-			Object.set(button, {
-				click 	: Function.from(),
-				type	: ''
-			});
-			var btn  = new Element('button', {
-				html	: button.name, 
-				'class' : 'btn'
-			});
-			
-			btn.addClass(button.type);
-			
-			btn.addEvent('click', button.click.bind(this));
-			
-			if ( button.dismiss ) {
-				btn.addClass('dismiss stopEvent');
-			} 
-			
-			return btn;
-		});
-		 
-		element.getElement('.modal-footer').adopt(data.buttons);
-		element.inject(document.body, 'bottom');
-		
-		return new Bootstrap.Popup(element, data.options || {});	
+	});
+	var parse = function(section, html, sections) {
+		var sectionReg    = new RegExp('<popup:'+section+'>([\\s\\S]*?)<\/popup:'+section+'>');
+		var matches       = sectionReg.exec(html);
+		sections[section] = matches ? matches[1] : null;
+		return html.replace(sectionReg, '');
 	}
+	Bootstrap.Popup.implement({
+		setContent : function(sections) 
+		{
+			if ( typeOf(sections) == 'string' ) 
+			{
+				var html = sections;
+				sections = {};
+				//check if the html has popup tag
+				html = parse('header', html, sections);
+				html = parse('footer', html, sections);
+				if ( !html.match(/<popup:/)) {
+					html = '<popup:body>' + html + '</popup:body>';
+				}
+				html = parse('body', html, sections);
+			}	
+			//get the content from a remote URL
+			if ( sections.url ) 
+			{
+				if ( this.url == sections.url ) {
+					this.show();
+					return;
+				} 
+				if ( !this.visible ) {
+					this.setContent({
+						body   : '<div class="uiActivityIndicator">&nbsp;</div>'
+					});					
+				}
+				this.url = sections.url;					
+				this.show();
+				var req = new Request.HTML({
+					url : this.url,
+					onSuccess : function(nodes, tree, html) {
+						this.setContent(html);					
+					}.bind(this)
+				}).get();									
+			}
+			else 
+			{
+				Object.add(sections, {header:'',footer:'',body:''});
+				['header','footer','body'].each(function(section){
+					var element = this.element.getElement('.modal-' + section);
+					var content = sections[section];
+					if ( content ) 
+					{
+						element.show();
+						element.set('html', content);
+						//if header doesn't have a close
+						//then add it
+						if ( section == 'header' && !element.getElement('.close') ) 
+						{
+							var close = new Element('button',{'class':'close','aria-hidden':true,'html':'&times;'});
+							close.inject(element, 'top');
+						}
+												
+					} else {
+						element.hide();
+					}					
+					
+				}.bind(this));
+				var buttons = (sections.buttons || []).map(function(button) {
+					Object.set(button, {
+						click 	: Function.from(),
+						type	: ''
+					});
+					var btn  = new Element('button', {
+						html	: button.name, 
+						'class' : 'btn'
+					});
+					btn.addClass(button.type);			
+					btn.addEvent('click', button.click.bind(this));
+					if ( button.dismiss ) {
+						btn.addClass('dismiss stopEvent');
+					}			
+					return btn;
+				});
+				if ( buttons.length ) {
+					this.element.getElement('.modal-footer').adopt(buttons);
+					this.element.getElement('.modal-footer').show();
+				}				
+			}			
+		}
+	});
+	Bootstrap.Popup.from = function(data) {
+		data = data || {};
+		html = '<div class="modal-header"></div>' + 
+			   '<div class="modal-body"></div>'+
+			   '<div class="modal-footer"></div>';
+		element = new Element('div', {'html':html,'class':'modal fade'});
+		element.inject(document.body, 'bottom');
+		var modal = new Bootstrap.Popup(element, data.options || {});
+		modal.setContent(data);
+		return modal; 
+	};
 })();
 
+(function() {
+	var popup;	
+	Delegator.register('click', 'BS.showPopup', {
+		handler: function(event, link, api) {
+			var target, url;
+			url = link.get('href');
+			event.preventDefault();
+			if ( api.get('target') ) {
+				target = link.getElement(api.get('target'));
+			} 
+			if ( api.get('url') ) {			
+				url	   = api.get('url');
+			}
+			if ( !url && !target ) {
+				api.fail('Need either a url to the content or can\'t find the target element');
+			}
+						
+			if ( target )								
+				target.getBehaviorResult('BS.Popup').show();
+			else 
+			{
+				if ( popup && 
+						popup.url == url
+						
+				) {
+					popup.show();
+					return;
+				}				
+				if ( !popup ) {
+					popup =  Bootstrap.Popup.from(); 
+				}								
+				popup.setContent({url:url});
+				return;
+				popup.url = url;					
+				popup.show();
+				var req = new Request.HTML({
+					url : url,
+					onSuccess : function(nodes, tree, html) {
+						popup.setContent(html);					
+					}
+				}).get();
+			}
+		}
+
+	}, true);
+
+})();
+String.implement({
+	alert  : function(type) {
+		var div = new Element('div',{html:this});
+		div.set('data-alert-type', type);
+		window.behavior.applyFilter(div, Behavior.getFilter('Alert'));
+	}
+});
 Behavior.addGlobalFilter('Alert', {
 	defaults : {
-		mode 		: 'bottom',
-		position	: 'right',
+		mode 		: 'top',
+		position	: 'center',
 		highlight   : false,
 		hide 		: true,
 		alert		: {
@@ -20077,12 +20401,150 @@ Behavior.addGlobalFilter('Alert', {
 		if ( api.getAs(Boolean, 'hide') === false) {			
 			options.alert['hideAfter'] = false;
 		}
-		if ( !this._purr ) {
-			this._purr = new Purr(options);
+		if ( this._purr )  {
+			this._purr.wrapper.destroy();
 		}
+		this._purr = new Purr(options);
 		var wrapper = new Element('div',{'class':'alert alert-'+api.get('type')}).set('html', el.get('html'));		
 		this._purr.alert(wrapper, api._getOptions() || {});
 		return this._purr;
+	}
+});
+
+(function() {
+	Behavior.addGlobalFilter('Submit', {
+    	setup : function(el, api)
+    	{
+    		var form = document.getElement(api.get('form') || el);
+    		
+    		if ( !form ) 
+    			return;
+			
+    		var submit = function() {
+				form.spin();
+				form.submit();			
+			}
+    		if ( el != form ) {
+    			el.addEvent('click', submit);
+    		}
+    		form.addEvent('keyup', function(e) {
+    			if ( e.key == 'enter' ) {
+    				submit();
+    			}
+    		});
+    	}
+	});	
+	Delegator.register('click', {
+		'Submit' : function(event, el, api) {
+			event.stop();
+			if ( el.hasClass('disabled') ) {
+			    return false;
+			}
+			if ( api.get('form') || el.form ) 
+			{
+				var form = api.get('form') ? document.getElement(api.get('form')) : el.form;
+				var submit = function() {
+					form.spin();
+					form.submit();			
+				}
+			} else {
+				var url    = api.get('url') || el.get('href');
+				var data   = JSON.decode(el.get('data-data')) || el.get('href').toURI().getData();
+				var target = api.get('target') || el.get('target');
+				var form   = Element.Form({action:url, data:data});
+				var spinner   = el.getElement(api.get('spinner')) || el;
+				if ( target ) {
+					form.set('target', target);
+				}	
+				var submit = function(){
+					if ( spinner ) spinner.spin();
+					form.inject(document.body, 'bottom');
+					form.submit();			
+				}
+			}
+			
+			if ( api.get('promptMsg') ) {
+				api.get('promptMsg').prompt({onConfirm:submit});
+			}		
+			else {			
+				submit();
+			}
+		}		
+	});
+})();
+
+var MessageHandler = {};
+
+MessageHandler.Alert = new Class({
+
+	handle : function(message) {
+		if ( message.text && message.type ) {
+				message.text.alert(message.type);	
+		}
+	}
+});
+
+MessageHandler.Element = new Class({
+	initialize : function(container) {
+		this.container = container;
+	},
+	handle : function(message) {
+		if ( !message.text || !message.type) {
+			return
+		}
+		if ( document.id(this.container) ) {
+			msg = new Element('div',{'class':'alert alert-'+message.type}).set('html', message.text);
+			document.id(this.container).empty().adopt(msg);
+		} else {
+			new MessageHandler.Alert(message); 
+		}		
+	}
+});
+
+/**
+ * Handling displaying ajax message notifications
+ */
+Class.refactor(Request.HTML, 
+{	
+	options  : {
+		message : {
+			handler :new MessageHandler.Element('flash-message') 
+		}
+	},
+	//check the header
+	onSuccess: function() 
+	{
+		var message = this.xhr.getResponseHeader('X-Message');
+		message  = JSON.decode(message || '{}');
+		this.options.message.handler.handle(message);
+		return this.previous.apply(this, arguments);
+	},
+	onFailure: function() 
+	{
+		var message = this.xhr.getResponseHeader('X-Message');
+		message  = JSON.decode(message || '{}');
+		this.options.message.handler.handle(message);	
+		return this.previous.apply(this, arguments);
+	}
+});
+
+
+ 
+
+
+/**
+ * String Alert using Purr
+ */
+String.implement({
+	prompt : function(options) {
+		var options = {					
+				body    : '<h3>' + this.translate() + '</h3>',
+				buttons : [
+				   {name: 'Action.cancel'.translate(), dismiss:true},
+				   {name: 'Action.yes'.translate(), dismiss:true, click:options.onConfirm, type: 'btn-danger'}
+				]
+		};
+		return new Bootstrap.Popup.from(options).show();	
 	}
 });
 
@@ -20490,29 +20952,6 @@ Delegator.register('click', {
 		}
 		else submit();		
 	},
-	'Submit' : function(event, el, api) {
-		event.stop();
-		if ( el.hasClass('disabled') )
-		{
-		    return false;
-		}
-		data = el.get('href').toURI().getData();
-		var form = Element.Form({action:el.get('href'), data:data});
-		if ( el.get('target') ) {
-			form.set('target', el.get('target'));
-		}
-		var submit = function(){
-			el.spin();
-			form.inject(document.body, 'bottom');
-			form.submit();			
-		}
-		if ( api.get('promptMsg') ) {
-			api.get('promptMsg').prompt({onConfirm:submit});
-		}		
-		else {			
-			submit();
-		}
-	},
 	'VoteLink' : function(event, el, api) {
 		event.stop();
 		el.ajaxRequest({
@@ -20535,49 +20974,7 @@ Delegator.register('click', {
 	}
 });
 
-(function(){
-	Delegator.register('click', 'BS.showPopup', {
-		handler: function(event, link, api) {
-			var target, url;	
-			event.preventDefault();
-			if ( api.get('target') ) {
-				target = link.getElement(api.get('target'));
-			} 
-			if ( api.get('url') ) {			
-				url	   = api.get('url');
-			}
-			if ( !url && !target ) {
-				api.fail('Need either a url to the content or can\'t find the target element');
-			}
-						
-			if ( target )								
-				target.getBehaviorResult('BS.Popup').show();
-			else {
-				var popup = Bootstrap.Popup.from({
-					header : 'Prompt.loading'.translate(),
-					body   : '<div class="uiActivityIndicator">&nbsp;</div>',
-					buttons : [{name: 'Action.close'.translate(), dismiss:true}]
-				});
-				popup.show();			
-				var req = new Request.HTML({
-					url : url,
-					onSuccess : function(nodes, tree, html) { 
-					    var title = html.parseHTML().getElement('.popup-header');
-					    var body  = html.parseHTML().getElement('.popup-body');
-					    if ( title ) {
-					    	popup.element.getElement('.modal-header').empty().adopt(title);
-					    }
-					    if ( body ) {
-					    	popup.element.getElement('.modal-body').empty().adopt(body);
-					    }
-					}
-				}).get();
-			}
-		}
 
-	}, true);
-
-})();
 
 Request.Options = {};
 
@@ -21045,6 +21442,41 @@ Delegator.register(['click'],'Comment', {
 	}
 });
 
+Delegator.register(['click'],'Checkbox', {
+	defaults : {
+		'toggle-element' : null,
+		'toggle-class'	 : 'selected'
+	},
+	handler  : function(event, el, api) 
+	{		
+		var target = el;
+		if ( api.get('toggle-element') ) {
+			target = el.getElement(api.get('toggle-element'));
+		}				
+		if ( !el.retrieve('checkbox') ) 
+		{			
+			var checkbox = new Element('input',{
+				type   : 'checkbox',
+				value  : api.getAs(String,'value'),
+				name   : api.getAs(String,'name')
+			});			
+			el.adopt(checkbox);
+			checkbox.hide();
+			if ( checkbox.form ) {
+				checkbox.form.addEvent('reset', function(){
+					target.removeClass(api.get('toggle-class'));
+				});
+			}
+			el.store('checkbox', checkbox);
+		}
+
+		var checkbox 	   = el.retrieve('checkbox');
+		checkbox.checked   = !checkbox.checked;
+		target.toggleClass(api.get('toggle-class'));
+		el.fireEvent('check');
+	}
+});
+
 var ScrollLoader = new Class({
 
     Implements: [Options, Events],
@@ -21094,7 +21526,8 @@ var EditEntityOptions = function() {
 	return {
 		replace : this.getParent('form'),
 		url		: function() {
-			return this.form.get('action') + '&layout=list&reset=1';
+			var url = this.form.get('action').toURI().setData({layout:'list'}).toString();
+			return url;
 		}
 	}
 }
@@ -21116,9 +21549,10 @@ var EntityHelper = new Class({
 		if(this.form.title.value.clean().length < 3)
 			return false;
 		
+		var url = this.form.get('action').toURI().setData({layout:'list'}).toString();
 		this.form.ajaxRequest({
 			method : 'post',
-			url : this.form.get('action') + '&layout=list&reset=1',
+			url  : url,
 			data : this.form,
 			inject : {
 				element : document.getElement('.an-entities'),

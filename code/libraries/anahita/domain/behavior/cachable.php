@@ -26,20 +26,20 @@
  * @link       http://www.anahitapolis.com
  */
 class AnDomainBehaviorCachable extends AnDomainBehaviorAbstract
-{   
-    /**
-     * Counter. Caching only works if the counter is 0
-     * 
-     * @var int
-     */ 
-    static $_counter = 0;
-    
+{           
     /**
      * The repository cache
      * 
-     * @var AnDomainRepositoryCache
+     * @var ArrayObject
      */
     protected $_cache;
+    
+    /**
+     * Turn off/on cache
+     * 
+     * @var boolean
+     */
+    protected $_enable;
     
     /**
      * Constructor.
@@ -51,8 +51,8 @@ class AnDomainBehaviorCachable extends AnDomainBehaviorAbstract
     public function __construct(KConfig $config)
     {
         parent::__construct($config);
-        
-        $this->_cache = $config->cache;
+        $this->_cache  = $config->cache;
+        $this->_enable = $config->enable;     
     }
         
     /**
@@ -67,72 +67,132 @@ class AnDomainBehaviorCachable extends AnDomainBehaviorAbstract
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
+            'enable'     => true,
             'priority'   => KCommand::PRIORITY_LOWEST,
             'cache'      => new ArrayObject()
         ));
     
         parent::_initialize($config);
     }
-
+    
     /**
-     * @{inheritdoc}
-     */
-    public function getMixableMethods(KObject $mixer = null)
-    {                        
-        return parent::getMixableMethods($mixer);
-    }
-        
-    /**
-     * Command handler
+     * Check the object cache see if the data has already been retrieved
+     * 
+     * This cache is only persisted throughout a request 
      *
-     * @param   string      The command name
-     * @param   object      The command context
-     * @return  boolean     Can return both true or false.
+     * @param KCommandContext $context
+     *
+     * @return void
      */
-    public function execute( $name, KCommandContext $context)
+    protected function _beforeRepositoryFetch(KCommandContext $context)
     {
-        $operation = $context->operation;
-        $cache	   = $this->_cache;
-        $parts     = explode('.', $name);
-        if ( $operation & AnDomain::OPERATION_FETCH && self::$_counter == 0 )
-        {            
-            $key	 	 = (string)$context->query;
-            
-            if ( $parts[0] == 'before' ) 
-            {
-                if ( $cache->offsetExists($key) ) 
-                {
-                    $context->data = $cache->offsetGet($key);
-                    return false;
-                }
-            }
-            else
-            {
-                $cache->offsetSet($key, $context->data);
-            }
-        } elseif ( $operation && count($parts) == 2 )
+        if ( $this->_enable )
         {
-             //empty cache first
-            if ( count($this->_cache) ) 
+            $key = $this->_getCacheKey($context->query);
+            
+            if ( $this->_cache->offsetExists($key) )
             {
-                $this->_cache->exchangeArray(array());
-            }
-            if ( $parts[0] == 'before' ) {
-                self::$_counter++;
-            } else {
-                self::$_counter--;
-            }
+                $context->data = $this->_cache->offsetGet($key);
+                return false;
+            }            
         }
     }
     
     /**
-     * Return the cache object 
+     * Stores the objects in the cache. This cache is persisted during the
+     * request life cycle
      *
-     * @return ArrayObject
+     * @param KCommandContext $context
+     *
+     * @return void
      */
-    public function getCache()
+    protected function _afterRepositoryFetch(KCommandContext $context)
     {
-        return $this->_cache;
+        if ( $this->_enable )
+        {
+            $key = $this->_getCacheKey($context->query);
+            $this->_cache->offsetSet($key, $context->data);            
+        }
+    }    
+    
+    /**
+     * Clean and disable the cahce before insert
+     *
+     * @param KCommandContext $context
+     *
+     * @return void
+     */
+    protected function _beforeEntityInsert(KCommandContext $context)
+    {
+        $this->_cache->exchangeArray(array());
+    }    
+    
+    /**
+     * Clean and disable the cahce before delete
+     *
+     * @param KCommandContext $context
+     *
+     * @return void
+     */
+    protected function _beforeEntityDelete(KCommandContext $context)
+    {
+        $this->_cache->exchangeArray(array());
+    }    
+
+    /**
+     * Clean and disable the cahce before update
+     *
+     * @param KCommandContext $context
+     *
+     * @return void
+     */
+    protected function _beforeEntityUpdate(KCommandContext $context)
+    {
+        $this->_cache->exchangeArray(array());
+    }      
+    
+    /**
+     * Enables the cache
+     * 
+     * @return void
+     */
+    public function enableCache()
+    {
+        $this->_enable = true;
+    }
+    
+    /**
+     * Disable the cache
+     *
+     * @return void
+     */
+    public function disableCache()
+    {
+        $this->_enable = false;
+    }    
+    
+    /**
+     * Empty the cache
+     * 
+     * @param AnDomainQuery $query
+     * 
+     * @return void
+     */
+    public function emptyCache($query)
+    {
+    	$this->_cache->offsetSet($this->_getCacheKey($query), null);    	
+    }
+    
+    /**
+     * Returns a key to use for cache 
+     * 
+     * @param AnDomainQuery $query
+     * 
+     * @return string
+     */
+    protected function _getCacheKey($query)
+    {
+    	return (string)$query;
     }
     
     /**

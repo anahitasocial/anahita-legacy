@@ -10,7 +10,7 @@ $config->append(array(
    'c' => 'up',
 ));
 
-$controller = KService::get('com://dev/migrator.controller', array('path'=>$config->p));
+$controller = KService::get('com://dev/migrator.controller.default', array('path'=>$config->p));
 
 print $controller->{$config->c}();
 

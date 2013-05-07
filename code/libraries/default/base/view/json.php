@@ -98,6 +98,9 @@ class LibBaseViewJson extends LibBaseViewAbstract
             $this->output = $this->_getItem();
         }
       
+        //if null then return empty string
+        $this->output = pick($this->output, '');
+        
         if (!is_string($this->output)) {
             $this->output = json_encode($this->output);
         }
@@ -124,22 +127,30 @@ class LibBaseViewJson extends LibBaseViewAbstract
             $name = KInflector::singularize($this->getName());
              
             foreach($items as $item) 
-            {                
-               $id = $item->getIdentityProperty();
-            
-               $data[] = array_merge(array(
-                      'href'    => (string) $this->getRoute('view='.$name.'&id='.$item->{$id}),
-                    ), $item->toSerializableArray());
+            {               
+               $this->_state->setItem($item);
+               $name = null; 
+               $item = $this->_serializeToArray($item, $name);                              
+               
+               if ( count($commands = $this->getToolbarCommands('list')) ) {
+                    $item['commands'] = $commands;
+               }
+               
+               $data[] = $item; 
             }
             
             $data = array(
-                'data' => $data,
-                'pagination'     => array(
-                    'offset' => (int) $items->getOffset(),
-                    'limit'  => (int) $items->getLimit(),
-                    'total'  => (int) $items->getTotal(),                
-                )
-            );            
+                'data' => $data                
+            );
+            
+            if ( is($items, 'AnDomainEntitysetAbstract') )
+            {
+                $data['pagination'] = array(
+                        'offset' => (int) $items->getOffset(),
+                        'limit'  => (int) $items->getLimit(),
+                        'total'  => (int) $items->getTotal(),                
+                );
+            }
         }
         
         return $data;
@@ -152,12 +163,66 @@ class LibBaseViewJson extends LibBaseViewAbstract
      */
     protected function _getItem()
     {
-        $data = array(); 
-        
-        if ( $item = $this->_state->getItem() ) {
-            $data = $item->toSerializableArray();   
+        $item = null;
+
+        if ( $item = $this->_state->getItem() ) 
+        {
+           $item     = $this->_serializeToArray($item);
+           $commands = $this->getToolbarCommands('toolbar');
+           if ( !empty($commands) ) {
+                $item['commands'] = $commands;
+           }
         }
         
-        return $data;
+        return $item;
+    }
+    
+    /**
+     * Serializes an item into an array
+     * 
+     * @return array
+     */
+    protected function _serializeToArray($item)
+    {
+        $result = array();
+        
+        if ( is($item, 'AnDomainBehaviorSerializable') )
+            $result = $item->toSerializableArray();
+        else {
+            $result = (array)$item;
+        }
+        
+        return $result;         
+    }
+    
+    /**
+     * Gets the toolbar commands. This method checks if the view state has 
+     * a toolbar 
+     * 
+     * @param string $name The name of the commands
+     * 
+     * @return array Return an array of commands
+     */
+    public function getToolbarCommands($name)
+    {
+        $result = array();
+        
+        if ( $this->_state->toolbar instanceof KControllerToolbarAbstract ) 
+        {
+            $this->_state->toolbar->reset();
+            $method  = 'add'.ucfirst($name).'Commands';
+            
+            if ( method_exists($this->_state->toolbar, $method) ) {
+                $this->_state->toolbar->$method();
+            }
+        
+            $commands = $this->_state->toolbar->getCommands();
+            
+            foreach($commands as $command) {
+                $result[] =$command->getname();
+            }
+        }
+        
+        return $result;
     }
 }

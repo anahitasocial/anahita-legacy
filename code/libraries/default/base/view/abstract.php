@@ -84,7 +84,7 @@ abstract class LibBaseViewAbstract extends KObject
 		
 	    //set the base url
         if(!$config->base_url instanceof KHttpUrl) {
-            $this->_baseurl = KService::get('koowa:http.url', array('url' => $config->base_url));
+            $this->_baseurl = $this->getService('koowa:http.url', array('url' => $config->base_url));
         } else {
             $this->_baseurl = $config->base_url;
         }
@@ -169,15 +169,7 @@ abstract class LibBaseViewAbstract extends KObject
         //If one argument is passed we assume a setter method is being called
         if ( !isset($this->_mixed_methods[$method]) && count($args) == 1 ) 
         {
-        	//the methods like set[Value] will remove the set from the method
-        	if ( substr($method, 0, 3) == 'set' ) 
-            {  
-                deprecated('using view::__call');
-        		$method = KInflector::variablize(substr($method, 3));
-        	}
-        	
-            $this->set(KInflector::underscore($method), $args[0]);
-            
+            $this->set(KInflector::underscore($method), $args[0]);            
         	return $this; 
         }
                 
@@ -317,13 +309,14 @@ abstract class LibBaseViewAbstract extends KObject
 	 */
 	public function getRoute( $route = '', $fqr = true)
 	{
-	    if ( is_array($route) ) {
-	        $parts = $route;
-	    } else {
-	        //Parse route
-	        $parts = array();
-	        parse_str(trim($route), $parts);
-	    }
+		if ( !is_array($route) ) 
+		{
+			$parts = array();
+			parse_str(trim($route), $parts);
+			$route = $parts;
+		}
+				
+	    $parts = $route;
 	    
 	    $route = array();
 	    
@@ -340,6 +333,11 @@ abstract class LibBaseViewAbstract extends KObject
 	        //Add the layout information to the route if it's not set
 	        if(!isset($parts['layout'])) {
 	            $route['layout'] = $this->getLayout();
+	            
+	            //@TODO temporary. who are we to day what's the default la
+	            if ( $route['layout'] == 'default' ) {
+	            	unset($route['layout']);
+	            }	            
 	        }
             
             //since the view is missing then get the data from
@@ -347,16 +345,26 @@ abstract class LibBaseViewAbstract extends KObject
             $data = $this->_state->getData($this->_state->isUnique());
             
             $route = array_merge($route, $data);
-	    }
-	    
-	    //Add the format information to the route only if it's not 'html'
-	    if(!isset($parts['format'])) {
-	        $route['format'] = $this->getIdentifier()->name;
+            
+            //Add the format information to the route only if it's not 'html'
+            if(!isset($parts['format'])) {
+            	$route['format'] = $this->getIdentifier()->name;
+            }
 	    }
 	    
 	    $parts = array_merge($route, $parts);
+
+	    $route = $this->getService('application')
+	    		->getRouter()->build(http_build_query($parts));	    
 	    
-	    return LibBaseHelperUrl::getRoute($parts);
+	    //Add the host and the schema
+	    if ( $fqr )
+	    {
+	    	$route->scheme = $this->getBaseUrl()->scheme;
+	    	$route->host   = $this->getBaseUrl()->host;
+	    }
+	    	    
+	    return $route;    	    
 	}
     
     /**

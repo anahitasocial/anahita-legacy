@@ -50,16 +50,24 @@ class AnServiceLocatorTemplate extends KServiceLocatorAbstract
             
 	        if ( !$classname )
 	        {
-                $path      = KInflector::implode($identifier->path);
-                $classes[] = 'TmplBase'.$path.ucfirst($identifier->name);
-                $classes[] = 'TmplBase'.$path.ucfirst($identifier->name).'Default';
-                $classes[] = 'LibTheme'.$path.ucfirst($identifier->name);
-                $classes[] = 'LibTheme'.$path.ucfirst($identifier->name).'Default';                
+                //$path      = KInflector::implode($identifier->path);
+                $classpath = $identifier->path;
+                $classtype = !empty($classpath) ? array_shift($classpath) : '';
+                        
+                //Create the fallback path and make an exception for views
+                $path = ($classtype != 'view') ? ucfirst($classtype).KInflector::camelize(implode('_', $classpath)) : ucfirst($classtype);
+
+                $classes[] = 'Tmpl'.ucfirst($identifier->package).$path.ucfirst($identifier->name);
+                $classes[] = 'Tmpl'.ucfirst($identifier->package).$path.'Default';
+                $classes[] = 'ComApplication'.$path.ucfirst($identifier->name);
+                $classes[] = 'ComApplication'.$path.'Default';                
+                $classes[] = 'LibApplication'.$path.ucfirst($identifier->name);
+                $classes[] = 'LibApplication'.$path.'Default';                
                 $classes[] = 'LibBase'.$path.ucfirst($identifier->name);
-                $classes[] = 'LibBase'.$path.ucfirst($identifier->name).'Default';
+                $classes[] = 'LibBase'.$path.'Default';
 	            $classes[] = 'K'.$path.ucfirst($identifier->name);
-                $classes[] = 'K'.$path.ucfirst($identifier->name).'Default';            
-                  
+                $classes[] = 'K'.$path.'Default';            
+
 	            foreach($classes as $class)
 	            {
 	                if ( $this->getService('koowa:loader')->loadClass($class,  $identifier->basepath)) {

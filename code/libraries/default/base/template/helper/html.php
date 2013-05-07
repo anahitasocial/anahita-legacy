@@ -237,7 +237,7 @@ class LibBaseTemplateHelperHtml extends KTemplateHelperAbstract implements KServ
 	 */
 	public function link($content, $url='', $attributes=array())
 	{
-		$attributes['href'] = LibBaseHelperUrl::getRoute($url);
+		$attributes['href'] = $url;
 		return $this->tag('a', $content, $attributes);
 	}
 	

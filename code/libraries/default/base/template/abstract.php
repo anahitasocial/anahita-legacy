@@ -32,20 +32,20 @@
  * @link       http://www.anahitapolis.com
  */
 abstract class LibBaseTemplateAbstract extends KTemplateAbstract
-{
+{		
 	/**
-	 * Paths
+	 * Array of search path
 	 * 
 	 * @var array
 	 */
-	protected $_paths = array();			
+	protected $_search_paths = array();
 	
 	/**
-	 * Path stach
+	 * The template load stack
 	 * 
 	 * @var array
 	 */
-	protected $_path_stack = array();
+	protected $_load_stack = array();
 	
 	/**
 	 * Array of helpers
@@ -54,12 +54,19 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 	 */
 	protected $_helpers = array();
 	
-    /**
-     * ArrayAccess interface
-     * 
-     * @var ArrayAccess
-     */
-    protected $_cache;
+	/**
+	 * Contains the paths for the template
+	 * 
+	 * @var array
+	 */
+	protected $_paths = array();
+	
+	/**
+	 * stores the parsed data for each path
+	 * 
+	 * @var array
+	 */
+	protected $_parsed_data;
     
     /** 
      * Constructor.
@@ -72,9 +79,9 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
     {
         parent::__construct($config);
         
-        $this->_cache = $config->cache;
-        
         $this->_data  = KConfig::unbox($config->data);
+        
+        $this->_parsed_data = new ArrayObject();
     }
     
     /**
@@ -89,15 +96,10 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-            'cache' => $this->getService('anahita:cache', array('name'=>$this->getIdentifier())),
             'data'  => array()
         ));
 
         parent::_initialize($config);
-        
-        if ( !$config->cache ) {
-            $config->cache = new ArrayObject();   
-        }
     }
             
 	/**
@@ -163,84 +165,32 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 	public function loadFile($file, $data = array(), $process = true)
 	{
 		//tracks the recursive paths
-		$this->_path_stack[] = $file;
+		$this->_load_stack[]		 = $file;
 		
 		$data['__FILE__'] 	 = $file;
 		$data['__DIR__'] 	 = dirname($file);
 		 
 		$result = parent::loadFile($file, $data, $process);
 	
-		array_pop($this->_path_stack);
+		array_pop($this->_load_stack);
+		//the path 
+		$this->_path = end($this->_load_stack);
 	
 		return $result;
-	}	
-	
-	/**
-	 * Loads the parent path of the current loaded path
-	 *
-	 * @param  array $data Template data
-	 * 
-	 * @return string
-	 */
-	public function loadParent($data = array())
-	{
-		$_path = $this->getPath();
-		
-		if ( empty($_path) ) 
-			return '';
-						
-		$current   = dirname($_path);
-		$filename  = basename($_path);
-		$cue  	   = false;
-		
-		//look into the path cache to find the parent
-		//if not then find the parent
-		if ( !isset($this->_cache['loadParent::'.$_path]) )	
-		{
-			$parent	   = false;
-			
-			foreach($this->_paths as $path )
-			{
-				if ( $cue ) {
-					$file = $path.'/'.$filename;
-					if ( $this->findFile($file) ) {
-						$parent = $file;
-						break;
-					}
-				}
-				
-				if ( !$cue && $path == $current ) {
-					//found the index start looking for the 
-					//parent
-					$cue = true;
-				}
-			}
-			
-			$this->_cache['loadParent::'.$_path] = $parent;
-		} 
-				
-		$parent = $this->_cache['loadParent::'.$_path];
-		
-		if ( !$parent ) {
-			throw new KTemplateException("The {$_path} template has no parent");
-		}
-	
-		$result =  $this->loadFile($parent, $data);
-			
-		return $result;
-	}
+	}		
 	
 	/**
 	 * Loads a template using the identifier by converting an identifier to a path. On the contrary to
 	 * KTemplateAbstract if a KServiceIdentifier is passed, it will not append the path directory as the 
-	 * default path of $template->_paths
+	 * default path of $template->_search_paths
 	 * 
 	 * @param KServiceIdentifier $template Template Identifier
 	 * @param array              $data     Template data
+	 * @param boolean $process	If TRUE process the data using a tmpl stream. Default TRUE.
 	 *    
 	 * @return KTemplateAbstract
 	 */
-	public function loadIdentifier($template, $data = array())
+	public function loadIdentifier($template, $data = array(), $process = true)
 	{
 		//Identify the template
 	    $identifier = $this->getIdentifier($template);
@@ -249,11 +199,11 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 	    //@TODO shoudl we do that or just try load the template path
         $path       = dirname($identifier->filepath);
         
-	    if ( !in_array($path, $this->_paths) ) {
-			array_unshift($this->_paths, $path);
+	    if ( !in_array($path, $this->_search_paths) ) {
+			array_unshift($this->_search_paths, $path);
 	    }
 	    //load the template
-	    return $this->loadTemplate($identifier->name, $data);
+	    return $this->loadTemplate($identifier->name, $data, $process);
 	}
 	
 	/**
@@ -261,21 +211,18 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 	 *
 	 * @param string $template Template name
 	 * @param array  $data     Template data
-	 * 
 	 * @param boolean $process	If TRUE process the data using a tmpl stream. Default TRUE.
+	 * 
+	 * @return string
 	 */
 	public function loadTemplate($template, $data = array(), $process = true)
-	{
-		$file = $template.'.php';
-				
-		$path = $this->findPath($file);
-		
+	{				
+		$path = $this->findTemplate($template);
+		 
 		if ( !$path ) {
 	    	throw new KTemplateException($template.' template not found for '.$this->getIdentifier());
 	    }
-	    
-	    $path = $path.'/'.$file;
-	    
+	    	    
 	    return $this->loadFile($path, $data, $process);
 	}
 	
@@ -285,9 +232,10 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 	 *
 	 * @param	string	Name of the helper, dot separated including the helper function to call
 	 * @param	mixed	Parameters to be passed to the helper
+	 * 
 	 * @return 	string	Helper output
 	 */
-	public function renderHelper()
+	public function renderHelper($identifier, $config = array())
 	{
 		$args		 = func_get_args();
 		$identifier  = array_shift($args);
@@ -316,7 +264,7 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 	 * @param	mixed	Parameters to be passed to the helper
 	 * @return 	KTemplateHelperInterface
 	 */
-	public function getHelper($helper)
+	public function getHelper($helper, $config = array())
 	{
 	    $name = (string) $helper;
 	    if ( !isset($this->_helpers[$name]) )
@@ -329,11 +277,23 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 	            register_default(array('identifier'=>$identifier, 'prefix'=>$this));
 	            $helper = $identifier;
 	        }
-	        $this->_helpers[$name] = parent::getHelper($helper);	        
+	        $this->_helpers[$name] = parent::getHelper($helper, $config);	        
 	    }
 	    return $this->_helpers[$name];	
 	}		
-		
+
+	/**
+	 * Same as findPath except it automatically adds the .php extension
+	 * 
+	 * @param string $template The template path
+	 * 
+	 * @return string 
+	 */
+	public function findTemplate($template)
+	{
+		return $this->findPath($template.'.php');
+	}
+	
 	/**
 	 * Caches the found paths. @see KTemplateAbstract::findPath for more detail 
 	 *
@@ -342,33 +302,31 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 	 * 							if the file is not found in any of the paths
 	 */
 	public function findPath($filename)
-	{
-        $key = 'filepath::'.$filename;
-        
-		if ( !isset($this->_cache[$key]) )
+	{        
+		if ( !isset($this->_paths[$filename]) )
 		{
-			foreach($this->_paths as $path)
+			foreach($this->_search_paths as $path)
 			{
 				$file = $path.'/'.$filename;
 				if ( $this->findFile($file) ) {
-					$this->_cache[$key] = $path;
-					return $path;
+					$this->_paths[$filename] = $file;
+					return $file;
 				}
-			}	
-			$this->_cache[$key] = false;
+			}
+			$this->_paths[$filename] = false;
 		}
 		
-		return $this->_cache[$key];
-	}
+		return $this->_paths[$filename];
+	}	
 
 	/**
 	 * Return all the template paths
 	 * 
 	 * @return array
 	 */
-	public function getPaths()
+	public function getSearchPaths()
 	{
-		return $this->_paths;
+		return $this->_search_paths;
 	}
 	
 	/**
@@ -378,7 +336,7 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
      * 
 	 * @return  KTemplateAbstract
 	 */
-	public function addPath($paths, $append = false)
+	public function addSearchPath($paths, $append = false)
 	{
 		settype($paths, 'array');
 		
@@ -388,13 +346,13 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
                 continue;
             }
                 
-			if ( in_array($path, $this->_paths) )
+			if ( in_array($path, $this->_search_paths) )
 				continue;
 							
 			if ( $append )
-				$this->_paths[] = $path;
+				$this->_search_paths[] = $path;
 			else {
-				array_unshift($this->_paths, $path);
+				array_unshift($this->_search_paths, $path);
 			}
 		}
 	}   
@@ -406,20 +364,13 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 	 */
 	public function parse()
 	{
-		$key  = $this->getPath();
+        $path = $this->_contents;
         
-        if ( !$key ) {
-            $key = md5($this->_contents);
+        if ( !isset($this->_parsed_data[$path]) ) {
+        	$this->_parsed_data[$path] = parent::parse();
         }
         
-        $key = 'parse::'.$key;
-        
-        if ( !isset($this->_cache[$key]) )
-        {
-            $this->_cache[$key] = parent::parse();
-        }
-        
-        return $this->_cache[$key];
+        return $this->_parsed_data[$path];
 	}
 
 	/**
@@ -479,6 +430,6 @@ abstract class LibBaseTemplateAbstract extends KTemplateAbstract
 	 */
 	public function getPath()
 	{
-		return end($this->_path_stack);
+		return end($this->_load_stack);
 	}	
 }

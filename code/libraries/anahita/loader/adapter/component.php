@@ -50,8 +50,20 @@ class AnLoaderAdapterComponent extends KLoaderAdapterAbstract
 	public function findPath($classname, $basepath = null)
 	{
 		$path = false;
-
+		
+		/*
+		 * Exception rule for Exception classes
+		*
+		* Transform class to lower case to always load the exception class from the /exception/ folder.
+		*/
+		if($pos = strpos($classname, 'Exception'))
+		{
+		    $filename       = substr($classname, $pos + strlen('Exception'));
+		    $classname      = str_replace($filename, ucfirst(strtolower($filename)), $classname);
+		}
+		
 		$word  = strtolower(preg_replace('/(?<=\\w)([A-Z])/', ' \\1', $classname));
+		
 		$parts = explode(' ', $word);
 
 		if (array_shift($parts) == 'com')
@@ -63,7 +75,7 @@ class AnLoaderAdapterComponent extends KLoaderAdapterAbstract
 
 		    $component = 'com_'.strtolower(array_shift($parts));
 			$file 	   = array_pop($parts);
-
+            $path      = null;
 			if(count($parts))
 			{
 			    if($parts[0] != 'view')
@@ -73,26 +85,33 @@ class AnLoaderAdapterComponent extends KLoaderAdapterAbstract
 				    }
 			    }
 			    else $parts[0] = KInflector::pluralize($parts[0]);
+				$path = implode('/', $parts);
+			}			
 
-				$path = implode('/', $parts).'/'.$file;
+			$path = '/components/'.$component.'/'.$path;
+			
+			$filepath  = $path.'/'.$file.'.php';
+			$basepath  = $this->_basepath;
+			
+			if ( array_value($parts, -1) == 'exceptions' )
+			{
+                if ( !file_exists($basepath.$filepath) ) {
+                    $filepath = $path.'/default.php';
+                }
 			}
-			else $path = $file;
-
-			$path     = '/components/'.$component.'/'.$path.'.php';
-			$basepath = $this->_basepath;
 			
 			if ( count($parts) == 2 && $parts[0] == 'domains' )
 			{
 			    if ( $parts[1] == 'entities' && JPATH_SITE != $this->_basepath )
 			    {
 			        //set the basepath of entities to the site
-			        if ( !file_exists($basepath.$path) ) {			            
+			        if ( !file_exists($basepath.$filepath) ) {			            
 			            $basepath = JPATH_SITE;
 			        }
 			    }
 			}			    			
 
-			$path = $basepath.$path;
+			$path = $basepath.$filepath;
 		}
 
 		return $path;

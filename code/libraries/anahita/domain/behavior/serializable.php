@@ -31,12 +31,45 @@
  */
 class AnDomainBehaviorSerializable extends AnDomainBehaviorAbstract
 {
-    /**
-     * Serializer object
-     * 
-     * @var AnDomainSerializerAbstract
-     */
-    protected $_serializer;
+	/**
+	 * Serializer object
+	 *
+	 * @var AnDomainSerializerAbstract
+	 */
+	protected $_serializer;
+		
+	/**
+	 * Constructor.
+	 *
+	 * @param KConfig $config An optional KConfig object with configuration options.
+	 *
+	 * @return void
+	 */
+	public function __construct(KConfig $config)
+	{
+		parent::__construct($config);
+		
+		$this->_serializer = $config->serializer;
+	}
+
+	/**
+	 * Initializes the default configuration for the object
+	 *
+	 * Called from {@link __construct()} as a first step of object instantiation.
+	 *
+	 * @param KConfig $config An optional KConfig object with configuration options.
+	 *
+	 * @return void
+	 */
+	protected function _initialize(KConfig $config)
+	{
+		
+		$config->append(array(
+			'serializer' => $config->mixer->getIdentifier()->name
+		));
+	
+		parent::_initialize($config);
+	}
     
     /**
      * Return an array of serializable data of the entity in format of associative array
@@ -55,14 +88,41 @@ class AnDomainBehaviorSerializable extends AnDomainBehaviorAbstract
      */
     public function getSerilizer()
     {
-        if ( !isset($this->_serializer) )
-        {
-            $identifier = clone $this->_repository->getIdentifier();
-            $identifier->path = array('domain','serializer');
-            register_default(array('identifier'=>$identifier,'prefix'=>$this->_repository->getClone()));            
-            $this->_serializer = $this->getService($identifier);            
-        }
+    	if ( !$this->_serializer instanceof AnDomainSerializerAbstract )
+    	{
+    		if ( !$this->_serializer instanceof KServiceIdentifier ) {
+    			$this->setSerializer($this->_serializer);
+    		}
+    		
+    		$this->_serializer = $this->getService($this->_serializer);
+    	}        
         
         return $this->_serializer;
+    }
+    
+    /**
+     * Set the serializer
+     * 
+     * @param AnDomainSerializerAbstract|string $serializer
+     * 
+     * @return void
+     */
+    public function setSerializer($serializer)
+    {
+    	if ( !$serializer instanceof AnDomainSerializerAbstract )
+    	{
+    		if(is_string($serializer) && strpos($serializer, '.') === false )
+    		{
+    			$identifier         = clone $this->_repository->getIdentifier();    			
+    			$identifier->path = array('domain','serializer');
+    			$identifier->name   = $serializer;
+    			register_default(array('identifier'=>$identifier,'prefix'=>$this->_repository->getClone()));
+    		}
+    		else  $identifier = $this->getIdentifier($serializer);
+    	
+    		$serializer = $identifier;
+    	}
+    	
+    	$this->_serializer = $serializer;
     }
 }

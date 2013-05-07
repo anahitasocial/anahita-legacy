@@ -28,6 +28,27 @@
 class LibBaseDomainBehaviorDescribable extends AnDomainBehaviorAbstract
 {
     /**
+     * An array of properties that can be searched
+     * 
+     * @var array
+     */
+    protected $_searchable_properties = array();
+    
+    /** 
+     * Constructor.
+     *
+     * @param KConfig $config An optional KConfig object with configuration options.
+     * 
+     * @return void
+     */ 
+    public function __construct(KConfig $config)
+    {
+        parent::__construct($config);
+        
+        $this->_searchable_properties = $config->searchable_properties;
+    }
+    
+    /**
 	 * Initializes the default configuration for the object
 	 *
 	 * Called from {@link __construct()} as a first step of object instantiation.
@@ -39,6 +60,7 @@ class LibBaseDomainBehaviorDescribable extends AnDomainBehaviorAbstract
 	protected function _initialize(KConfig $config)
 	{
 		$config->append(array(
+		    'searchable_properties' => array('name','body'),
 			'attributes' => array(
 				'name'  => array('format'=>'string'),
 				'body',
@@ -76,22 +98,11 @@ class LibBaseDomainBehaviorDescribable extends AnDomainBehaviorAbstract
 		{
             $this->_mixer->_url = 'option='.$this->component.'&view='.$this->_mixer->getIdentifier()->name;
             
-            if ( $comment = $this->_mixer->getRowData('comment') ) {
-                $id = $this->_mixer->getRowData('_id');                
-            } 
-            else {
-                $id = $this->_mixer->id;    
-            }
-                        
-            if ( $id )             
-                $this->_mixer->_url .= '&id='.$id;             
+            if ( $this->_mixer->id )             
+                $this->_mixer->_url .= '&id='.$this->_mixer->id;             
             
             if ( $this->alias )
                 $this->_mixer->_url .= '&alias='.$this->alias;
-                
-            if ( $comment ) {
-                $this->_mixer->_url .= '&permalink='.$this->_mixer->id;
-            }
 		}
 	
 		return $this->_mixer->_url;
@@ -108,48 +119,36 @@ class LibBaseDomainBehaviorDescribable extends AnDomainBehaviorAbstract
 		$query = $context->query;
 		
 		if ( $query->keyword ) 
-		{
-			$commentable	= $query->getRepository()->hasBehavior('commentable');
-			$sub_clause 	= $query->clause();
-			$words	    	= (array)KConfig::unbox($query->keyword);
-			$words 			= array_unique($words);
-                     
-            if ( $commentable ) 
-            {
-                $main_alias   = $query->getRepository()->getResources()->main()->getAlias();
-                $comment_type = (string)$query->getRepository()->getDescription()->getProperty('comments')->getChildRepository()->getDescription()->getInheritanceColumnValue();
-                $node_type    = (string)$query->getRepository()->getDescription()->getInheritanceColumnValue();                
-                $condition    = "(node.parent_id = $main_alias.id AND node.type LIKE '$comment_type') OR (node.id = $main_alias.id)";                
-                $query->link(KService::get('repos:base.node'),$condition, array('as'=>'node'));
-            }
-                
-            if ( $context->mode != AnDomain::FETCH_VALUE )
-            {
-                if ($commentable)
-                    $query->select(array(
-                        '_id'     => '@col(id)',
-                        'id'      => '@col(node.id)',                    
-                        'comment' => '@col(id) <> @col(node.id)',                                        
-                        'search_result_preview'  => '@col(node.body)'
-                    ));
-                else $query->select('@col(body) AS search_result_preview');             
-            } 
-                
-			foreach($words as $word) 
-            {
-				if ( strlen($word) >= 2 ) 
-                {
-					if ( $commentable ) {
-						//$sub_clause->where('node.body','LIKE','%'.$word.'%');
-                        $sub_clause->where('@col(node.body) LIKE @quote(%'.$word.'%) OR @col(node.name) LIKE @quote(%'.$word.'%)');                        
-					} 
-                    else {                        
-                        $sub_clause
-                             ->where('name','LIKE','%'.$word.'%', 'OR')
-                             ->where('body','LIKE','%'.$word.'%', 'OR');                        
-                    }
-				}
-			}
+		{		    
+		    $keywords  = $query->keyword;
+		    
+		    if ( $keywords )
+		    {
+		        if ( strpos($keywords,'#') === 0 ) {
+		            $keywords  = explode(',', substr($keywords,1));
+		        }
+		        elseif ( strpos($keywords,' OR ') ) {
+		            $keywords  = explode(' OR ',$keywords);
+		            $operation = 'OR';
+		        } else {
+		            $keywords = explode(' ', $keywords);
+		            $operation = 'AND';
+		        }
+		    
+		        if ( !empty($operation) )
+		        {
+		            $clause        = $query->clause();
+		            $search_column = array();
+		            foreach($this->_searchable_properties as $property ) 
+		            {
+		                $search_column[] = "IF(@col($property) IS NULL,\"\",@col($property))";		              
+		            }
+		            $search_column = implode($search_column, ',');
+		            foreach($keywords as $keyword) {
+		                $clause->where('CONCAT('.$search_column.') LIKE @quote(%'.$keyword.'%)',$operation);
+		            }
+		        }
+		    }		    
 		}
 	}
 }

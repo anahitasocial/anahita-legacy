@@ -145,7 +145,17 @@ class AnDomainAttributeProperty extends AnDomainPropertyAbstract implements AnDo
 	{
 		return $this->_type;
 	}
-		
+    
+    /**
+     * Set the attribute type
+     * 
+     * @return void
+     */
+    public function setType($type)
+    {
+        $this->_type = $type;
+    }
+    
 	/**
 	 * Clones the default value or create a new one if a type is given
 	 * 
@@ -181,6 +191,16 @@ class AnDomainAttributeProperty extends AnDomainPropertyAbstract implements AnDo
 	}	
 	
 	/**
+	 * (non-PHPdoc)
+	 * @see AnDomainPropertyAbstract::isMaterializable()
+	 */
+	public function isMaterializable(array $data)
+	{
+	    $key  	 = $this->getColumn()->key();
+	    return array_key_exists($key, $data);
+	}
+	
+	/**
 	 * Materialize the database value into attribute values for an entity
 	 *
 	 * @param array                  $data   The raw data of the domain entity
@@ -192,7 +212,7 @@ class AnDomainAttributeProperty extends AnDomainPropertyAbstract implements AnDo
 	{
 	    $key  	 = $this->getColumn()->key();
 	    $value	 = null;
-	    if ( array_key_exists($key, $data) )
+	    if ( $this->isMaterializable($data) )
 	    {	
 	        //only set the value type if it's not null
 	        if ( $data[$key] !== null ) 

@@ -39,7 +39,7 @@ class LibBaseTemplateFilterAlias extends KTemplateFilterAlias
 		$this->_alias_read = array_merge($this->_alias_read, array(			
 			'@controller(' 	=> '$this->renderHelper(\'controller.getController\',',
 			'@view('	   	=> '$this->renderHelper(\'controller.getView\',',
-			'@previous('   	=> '$this->loadParent(',
+			'@previous('   	=> '$this->getHelper(\'previous\')->load(',
 			'@template('   	=> '$this->getView()->load(',
 			'@route('	   	=> '$this->getView()->getRoute(',
 			'@html(\''     	=> '$this->renderHelper(\'com:base.template.helper.html.',

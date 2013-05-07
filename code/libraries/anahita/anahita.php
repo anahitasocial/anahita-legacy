@@ -18,6 +18,7 @@ define('ANAHITA', 1);
  * Include Koowa
  */
 require_once JPATH_LIBRARIES.'/koowa/koowa.php';
+require_once JPATH_LIBRARIES.'/anahita/functions.php';
 
 /**
  * Service Class
@@ -29,7 +30,7 @@ require_once JPATH_LIBRARIES.'/koowa/koowa.php';
  * @link       http://www.anahitapolis.com
  */
 class Anahita
-{       
+{
     /**
      * Path to Anahita libraries
      * 
@@ -78,54 +79,30 @@ class Anahita
             'cache_prefix'  => $config['cache_prefix'],
             'cache_enabled' => $config['cache_enabled']
         ));
-        
-        KLoader::addAdapter(new KLoaderAdapterModule(array('basepath' => JPATH_BASE)));
-        KLoader::addAdapter(new KLoaderAdapterPlugin(array('basepath' => JPATH_ROOT)));
-
-        KServiceIdentifier::addLocator(KService::get('koowa:service.locator.plugin'));
-        
-        KServiceIdentifier::setApplication('site' , JPATH_SITE);
-        KServiceIdentifier::setApplication('admin', JPATH_ADMINISTRATOR);
-        //register an empty path for the application
-        //a workaround to remove the applicaiton path from an identifier
-        KServiceIdentifier::setApplication('', '');
-        
-        require_once $this->_path.'/functions.php';
-        require_once $this->_path.'/loader/adapter/anahita.php';
-                
+                       
         //if caching is not enabled then reset the apc cache to
         //to prevent corrupt identifier        
         if ( !$config['cache_enabled'] ) {
-              clean_apc_with_prefix($config['cache_prefix']);
-        }   
-   
-        KLoader::addAdapter(new AnLoaderAdapterAnahita(array('basepath'=>$this->_path)));
-        KLoader::addAdapter(new AnLoaderAdapterComponent(array('basepath'=>JPATH_BASE)));
-        KLoader::addAdapter(new AnLoaderAdapterTemplate(array('basepath'=>JPATH_BASE)));
-        KLoader::addAdapter(new AnLoaderAdapterDefault(array('basepath'=>JPATH_LIBRARIES.DS.'default')));
-        
-        KServiceIdentifier::addLocator(new AnServiceLocatorAnahita());
-        KServiceIdentifier::addLocator( new AnServiceLocatorRepository() );
-        KServiceIdentifier::addLocator( KService::get('anahita:service.locator.module') );
-        KServiceIdentifier::addLocator( KService::get('anahita:service.locator.component') );
-        KServiceIdentifier::addLocator( KService::get('anahita:service.locator.template') );
+            clean_apc_with_prefix($config['cache_prefix']);
+        }
+                
+        require_once dirname(__FILE__).'/loader/adapter/anahita.php';
+                        
+        KLoader::addAdapter(new AnLoaderAdapterAnahita(array('basepath'=>dirname(__FILE__))));
+        KLoader::addAdapter(new AnLoaderAdapterDefault(array('basepath'=>JPATH_LIBRARIES.'/default')));
         
         AnServiceClass::getInstance();
         
-        KService::get('koowa:loader')->loadClass('AnServiceClass');
-                                
+        KServiceIdentifier::addLocator(new AnServiceLocatorAnahita());
+        KServiceIdentifier::addLocator(new AnServiceLocatorRepository());
+
+        //register an empty path for the application
+        //a workaround to remove the applicaiton path from an identifier
+        KServiceIdentifier::setApplication('', '');
+                
         //create a central event dispatcher           
         KService::set('anahita:event.dispatcher', KService::get('koowa:event.dispatcher'));
-        
-        //create an event command with central event dispatcher
-        KService::set('anahita:command.event', 
-                    KService::get('koowa:command.event', array('event_dispatcher'=>KService::get('anahita:event.dispatcher'))));
-        
-
-        //setup aliases
-        KService::setAlias('koowa:database.adapter.mysqli', 'com://admin/default.database.adapter.mysqli');
-        KService::setAlias('anahita:domain.store.database', 'com:base.domain.store.database');        
-        KService::setAlias('anahita:domain.space',          'com:base.domain.space');
+               
     }
     
     /**

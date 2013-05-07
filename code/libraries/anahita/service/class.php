@@ -90,6 +90,7 @@ class AnServiceClass
 	static function setDefaultClass($identifier, $classname)
 	{
 	    self::$_defaults[(string)$identifier] = $classname;
+	    unset(self::$_identifiers[(string)$identifier]);
 	}	
 	
     /**
@@ -125,6 +126,10 @@ class AnServiceClass
          }
          
          self::$_identifiers[$strIdentifier] = $config;
+         
+         if ( isset(self::$_defaults[$strIdentifier]) ) {
+             unset(self::$_defaults[$strIdentifier]);
+         }
     }
     
     /**
@@ -149,7 +154,7 @@ class AnServiceClass
         }
         
         $classbase = 'Lib'.ucfirst($identifier->package).KInflector::implode($identifier->path);
-        
+        $loader    = KService::get('koowa:loader');
         $classname = $classbase.ucfirst($identifier->name);
         
         if ( !class_exists($classname) )
@@ -180,10 +185,13 @@ class AnServiceClass
                        $classes[] = $config['fallback'];                      
                    }
                }
-               
                foreach($classes as $class) 
                {
-                   if ( class_exists($class) )
+                   //make sure to find  path first
+                   //then try to load it 
+                   if ( $loader->findPath($class, $identifier->basepath) &&                                                      
+                        $loader->loadClass($class, $identifier->basepath)                             
+                           )
                    {
                        $classname = $class;
                        break;
@@ -278,4 +286,9 @@ function get_prefix($object, $config = array())
 function register_default($config)
 {
     AnServiceClass::registerDefault($config);
+}
+
+function unregister_default($identifier)
+{
+    AnServiceClass::setDefaultClass($identifier, null);
 }
