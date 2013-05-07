@@ -6,7 +6,7 @@
 	<div class="entity-portrait-square">
 		<?= @avatar($item) ?>
 	</div>
-	
+	 
 	<div class="entity-container">
 		<h3 class="entity-name"><?= @name($item) ?></h3>
 		

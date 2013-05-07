@@ -60,7 +60,8 @@ class ComActorsTemplateHelper extends KTemplateHelperAbstract implements KServic
 	 */
 	public function getActorURL($actor)
 	{
-		return LibBaseHelperUrl::getRoute($actor->getURL());
+		return $this->getService('application')
+			->getRouter()->build($actor->getURL());
 	}
 	
 	/**
@@ -107,8 +108,8 @@ class ComActorsTemplateHelper extends KTemplateHelperAbstract implements KServic
 		if ($actor->portraitSet()) 
 		{
 			$src  = $actor->getPortraitURL($size);		
-			$name = JString::ucwords($actor->name);
-			$img  = '<img '.$width .' title="'.$name.'" actorid="'.$actor->id.'" src="'.$src.'" id="actor-avatar-'.$actor->id.'" size="'.$size.'" class="actor-avatar actor-avatar-'.$actor->id.' '.$size.'" />';		
+			$name = KHelperString::ucwords($actor->name);
+			$img  = '<img '.$width .' alt="'.$name.'" actorid="'.$actor->id.'" src="'.$src.'" id="actor-avatar-'.$actor->id.'" size="'.$size.'" class="actor-avatar actor-avatar-'.$actor->id.' '.$size.'" />';		
 		}
 		else
 		{

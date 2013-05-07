@@ -96,8 +96,28 @@ class ComBaseControllerBehaviorOwnable extends KControllerBehaviorAbstract
 		$parts = explode('.', $name);
         
 		if ( $parts[0] == 'before' ) {
-			return $this->_fetchOwner($context);
+			$this->_fetchOwner($context);
 		}
+		
+	    parent::execute($name, $context);
+    }
+   	
+    /**
+     * If the context->data actor is not already set them set the owner to the data 
+     * before controller add. 
+     * 
+     * @param KCommandContext $context
+     * 
+     * @return boolean
+     */
+    protected function _beforeControllerAdd(KCommandContext $context)
+    {
+        if ( !$context->data['owner'] instanceof ComActorsDomainEntityActor )
+        {
+            if  ( $this->getRepository()->hasBehavior('ownable') ) {
+                $context->data['owner'] = $this->actor;
+            }
+        }
     }
    	
     /**
@@ -112,7 +132,6 @@ class ComBaseControllerBehaviorOwnable extends KControllerBehaviorAbstract
        $this->_mixer->actor = $actor;
        return $this;
     }
-    
     
     /**
      * Return the actor context
@@ -140,7 +159,11 @@ class ComBaseControllerBehaviorOwnable extends KControllerBehaviorAbstract
         {
             if ( $value == 'viewer' )  {
                 $actor = get_viewer();
-            } else {
+            }
+			elseif ( !is_numeric($value) ) {
+				$actor = $this->getService('repos://site/people.person')->fetch(array('username'=>$value));
+			}
+            else {
                 $actor = $this->getService('repos://site/actors.actor')->fetch((int)$value);
             }
             
@@ -153,10 +176,7 @@ class ComBaseControllerBehaviorOwnable extends KControllerBehaviorAbstract
             $context->data['owner'] = $actor;  
             
             if ( !$actor ) {
-                $context->setError(new KHttpException(
-                    'Owner Not Found', KHttpResponse::NOT_FOUND
-                ));
-                return false;
+                throw new LibBaseControllerExceptionNotFound('Owner Not Found');
             }                      
         }
         

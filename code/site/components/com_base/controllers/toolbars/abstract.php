@@ -118,7 +118,7 @@ abstract class ComBaseControllerToolbarAbstract extends KControllerToolbarAbstra
             }
     
             //Create the config object
-            $command = LibBaseTemplateObject::getInstance($name, $config);
+            $command = ComBaseControllerToolbarCommand::getInstance($name, $config);
     
             //Find the command function to call
             if(method_exists($this, '_command'.ucfirst($name)))

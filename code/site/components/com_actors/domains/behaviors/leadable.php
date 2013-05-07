@@ -77,10 +77,11 @@ class ComActorsDomainBehaviorLeadable extends AnDomainBehaviorAbstract
 		if ( !isset($this->__common_leaders) )
 		{				
 			$ids    = array_intersect($this->leaderIds->toArray(), $actor->leaderIds->toArray());
-					
+			$ids[]  = -1;
 			$query	= $this->getService('repos:actors.actor')
 						->getQuery()->where('id','IN', $ids);
-						
+
+
 			$this->__common_leaders = $query->toEntitySet();
 		}
 		

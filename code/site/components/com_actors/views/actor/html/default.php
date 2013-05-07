@@ -6,18 +6,18 @@
 <?= @message(@text('COM-ACTORS-PROFILE-DISABLED-PROMPT'), array('type'=>'warning')) ?>
 <?php endif; ?>
 
-<module position="sidebar-b" style="simple">
+<module position="sidebar-b">
 	<?= @helper('ui.gadget', $gadgets->extract('socialgraph')) ?>	
 </module>
 
-<module position="sidebar-a" style="simple">
+<module position="sidebar-a">
 <div id="actor-avatar">
 	<?= @avatar($item, 'medium', false) ?>
 </div>
 </module>
 
 <?php if ( count($gadgets) > 1 ) : ?>
-<module position="sidebar-a" style="simple">	
+<module position="sidebar-a">	
 	<ul class="nav nav-pills nav-stacked sidelinks" data-behavior="BS.Tabs" data-bs-tabs-options="{'smooth':true,'tabs-selector':'.profile-tab-selector a','sections-selector':'! * .profile-tab-content'}">
 		<?php foreach($gadgets as $index=>$gadget) : ?>
 			<li class="profile-tab-selector <?= ($index == 'stories') ? 'active' : ''; ?>">

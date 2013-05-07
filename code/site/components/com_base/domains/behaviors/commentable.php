@@ -104,7 +104,7 @@ class ComBaseDomainBehaviorCommentable extends AnDomainBehaviorAbstract
 	{
 		$this->getRepository()->getStore()->execute('set @i = 0');
 		$query = clone $this->comments->getQuery();
-        return $query->where('@col(id) < '.(int)$cid)->fetchMax('@i := @i + 1'); 
+		return $query->where('@col(id) < '.(int)$cid)->fetchValue('MAX(@i := @i + 1)');
 	}
 	
 	/**
@@ -127,7 +127,7 @@ class ComBaseDomainBehaviorCommentable extends AnDomainBehaviorAbstract
 			);
 		}
 		
-		$comment = $this->_mixer->comments->create($comment);
+		$comment = $this->_mixer->comments->addNew($comment);
 		
 		if ( $this->_mixer->isSubscribable() ) {
 			$this->_mixer->addSubscriber($comment->author);

@@ -1,10 +1,10 @@
 <?php defined('KOOWA') or die ?>
 
 
-<module position="sidebar-b" style="simple"></module>
+<module position="sidebar-b" style="none"></module>
 
 <?php if ( count($gadgets) >= 1 ) : ?>
-<module position="sidebar-a" style="simple">   
+<module position="sidebar-a">   
     <ul class="nav nav-pills nav-stacked sidelinks" data-behavior="BS.Tabs" data-bs-tabs-options="{'smooth':true,'tabs-selector':'.profile-tab-selector a','sections-selector':'! * .profile-tab-content'}">
         <li class="nav-header">
             <?=  @text('LIB-AN-STREAMS') ?>

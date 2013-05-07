@@ -261,10 +261,12 @@ class ComActorsControllerToolbarDefault extends ComBaseControllerToolbarDefault
      */
     protected function _commandFollow($command)
     {
-        $url  = $command->receiver->getURL().'&action='.$command->action.'&actor='.$command->actor->id;
+        $url  = $command->receiver->getURL();
         
-        if ( !$this->_use_post)
-            $url .= '&reset=1&layout=list';               
+        $command->data(array('action'=>$command->action,'actor'=>$command->actor->id));
+        
+        if ( !$this->_use_post && $this->getController()->getRequest()->getFormat() != 'json')
+            $url .= '&layout=list';
                 
         $command->href($url);
         
@@ -285,7 +287,9 @@ class ComActorsControllerToolbarDefault extends ComBaseControllerToolbarDefault
      */
     protected function _commandBlock($command)
     {
-        $url  = $command->receiver->getURL().'&action='.$command->action.'&actor='.$command->actor->id;
+        $url  = $command->receiver->getURL();
+               
+        $command->data(array('action'=>$command->action,'actor'=>$command->actor->id));
                 
         $command->href($url);
         

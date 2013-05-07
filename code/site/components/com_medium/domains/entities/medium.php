@@ -47,7 +47,7 @@ class ComMediumDomainEntityMedium extends ComBaseDomainEntityNode
 		    'attributes'  => array(
                 'name'=>array('read'=>'public')
              ),
-			'behaviors'	  => array(
+			'behaviors'	  => array(                            
 				'votable',
 				'authorizer', 
 				'privatable', 
@@ -61,6 +61,7 @@ class ComMediumDomainEntityMedium extends ComBaseDomainEntityNode
         $behaviors = $config->behaviors;
         
         $behaviors->append(array(
+//            'taggable'    => array('parse_hashtag'=>true) ,
             'modifiable'  => array(
                 'modifiable_properties' => array('name','body')
             ),

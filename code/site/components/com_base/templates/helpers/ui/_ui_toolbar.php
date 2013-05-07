@@ -1,12 +1,6 @@
 <?php if ( count($toolbar->getCommands()) ) : ?>
 <?php 
 $commands = $toolbar->getCommands();
-foreach($commands as $command) 
-{
-    if ( $href = $command->getAttribute('href') ) {
-        $command->setAttribute('href', @route($href));
-    } 
-}
 ?>
 <div class="btn-toolbar clearfix" data-behavior="BS.Dropdown">
     <?php if ( $new = $commands->extract('new') ) :?>

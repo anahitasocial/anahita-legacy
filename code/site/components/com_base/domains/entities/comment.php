@@ -43,15 +43,16 @@ class ComBaseDomainEntityComment extends ComBaseDomainEntityNode
 			'attributes' => array(
 				'body'			=> array('required'=>true)
 			),
-			'behaviors'		=> array(
-				'parentable' => array('parent'=>'node'),
+			'behaviors'		=> array(       
+			    'parentable' => array('parent'=>'com:base.domain.entity.node'),			                 				
+                //'taggable',
 				'modifiable',
 				'authorizer',
 				'locatable' ,
 				'votable'
 			)
-		));
-					
+		));					
+		
 		parent::_initialize($config);
 	}
 	
@@ -62,7 +63,7 @@ class ComBaseDomainEntityComment extends ComBaseDomainEntityNode
 	 */
 	public function getURL()
 	{
-		return $this->parent->getURL().'&comment[id]='.$this->id;
+		return $this->parent->getURL().'&cid='.$this->id;
 	}
 	
     /**

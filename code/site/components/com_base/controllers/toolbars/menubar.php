@@ -40,7 +40,6 @@ class ComBaseControllerToolbarMenubar extends ComBaseControllerToolbarAbstract
         
         $title[] = strtoupper('COM-'.$this->getController()->getIdentifier()->package.'-'.$this->getController()->getIdentifier()->name.'-PAGE-HEADER');
         $title[] = strtoupper('COM-'.$this->getController()->getIdentifier()->package.'-HEADER');
-        $title[] = KInflector::humanize($this->getController()->getIdentifier()->package);
         
         $this->setTitle(translate($title));
     }

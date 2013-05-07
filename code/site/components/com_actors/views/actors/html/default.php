@@ -1,8 +1,8 @@
 <?php defined('KOOWA') or die; ?>
 
-<module position="sidebar-b" style="simple"></module>
+<module position="sidebar-b" style="none"></module>
 
-<?= @helper('ui.searchbox', @route('layout=list'))?>
+<?= @helper('ui.filterbox', @route('layout=list')) ?>
 
 <div class="an-entities-wrapper">	
 	<?= @template('list') ?>

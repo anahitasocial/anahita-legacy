@@ -36,10 +36,7 @@ class ComBaseControllerComment extends ComBaseControllerService
 	{
 		parent::__construct($config);
 		
-		$this->registerCallback(array('after.voteup','after.votedown'), array($this,'getvoters'));
-        
-        $this->getCommandChain()
-            ->enqueue( $this->getService('anahita:command.event'), KCommand::PRIORITY_LOWEST);        
+		$this->registerCallback(array('after.voteup','after.votedown'), array($this,'getvoters'));                
 	}
 
    /**
@@ -53,8 +50,7 @@ class ComBaseControllerComment extends ComBaseControllerService
 	protected function _initialize(KConfig $config)
 	{
 		$config->append(array(
-		    'behaviors' => array('publisher','parentable','votable'),
-			'publish_comment'  => KRequest::format() == 'html'			
+		    'behaviors' => array('parentable','votable'),
 		));
 	
 		parent::_initialize($config);
@@ -70,7 +66,7 @@ class ComBaseControllerComment extends ComBaseControllerService
 	{
 		$data = $context->data;
 		$body = $data->body;
-		$this->setItem($this->parent->addComment($body))->getItem();
+		return $this->setItem($this->parent->addComment($body))->getItem();
 	}
 	
 	/**
@@ -117,29 +113,6 @@ class ComBaseControllerComment extends ComBaseControllerService
 		
 		return $this;
 	}	
-	
-	/**
-	 * Generic executation authorization
-	 * 
-     * @param KCommandContext $context The CommandChain Context
-     *
-     * @return boolean
-	 */
-	public function canExecute(KCommandContext $context)
-	{        
-		$parent  = $this->getParent();
-		
-        $comment = $this->getItem();		
-		//either one of them has to exists
-		if ( !pick($parent, $comment) )
-			return false;		
-		
-		if ( !$parent->authorize('access') ) {
-			return false;	
-		}
-        
-        return $this->__call('canExecute', array($context));
-	}
     
 	/**
 	 * Returns whether a comment can be added
@@ -148,7 +121,9 @@ class ComBaseControllerComment extends ComBaseControllerService
 	 */
 	public function canAdd()
 	{
-	    return $this->parent->authorize('add.comment');
+	    return $this->parent 
+	    && $this->parent->authorize('access')      
+	    && $this->parent->authorize('add.comment');
 	}
 
 	/**
@@ -158,7 +133,8 @@ class ComBaseControllerComment extends ComBaseControllerService
 	 */
 	public function canEdit()
 	{	   
-	    return $this->getItem()->authorize('edit');
+	    return $this->getItem() && 
+	        $this->getItem()->authorize('edit');
 	}
 		
 	/**
@@ -168,6 +144,7 @@ class ComBaseControllerComment extends ComBaseControllerService
 	 */
 	public function canDelete()
 	{	    
-	    return $this->getItem()->authorize('delete');
+	    return  $this->getItem() && 
+	        $this->getItem()->authorize('delete');
 	}
 }

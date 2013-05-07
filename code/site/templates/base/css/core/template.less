@@ -40,8 +40,14 @@ a:hover
     .hero-unit
     {
         .border-radius(@baseBorderRadius);
-        margin-bottom: 20px;
+        margin: 0;
     }
+}
+
+.separator
+{
+   font-size: @baseFontSize + 3;
+   margin: 20px 0;
 }
 
 // BRAND
@@ -64,6 +70,14 @@ a:hover
            {
                padding: 12px 10px;
            }
+        }
+    }
+    
+    .navbar-search
+    {
+        input.search-query
+        {
+            padding: 6px 14px;
         }
     }
     
@@ -118,35 +132,6 @@ a:hover
         max-height: 350px;
         overflow:hidden;    
     }
-}
-
-#bottom-wrapper,
-#footer-wrapper
-{
-    .clearfix;
-    .container
-    {
-        margin-top: 10px;
-        margin-bottom: 10px;
-        
-        .module-title
-        {
-            border-bottom: 0;
-            margin-bottom: 0;
-            margin-top: 0;
-        }
-    }
-}
-
-#copyright-wrapper
-{
-    padding: 15px 0;
-}
-
-.module-border
-{
-    padding: 10px;
-    .border-radius(@baseBorderRadius);
 }
 
 // MODULES
@@ -273,54 +258,19 @@ a:hover
     background:url("images/icon-star-bw.png") no-repeat scroll 0 10px transparent;
 }
 
-// LOGIN MODULE
-.login-module
-{   
-    form
-    {   
-        .controls
-        {
-            input
-            {
-                width: 97%;
-            }
-        }
-    }
-    
-    .login-avatar
-    {
-        float: left;
-        
-        img.actor-avatar
-        {
-            .square(30px);
-            margin: 0;
-        }
-    }
-    
-    .login-greeting
-    {
-        padding-left: 40px;
-    }
+
+//Text Align
+.text-left
+{
+    text-align: left;	
 }
 
-// NAVIGATION MODULE
-#sidebar-a,
-#sidebar-b
+.text-right
 {
-    ul.menu
-    {
-        li
-        {
-            line-height: @baseLineHeight + 2;
-            
-            &.active
-            {
-                a
-                {
-                   text-decoration: underline;
-                }
-            }
-        }
-    }
+    text-align: right;   
+}
+
+.text-center
+{
+    text-align: center;   
 }

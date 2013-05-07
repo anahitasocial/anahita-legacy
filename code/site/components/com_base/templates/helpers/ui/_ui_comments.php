@@ -19,7 +19,7 @@
     <?php if( $viewer->guest() ) : ?>
         <?= $entity->get('type') ?>
         <?php $return = base64_encode(@route($entity->getURL())); ?>
-        <?= @message(sprintf(@text('LIB-AN-COMMENT-GUEST-MUST-LOGIN'), @route(array('option'=>'com_user', 'view'=>'login', 'return'=>$return))), array('type'=>'warning')) ?>
+        
     <?php elseif ( !$entity->openToComment ) : ?>
         <?= @message(@text('LIB-AN-COMMENTS-ARE-CLOSED')) ?>
     <?php elseif ( !empty($require_follow) ) : ?>

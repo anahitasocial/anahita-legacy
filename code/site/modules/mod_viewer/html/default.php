@@ -16,18 +16,26 @@
          </a>
          <ul class="dropdown-menu">
             <li><a href="<?=@route(get_viewer()->getURL())?>"><?= @text('MOD-VIEWER-MENU-PROFILE') ?></a></li>
-            <?php foreach($menus as $menu) : ?>
-                <?= $menu->toString() ?>
-            <?php endforeach; ?>
+            
+            <?php if ( isset($menutype) ) : ?>
+            	<li class="divider"></li>
+            	<?=
+            		@service('mod://site/menu.module')
+            			->menutype($menutype)
+            			->layout('list')
+            	?>
+            <?php endif ?>
+            
              <li class="divider"></li> 
                  
              <li><a href="<?=@route(get_viewer()->getURL().'&get=settings')?>"><?=@text('MOD-VIEWER-MENU-EDIT-PROFILE')?></a></li>                     
-             <li><a data-trigger="Submit" href="<?=JRoute::_('index.php?option=com_user&task=logout&return='.$return)?>"><?=@text('MOD-VIEWER-MENU-LOGOUT')?></a></li>
+             <li><a data-trigger="Submit" href="<?=@route('option=com_people&view=session&action=delete&return='.$return)?>"><?=@text('MOD-VIEWER-MENU-LOGOUT')?></a></li>
          </ul>
      </li>
  </ul>
 <script data-inline>
 (function(){
+	return;
     new Request.JSON({
         url       : '<?= @route('option=com_notifications&view=notifications&get=count')?>',
         onSuccess : function(data) {

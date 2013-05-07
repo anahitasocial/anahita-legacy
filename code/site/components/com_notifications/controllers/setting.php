@@ -59,7 +59,7 @@ class ComNotificationsControllerSetting extends ComBaseControllerResource
         
         $viewer  = get_viewer();
         
-        $setting = $this->getService('repos://site/notifications.setting')->findOrCreate(array(
+        $setting = $this->getService('repos://site/notifications.setting')->findOrAddNew(array(
             'person' => $viewer,
             'actor'	 => $this->actor
         ));

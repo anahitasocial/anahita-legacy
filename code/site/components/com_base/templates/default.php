@@ -33,20 +33,35 @@
 	 * @param 	object 	An optional KConfig object with configuration options
 	 */
 	public function __construct(KConfig $config)
-	{
-		parent::__construct($config);
-	}
-	 	
-     /**
-     * Initializes the options for the object
-     *
-     * Called from {@link __construct()} as a first step of object instantiation.
-     *
-     * @param 	object 	An optional KConfig object with configuration options.
-     * @return 	void
-     */
-	protected function _initialize(KConfig $config)
 	{	
-		parent::_initialize($config);
-	} 	
+		parent::__construct($config);
+		
+		if ( $config->cache )
+		{
+		    $this->_paths       =  $this->getService('application.registry',
+		            array('key' => 'template-paths-'.$config->cache_key));
+		    
+		    $this->_parsed_data = $this->getService('application.registry',
+		            array('key' => 'template-parsed-data-'.$config->cache_key));		    
+		}
+	}
+	
+	/**
+	 * Initializes the default configuration for the object
+	 *
+	 * Called from {@link __construct()} as a first step of object instantiation.
+	 *
+	 * @param KConfig $config An optional KConfig object with configuration options.
+	 *
+	 * @return void
+	 */
+	protected function _initialize(KConfig $config)
+	{
+	    $config->append(array(
+	        'cache'     => true,
+	        'cache_key' => (string)$this->getIdentifier() 
+	    ));
+	
+	    parent::_initialize($config);
+	}	
  }

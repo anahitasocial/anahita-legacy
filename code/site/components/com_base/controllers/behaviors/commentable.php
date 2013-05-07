@@ -41,47 +41,115 @@ class ComBaseControllerBehaviorCommentable extends KControllerBehaviorAbstract
 	 * @return boolean
 	 */
 	protected function _beforeControllerGet(KCommandContext $context)
-	{		
-		 if ($this->permalink && KRequest::type() != 'AJAX' ) 
-		 {
-            $cid	= (int)preg_replace('/[^\d]+/', '', $this->permalink);
-			$offset = $this->getItem()->getCommentOffset( $cid );
-			$start  = (int)($offset / $this->limit) * $this->limit;
-			$url	= KRequest::url();
-			$query  = $url->getQuery(true);
-			if ( $this->start != $start ) {				
+	{	
+	    if ( $this->cid )
+        {
+	        $context->response->content 
+	            = $this->getCommentController()->id($this->cid)->display();
+	        return false;      
+	    }
+        elseif ($this->permalink && !$context->request->isAjax() ) 
+		{
+           $cid	= (int)preg_replace('/[^\d]+/', '', $this->permalink);
+		   $offset = $this->getItem()->getCommentOffset( $cid );
+		   $start  = (int)($offset / $this->limit) * $this->limit;
+		   $url	= KRequest::url();
+		   $query  = $url->getQuery(true);
+		   if ( $this->start != $start ) {				
 				$query  = array_merge($query, array('start'=>$start));				
-			}
-			unset($query['permalink']);							
-			$url->setQuery($query);
-			$this->setRedirect($url.'#scroll='.$this->permalink);
-			return;
-		} 
+		   }
+		   unset($query['permalink']);							
+		   $url->setQuery($query);
+		   $context->response->setRedirect($url.'#scroll='.$this->permalink);		   			
+           return false;
+		}
 	}
 	
 	/**
-	 * Forward an action to the comment controller
-	 * 
-	 * @param  string $name
-	 * @param  KCommandContext $context
-	 * @return boolean
+	 * Adds a comment
+	 *
+	 * @param KCommandContext $context
+	 *
+	 * @return ComBaseDomainEntityComment
 	 */
-	public function execute($name, KCommandContext $context)
-	{		
-		$parts = explode('.', $name);
-		if ( $parts[0] == 'before' && KRequest::has('request.comment') ) 
-		{
-			$data 	= KRequest::has('post.comment') ? KRequest::get('post.comment', 'raw') : array();
-			$cntx 	= new KCommandContext(array('data'=>$data));
-			$action = pick($cntx->data->action, $context->action, KRequest::method());
-			$context->result = $this->getCommentController()->execute($action, $cntx);
-			if ( $action == 'post' ) {
-				$context->result = $this->getCommentController()->display();
-			}
-			return false;
-		}
-		return parent::execute($name, $context);
-	}		
+	protected function _actionDeletecomment(KCommandContext $context)
+	{
+        $ret = $this->getCommentController()->id($this->cid)->delete();
+	    $context->response->status  = KHttpResponse::NO_CONTENT;	    
+	}
+		
+	/**
+	 * Adds a comment
+	 *
+	 * @param KCommandContext $context
+	 *
+	 * @return ComBaseDomainEntityComment
+	 */
+	protected function _actionEditcomment(KCommandContext $context)
+	{    
+	    $data    = $context->data;
+        $comment = $this->getCommentController()->id($this->cid)->edit(array('body'=>$data->body));        
+	    $context->comment = $comment;	    
+	    if ( $this->isDispatched() ) {
+	        $context->response->content = $this->getCommentController()->display();
+	    }
+	    return $comment;     
+	}
+		
+	/**
+	 * Adds a comment
+	 * 
+	 * @param KCommandContext $context
+	 * 
+	 * @return ComBaseDomainEntityComment
+	 */
+	protected function _actionAddcomment(KCommandContext $context)
+	{	    
+        $data    = $context->data;
+	    $comment = $this->getCommentController()->add(array('body'=>$data->body));
+	    $context->response->status = KHttpResponse::CREATED;
+	    $context->comment = $comment;	   
+	    if ( $this->isDispatched() ) 
+	    {
+	        $context->response->content = $this->getCommentController()->display();
+	        if ( $context->request->getFormat() == 'html' ) 
+	        {
+	            $offset = $this->getItem()->getCommentOffset( $comment->id );
+	            $start  = (int)($offset / $this->limit) * $this->limit;
+	            $context->response->setRedirect(JRoute::_($comment->parent->getURL().'&start='.$start).'#scroll='.$comment->id);
+	        }
+	        else {
+	            $context->response->setRedirect(JRoute::_($comment->getURL()));
+	        }
+	    }
+	    return $comment;
+	}
+
+	/**
+	 * Vote on a comment
+	 *
+	 * @param KCommandContext $context
+	 *
+	 * @return void
+	 */
+	protected function _actionUnvoteComment(KCommandContext $context)
+	{
+	    $this->getCommentController()
+	    ->id($this->cid)->execute('unvote', $context);
+	}
+		
+	/**
+	 * Vote on a comment
+	 * 
+	 * @param KCommandContext $context
+	 * 
+	 * @return void
+	 */
+	protected function _actionVoteComment(KCommandContext $context)
+	{
+	    $this->getCommentController()
+	        ->id($this->cid)->execute('vote', $context);
+	}
 	
 	/**
 	 * Returns the comment controller
@@ -90,82 +158,27 @@ class ComBaseControllerBehaviorCommentable extends KControllerBehaviorAbstract
 	 */
 	public function getCommentController()
 	{
-		if ( !isset($this->_comment_controller) ) 
-		{
-			$request = new KConfig(KRequest::get('get', 'raw'));
-			$request->append(array(
-				'comment' => array(
-					'pid'	 => $request->id,
-					'format' => 'html',
-					'view'	 => 'comment',
-					'layout' => 'list'	 ,
-					'get'	 => $request->get
-				)
-			));
-			$request = $request->comment;
-			$identifier = clone $this->getIdentifier();
-			$identifier->path = array('controller');
-			$identifier->name = 'comment';
-			register_default(array('identifier'=>$identifier, 'default'=>'ComBaseControllerComment'));
-			$this->_comment_controller	 = $this->getService($identifier, array(
-				'request' => KConfig::unbox($request) 
-			));
-			
-			$this->_comment_controller->registerCallback('after.add',    array($this->_mixer, 'createCommentStory'));			
-		}
-		
-		return $this->_comment_controller;
-	}
-	
-    /**
-     * Callback method called from comment controlller after comment add action to create a 
-     * comment story after an object has been commented
-     *
-     * @param KCommandContext $context Context parameter
-     * 
-     * @return void
-     */
-    public function createCommentStory(KCommandContext $context)
-	{
-        //called by the comment controller as as callback
-	    $entity   = $context->caller->getItem();
-	    $parent   = $entity->parent;
-        
-	    //dn't make a comment story for commenting on a story
-	    if ( $parent->getIdentifier()->name == 'story' ) {
-	        return;
+	    if ( !isset($this->_comment_controller) )
+	    {
+	        $identifier = clone $this->getIdentifier();
+	        $identifier->path = array('controller');
+	        $identifier->name = 'comment';
+	        $request = new LibBaseControllerRequest(array('format'=>$this->getRequest()->getFormat()));
+	        if  ( $this->getRequest()->has('get') ) 
+	        {
+	            $request->set('get', $this->getRequest()->get('get'));
+	        }
+	        $request->append(pick($this->_mixer->getRequest()->comment,array()));
+	        $this->_comment_controller = $this->getService($identifier, array(
+                    'request'  => $request,
+                    'response' => $this->getResponse()
+	        ));
+	        //set the parent
+	        if ( $this->getItem() ) {
+	            $this->_comment_controller->pid($this->getItem()->id);
+	        }    
 	    }
-        
-        $owner = $entity->author;
-        	    
-	    if ( $parent->isOwnable() ) {
-	        $owner  = $parent->owner;
-	    }
-        
-	    $data = array(
-			'name' 		=> $parent->getIdentifier()->name.'_comment',
-			'component'	=> $parent->component,
-			'comment'	=> $entity,
-			'object'	=> $parent,
-			'owner'		=> $owner,
-			'target'	=> $parent->isOwnable()  ? $parent->owner : null	    			
-	    );
-	   
-	    $story               = $this->createStory($data);
-        
-        //story owner	    
-	    $data['subscribers'] = array($story->owner);
-	    
-        //all the not subscribers
-	    if ( $parent->isSubscribable() ) {
-	        $data['subscribers'][] = $parent->subscriberIds->toArray();
-	    }
-	    
-	    $notification  = $this->createNotification($data);
-	    
-	    $notification->setType('post');
-	    
-	    $story->save();
+	    return $this->_comment_controller;
 	}
 	
 	/**

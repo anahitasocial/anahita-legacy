@@ -42,17 +42,17 @@ class ComNotificationsTemplateHelperNotifications extends KTemplateHelperAbstrac
         foreach($notifications as $notification)
         {
             $current = AnDomainAttributeDate::getInstance()->addHours($timezone);
-            $diff    = $current->compare($notification->createdOn->addHours($timezone));            
+            $diff    = $current->compare($notification->creationTime->addHours($timezone));            
             
             if ( $diff <= AnHelperDate::dayToSeconds('1') )
             {
-                if ( $current->day ==  $notification->createdOn->day )
+                if ( $current->day ==  $notification->creationTime->day )
                     $key = JText::_('LIB-AN-DATE-TODAY');
                 else
                     $key = JText::_('LIB-AN-DATE-DAY');
             }
             else
-                $key = $this->getTemplate()->renderHelper('date.format',$notification->createdOn, array('format'=>'%B %d'));
+                $key = $this->getTemplate()->renderHelper('date.format',$notification->creationTime, array('format'=>'%B %d'));
                 
             if ( !isset($dates[$key]) ) {    
                 $dates[$key] = array();   

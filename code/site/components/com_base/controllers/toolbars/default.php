@@ -47,14 +47,12 @@ class ComBaseControllerToolbarDefault extends ComBaseControllerToolbarAbstract
      * @return void
      */
     public function onAfterControllerGet(KEvent $event)
-    {
-        $event->result;
-        
-        $can_render = is_string($event->result)  && 
-                      $this->getController()->isDispatched() &&
-                      KRequest::type()   == 'HTTP' &&
-                      KRequest::format() == 'html';
-        
+    {        
+        $can_render = $this->getController()->isDispatched() 
+                        && $this->getController()->getRequest()->getFormat() == 'html'
+                        && $this->getController()->getView() instanceof LibBaseViewTemplate
+                        && KRequest::type()   == 'HTTP';
+
         if ( $can_render ) 
         {
             $ui     = $this->getController()->getView()->getTemplate()->getHelper('ui');
@@ -65,12 +63,12 @@ class ComBaseControllerToolbarDefault extends ComBaseControllerToolbarAbstract
                'toolbar'  => $this->getController()->toolbar    
             );
             
-            $filter = $this->getController()->getView()->getTemplate()->getFilter('module');
+            $module = '<module position="toolbar" style="none">'.$ui->header($data).'</module>';
             
-            if ( $filter ) {          
-                $module = '<module position="toolbar" style="none">'.$ui->header($data).'</module>';
-                $filter->write($module);
-            }
+            $this->getController()
+                    ->getView()
+                    ->getTemplate()
+                    ->loadString($module)->render();
         }
     }    
            
@@ -117,41 +115,48 @@ class ComBaseControllerToolbarDefault extends ComBaseControllerToolbarAbstract
     protected function _commandVote($command)
     {
         $entity = $this->getController()->getItem();
-    
-        $command->append(array('label'=>JText::_('LIB-AN-ACTION-VOTE')));
-    
         $voted  = $entity->votedUp(get_viewer());
-        $vote_action = $command;
-        $vote_id 	 = uniqid();
-        $unvote_id	 = uniqid();
-        $command_name = 'action';
-    
-        if ( is($entity, 'ComBaseDomainEntityComment') ) {
-            $command_name = 'comment[action]';
-        }
-    
-        $vote_action
-        ->href($entity->getURL()."&$command_name=vote")
-        ->class('vote-action vote btn btn-mini')
-        ->setAttribute('data-trigger','VoteLink')
-        ->setAttribute('data-votelink-toggle', $unvote_id)
-        ->setAttribute('data-votelink-object', $entity->id)
-        ->id($vote_id);
+                
+        $btn_1_id   = uniqid();
+        $btn_2_id   = uniqid();
+
+        $action_key     = '_action';
         
-        $unvote_action = $this->addCommand('unvote', JText::_('LIB-AN-ACTION-UNVOTE'))
-        ->getCommand('unvote')
-        ->href($entity->getURL()."&$command_name=unvote")
-        ->class('vote-action unvote btn btn-mini btn-inverse')
-        ->setAttribute('data-trigger','VoteLink')
-        ->setAttribute('data-votelink-toggle', $vote_id)
-        ->setAttribute('data-votelink-object', $entity->id)
-        ->id($unvote_id)
-        ;
-    
-        if ( $voted )
-            $vote_action->setAttribute('data-behavior', 'Hide',',')->setAttribute('data-hide-element','!>');
-        else
-            $unvote_action->setAttribute('data-behavior', 'Hide',',')->setAttribute('data-hide-element','!>');
+        $action_value   = $voted ? 'unvote' : 'vote';
+        if ( is($entity, 'ComBaseDomainEntityComment') ) {
+            $action_value .= 'comment';
+        }
+        $label          = $voted ? JText::_('LIB-AN-ACTION-UNVOTE') : JText::_('LIB-AN-ACTION-VOTE');
+        $command->setName($action_value);        
+        $command->append(array('label' =>$label));
+        
+        $command
+            ->href($entity->getURL()."&$action_key=$action_value")
+            ->class('vote-action '.$action_value.' btn btn-mini')
+            ->setAttribute('data-trigger','VoteLink')
+            ->setAttribute('data-votelink-toggle', $btn_2_id)
+            ->setAttribute('data-votelink-object', $entity->id)
+            ->id($btn_1_id);
+                
+        
+        //lets add the reverse of the first
+        //button if any onle if it's html request 
+        if ( $this->getController()->getRequest()->getFormat() != 'html' )
+            return;
+            
+        $action_value   = !$voted ? 'unvote' : 'vote';
+        $label          = !$voted ? JText::_('LIB-AN-ACTION-UNVOTE') : JText::_('LIB-AN-ACTION-VOTE');
+        
+        $command = ComBaseControllerToolbarCommand::getInstance($action_value, array('label'=>$label));
+        $this->addCommand($command);        
+        $command
+            ->href($entity->getURL()."&$action_key=$action_value")
+            ->class('vote-action '.$action_value.' btn btn-mini')
+            ->setAttribute('data-trigger','VoteLink')
+            ->setAttribute('data-votelink-toggle', $btn_1_id)
+            ->setAttribute('data-votelink-object', $entity->id)
+            ->setAttribute('data-behavior', 'Hide',',')->setAttribute('data-hide-element','!>')
+            ->id($btn_2_id);
     }
     
     /**

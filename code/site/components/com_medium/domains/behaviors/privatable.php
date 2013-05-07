@@ -51,8 +51,8 @@ class ComMediumDomainBehaviorPrivatable extends LibBaseDomainBehaviorPrivatable
             $config->append(array(
                'use_access_column' => '@col(access)'    
             ));
-            $c1 = $this->_createWhere('@col(owner.id)', $config, '@col(owner.access)');
-            $c2 = $this->_createWhere('@col(owner.id)', $config, $config->use_access_column);
+            $c1 = $this->buildCondition('@col(owner.id)', $config, '@col(owner.access)');
+            $c2 = $this->buildCondition('@col(owner.id)', $config, $config->use_access_column);
             $where = "IF($c1, $c2, 0)";
             $query->where($where);
         }

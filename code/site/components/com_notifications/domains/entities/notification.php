@@ -48,11 +48,12 @@ class ComNotificationsDomainEntityNotification extends ComBaseDomainEntityNode
 			'attributes' => array(
 				'name' => array('required'=>true),
 				'type' => array('column'=>'body'),
-				'createdOn'			 => array('default'=>'date'),
+				'creationTime'		 => array('default'=>'date','column'=>'created_on'),
 				'status'			 => array('default'=>self::STATUS_NOT_SENT),
 				'subscriberIds' 	 => array('type'=>'set',   'default'=>'set','write'=>'private','required'=>true)
 			),
 		    'behaviors' => array(
+		    	  'serializable' => array('serializer'=>'com://site/stories.domain.serializer.story'),
 		          'dictionariable'      
             ),
 			'relationships'	 => array(			    

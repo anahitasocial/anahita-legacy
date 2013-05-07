@@ -38,15 +38,13 @@ abstract class ComMediumControllerAbstract extends ComBaseControllerService
 	{
 		parent::__construct($config);
 		
-		$this->registerCallback(array('after.add'), array($this, 'createStory'));
-	
-        //add the anahita:event.command        
-        $this->getCommandChain()
-            ->enqueue( $this->getService('anahita:command.event'), KCommand::PRIORITY_LOWEST);
+		$this->registerCallback(array('after.add'), array($this, 'createStoryCallback'));       
             
         //add medium related states
         $this->getState()
                 ->insert('filter')->insert('grid')->insert('order');
+        
+        $this->registerCallback(array('after.delete','after.add'), array($this, 'redirect'));
 	}
 	
 	/**
@@ -69,8 +67,10 @@ abstract class ComMediumControllerAbstract extends ComBaseControllerService
                 'order'     => null
             ),
 	        'behaviors' => array(
+	        	'com://site/search.controller.behavior.searchable',	
+                'com://site/stories.controller.behavior.publisher',
+	            'com://site/notifications.controller.behavior.notifier',	                        		
                 'composable',
-                'publisher',
                 'commentable',                
                 'votable',
                 'privatable',
@@ -87,7 +87,7 @@ abstract class ComMediumControllerAbstract extends ComBaseControllerService
         
 	    parent::_initialize($config);
 	}
-		
+	
 	/** 
 	 * Browse Action
 	 * 
@@ -106,24 +106,37 @@ abstract class ComMediumControllerAbstract extends ComBaseControllerService
            $leaderIds = array_merge($leaderIds, $this->viewer->getLeaderIds()->toArray());
            $entities->where( 'owner.id','IN', $leaderIds );
         }
-		elseif( $this->getRepository()->hasBehavior('ownable')  )
+		elseif( $this->getRepository()->hasBehavior('ownable') 
+                 && $this->actor 
+                 && $this->actor->id > 0 )
 			$entities->where('owner', '=', $this->actor);
 	    
         return $entities;
 	}
-		
-	/** 
-	 * Delete Action
+	
+	/**
+	 * Set the necessary redirect
 	 * 
-	 * @param KCommandContext $context Context Parameter
+	 * @param KCommandContext $context
 	 * 
 	 * @return void
 	 */
-	protected function _actionDelete(KCommandContext $context)
-	{		
-		$redirect_url = array('view'=>KInflector::pluralize($this->getIdentifier()->name), 'oid'=>$this->getItem()->owner->id);		
-		parent::_actionDelete($context);
-		$this->setRedirect($redirect_url);
+	public function redirect(KCommandContext $context)
+	{
+	    if ( $context->action == 'delete' ) 
+	    {
+	        $url['oid']    = $this->getItem()->owner->id;
+	        $url['view']   = KInflector::pluralize($this->getIdentifier()->name);
+	        $url['option'] = $this->getIdentifier()->package;
+	        $this->getResponse()->setRedirect(JRoute::_($url));
+	    }	    
+	    elseif ( $context->action == 'add' ) 
+	    {
+	        $url['id']     = $this->getItem()->id;
+	        $url['view']   = KInflector::pluralize($this->getIdentifier()->name);
+	        $url['option'] = $this->getIdentifier()->package;
+	        $this->getResponse()->setRedirect(JRoute::_($url));	        
+	    }
 	}
 	
 	/**
@@ -148,5 +161,35 @@ abstract class ComMediumControllerAbstract extends ComBaseControllerService
 	    }
 	
 	    return $this;
+	}	
+	
+	/**
+	 * Can be used as a cabllack to automatically create a story
+	 *
+	 * @param KCommandContext $context
+	 *
+	 * @return ComStoriesDomainEntityStory
+	 */
+	public function createStoryCallback(KCommandContext $context)
+	{
+	    if ( $context->result !== false )
+	    {
+	        $data	 = $context->data;
+	        $name    = $this->getIdentifier()->name.'_'.$context->action;
+	        $context->append(array(
+	                'story' => array(
+	                        'component' => 'com_'.$this->getIdentifier()->package,
+	                        'name' 		=> $name,
+	                        'owner'		=> $this->actor,
+	                        'object'	=> $this->getItem(),
+	                        'target'	=> $this->actor	,
+	                        'comment'	=> $this->isCommentable() ? $data->comment : null
+	                )
+	        ));
+	        $story = $this->createStory( KConfig::unbox($context->story) );
+	        $data->story = $story;
+	        return $story;
+	    }
+	    return $context->result;
 	}	
 }

@@ -37,6 +37,8 @@ class ComBaseTemplateFilterAlias extends LibBaseTemplateFilterAlias
 		parent::__construct($config);
 		
 		$this->_alias_read = array_merge($this->_alias_read, array(
+		    '@flash_message('  => '$this->renderHelper(\'ui.flash\',',
+            '@flash_message'   => '$this->renderHelper(\'ui.flash\')',		            
             '@commands('=>'$this->getHelper(\'toolbar\')->commands(',
 			'@content('		   => 'PlgContentfilterChain::getInstance()->filter(',
 			'@pagination('	   => '$this->renderHelper(\'ui.pagination\',',		
@@ -46,5 +48,5 @@ class ComBaseTemplateFilterAlias extends LibBaseTemplateFilterAlias
 		    '@message('	     => '$this->renderHelper(\'ui.message\',',
 		    '@date(' 	     => '$this->renderHelper(\'date.format\','		        		        
 		));
-	}	
+	}
 }

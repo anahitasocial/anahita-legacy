@@ -20,7 +20,7 @@
 	        </div>
 	        
 	        <div class="entity-meta">
-	        <?= @date($notification->createdOn)?>
+	        <?= @date($notification->creationTime)?>
 	        </div>
         </div>
     </div>

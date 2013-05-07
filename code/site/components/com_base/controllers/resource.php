@@ -55,8 +55,9 @@ class ComBaseControllerResource extends LibBaseControllerResource
 	protected function _initialize(KConfig $config)
 	{
 		$config->append(array(
-            'viewer'        => get_viewer(),
-		    'language'      => 'com_'.$this->getIdentifier()->package
+            'viewer'        => $this->getService('com:people.viewer'),
+		    'language'      => 'com_'.$this->getIdentifier()->package,
+		    'behaviors'     => to_hash('com://site/application.controller.behavior.message')
 		));
 				
 		parent::_initialize($config);
@@ -84,5 +85,17 @@ class ComBaseControllerResource extends LibBaseControllerResource
         }
     
         return parent::getToolbar($toolbar, $config);
-    }    	
+    }  
+
+    /**
+     * Sets the context response
+     *
+     * @return KCommandContext
+     */
+    public function getCommandContext()
+    {
+        $context = parent::getCommandContext();
+        $context->viewer = $this->_state->viewer;
+        return $context;
+    }
 }

@@ -61,9 +61,6 @@ class ComBaseDomainAuthorizerComment extends LibBaseDomainAuthorizerDefault
 	 */
 	protected function _authorizeEdit($context)
 	{
-		if ( is($this->_entity->parent, 'ComStoriesDomainEntityStory'))
-			return false;
-					
 		return $this->_authorizeDelete($context);
 	}	
 }

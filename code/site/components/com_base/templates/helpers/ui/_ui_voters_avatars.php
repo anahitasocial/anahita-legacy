@@ -1,8 +1,8 @@
 <?php defined('KOOWA') or die; ?>
 <?php if( $entity->voteUpCount > 0 ) : ?>
-<div class="popup-header">
+<popup:header>
 	<h3><?= $entity->voteUpCount == 1 ? @text('LIB-AN-VOTE-ONE-VOTED') : sprintf(@text('LIB-AN-VOTE-OTHER-VOTED'), $entity->voteUpCount)?></h3>
-</div>
+</popup:header>
 <div class="popup-body">
 	<div class="an-entities">
 		<?php foreach($entity->voteups->voter as $actor) : ?>

@@ -26,7 +26,14 @@
  * @link       http://www.anahitapolis.com
  */
 class ComActorsDomainEntityActor extends ComBaseDomainEntityNode
-{        
+{   
+	/**
+	 * Actor components
+	 * 
+	 * @var ComActorsDomainEntitysetComponent
+	 */   
+	protected $_components;
+	  
     /**
 	 * Initializes the default configuration for the object
 	 *
@@ -37,30 +44,35 @@ class ComActorsDomainEntityActor extends ComBaseDomainEntityNode
 	 * @return void
 	 */
 	protected function _initialize(KConfig $config)
-	{
+	{		
 		$config->append(array(
-		    'abstract_identifier' => 'com:actors.domain.entity.actor', //actor is an abstract entity, can not be stored in database
-			'attributes' => array(
-				'name'		=> array('required'=>true, 'format'=>'string','read'=>'public'),
-			    'body'      => array('format'=>'string'),
-				'status',
-				'statusUpdateTime',
-			),
-			'behaviors'  => array(
+	        'abstract_identifier' => 'com:actors.domain.entity.actor', //actor is an abstract entity, can not be stored in database
+	        'attributes' => to_hash(array(
+                'name'		=> array('required'=>AnDomain::VALUE_NOT_EMPTY, 'format'=>'string','read'=>'public'),
+                'body'      => array('format'=>'string'),
+                'status',
+                'statusUpdateTime',
+	        )),
+	        'behaviors'  => to_hash(array(	                
                 'subscribable',
-				'modifiable',
-				'followable',
-			    'storable',
-				'portraitable',
-				'describable',
-				'authorizer',
-				'dictionariable',
-				'privatable',
+                'modifiable',
+                'storable',
+                'describable',
+                'authorizer',
+                'privatable',
                 'administrable',
-			    'enableable'                
-			)
-		));
-		
+                'enableable',
+                'dictionariable',
+                'followable',
+                'portraitable'   => array(
+                        'sizes'  => array(
+                                'small'  => '80xauto',
+                                'medium' => '160xauto',
+                                'large'  => '480xauto',
+                                'square' => 56 ))	                
+	        )		        
+        )));
+
 		parent::_initialize($config);
 	}
 				
@@ -91,7 +103,30 @@ class ComActorsDomainEntityActor extends ComBaseDomainEntityNode
 		} else {			
 			$filename = $this->component.'/avatars/'.$size.$this->filename;				
 		}
-
+        
 		return $filename;
+	}
+	
+	/**
+	 * (non-PHPdoc)
+	 * @see AnDomainEntityAbstract::__get()
+	 */
+	public function __get($name)
+	{
+		if ( $name == 'components' ) 
+		{
+			if ( !isset($this->_components) ) {
+				$this->_components = $this->getService('com://site/actors.domain.entityset.component', array(
+        				'actor' 		=> $this        				
+				));
+			}
+			return $this->_components;
+		} 
+		else if ( $name == 'uniqueAlias' ) {
+			return $this->get('id');
+		}
+		else {
+			return parent::__get($name);
+		}
 	}
 }

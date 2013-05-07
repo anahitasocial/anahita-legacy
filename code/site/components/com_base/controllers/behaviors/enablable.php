@@ -35,6 +35,7 @@ class ComBaseControllerBehaviorEnablable extends KControllerBehaviorAbstract
 	 */
 	protected function _actionEnable($context)
 	{
+	    $context->response->status = KHttpResponse::RESET_CONTENT;
 		$this->getItem()->enabled = 1;
         return $this->getItem();
 	}
@@ -47,6 +48,7 @@ class ComBaseControllerBehaviorEnablable extends KControllerBehaviorAbstract
 	 */
 	protected function _actionDisable($context)
 	{
+	    $context->response->status = KHttpResponse::RESET_CONTENT;
 		$this->getItem()->enabled = 0;
         return $this->getItem();		
 	}

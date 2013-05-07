@@ -89,12 +89,12 @@ class ComActorsControllerToolbarActorbar extends ComBaseControllerToolbarActorba
         if ( $entity->authorize('administration', array('strict'=>true)) ) {
             $types[] = 'Blockeds';
         }
-
+        $filter = $this->getService('koowa:filter.cmd');
         foreach($types as $type)
         {
             $label   = array(strtoupper('COM-'.$this->getIdentifier()->package.'-NAV-LINK-SOCIALGRAPH-'.$type));
             $label[] = 'COM-ACTORS-NAV-LINK-SOCIALGRAPH-'.strtoupper($type);
-            $cmd     = strtolower($this->getController()->sanitize($type, 'cmd'));
+            $cmd     = strtolower($filter->sanitize($type));
             $this->addNavigation('navbar-'.$cmd,translate($label),
                     $entity->getURL().'&get=graph&type='.$cmd,
                     $this->getController()->type == $cmd);

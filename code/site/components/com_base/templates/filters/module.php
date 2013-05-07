@@ -54,7 +54,8 @@ class ComBaseTemplateFilterModule extends KTemplateFilterAbstract implements KTe
     public function write(&$text)
     {
         $matches = array();
-    
+    	if ( KRequest::type() == 'AJAX' ) 
+    		return;
         if(preg_match_all('#<module([^>]*)>(.*)</module>#siU', $text, $matches))
         {
             $modules = array();
@@ -77,25 +78,16 @@ class ComBaseTemplateFilterModule extends KTemplateFilterAbstract implements KTe
                     $attributes['params'] .= ' moduleclass_sfx= '.$attributes['class'];
                 }
                 
-                $module   	       = new KObject();
-                $module->id        = uniqid();
-                $module->content   = $matches[2][$key];               
-                $module->position  = $attributes['position'];
-                $module->params    = $attributes['params'];
-                $module->showtitle = !empty($attributes['title']);
-                $module->title	   = $attributes['title'];                
-                $module->name	   = $attributes['position'];
-                $module->attribs   = $attributes;
-                $module->user      = 0;
-                $module->module    = 'mod_dynamic';                
-                $modules[] 		   = $module;
+                JModuleHelper::addDynamicModule(array(
+                    'content'   => $matches[2][$key],               
+                    'position'  => $attributes['position'],
+                    'params'    => $attributes['params'],
+                    'title' 	=> $attributes['title'],
+                    'attribs'   => $attributes
+                ));
             }
-                        
-            $mods =& JModuleHelper::_load();
-            $mods = array_merge($modules, $mods);
         }
-
-                
+                        
         return $this;
     }    
 }

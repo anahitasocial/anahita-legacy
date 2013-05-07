@@ -68,14 +68,11 @@ class ComActorsViewActorHtml extends ComBaseViewHtml
         ));
 				
         if ( $this->_state->getItem()->authorize('access') )
-        {
-            $apps  = $this->getService('repos:apps.app')
-                    ->getQuery()
-                    ->actor($this->_state->getItem())
-                    ->order('ordering','ASC')->fetchSet();
-            
-            $apps->registerEventDispatcher($this->getService('anahita:event.dispatcher'));
-                        
+        {        	
+        	$this->_state->getItem()->components->registerEventDispatcher( $this->getService('anahita:event.dispatcher'));
+        	
+        	$this->getService('anahita:event.dispatcher')->dispatchEvent('onProfileDisplay', $context);
+        	        	       
             $this->getService('anahita:event.dispatcher')->dispatchEvent('onProfileDisplay', $context);
             
             dispatch_plugin('profile.onDisplay', array('actor'=>$this->_state->getItem(), 'profile'=>$context->profile));

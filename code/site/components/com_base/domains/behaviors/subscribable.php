@@ -90,7 +90,7 @@ class ComBaseDomainBehaviorSubscribable extends AnDomainBehaviorAbstract
 	 */
 	public function addSubscriber($person)
 	{
-	    $this->subscriptions->findOrCreate(array(
+	    $this->subscriptions->findOrAddNew(array(
 	        'subscriber' => $person
         ))->setData(array(
             'component' => $this->component,

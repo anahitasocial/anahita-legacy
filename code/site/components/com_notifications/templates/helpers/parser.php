@@ -32,7 +32,6 @@ class ComNotificationsTemplateHelperParser extends ComStoriesTemplateHelperParse
     {
         $config->append(array(
             'filters' => array(
-            	'com://site/notifications.template.filter.url',
             	'com://site/notifications.template.filter.blockquote',
         		'com://site/notifications.template.filter.link'
             )

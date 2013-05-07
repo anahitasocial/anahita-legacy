@@ -40,7 +40,8 @@ class ComMediumControllerBehaviorComposable extends ComComposerControllerBehavio
         
         if ( $data->composed && $data->story ) 
         {
-            $context->result = $this->_renderComposedStory($data->story);
+            $content = $this->_renderComposedStory($data->story);
+            $context->response->setContent($content);
         }
     }
 }

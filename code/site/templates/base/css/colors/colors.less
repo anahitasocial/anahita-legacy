@@ -1,5 +1,5 @@
 //VARIABLES
-@borderColor: darken(@grayLighter, 5%);
+@borderColor: darken(@grayLighter, 10%);
 
 //NAVPILLS
 .nav
@@ -8,7 +8,7 @@
     {
 	    a:hover
 	    {
-	        background-color: @borderColor;
+	        background-color: lighten( @borderColor, 7%);
 	    }
 	    
 	    .active > a,
@@ -73,55 +73,10 @@
     }
 }
 
-#bottom-wrapper
-{
-    background-color: @gray;
-    border-top: 1px solid @grayLighter;    
-}
-
-#footer-wrapper
-{
-    border-top: 1px solid @grayLighter;
-    background-color: @grayDark;
-    
-    .module-title
-    { 
-        color: @white; 
-    }
-    
-    .module-content
-    {
-        color: @white;
-        
-         a
-         {
-             color: @grayLighter;
-             border-bottom: 1px dotted @white;
-             
-             &:hover
-             {
-                color: @white; 
-             }
-         }
-   }
-}
-
-#copyright-wrapper
-{
-    border-top: 1px solid @white;
-}
-
 // DEFAULT MODULE
 .module-title
 {
     border-bottom: 1px solid @borderColor;
-}
-
-.module-border
-{
-    background-color: @wellBackground;
-    border: 1px solid darken(@wellBackground, 7%);
-    .box-shadow(inset 0 1px 1px rgba(0,0,0,.05));
 }
 
 .module-content
@@ -282,6 +237,11 @@ ul.autocompleter-choices
             }
         }
     }
+}
+
+.separator
+{
+   border-bottom: 1px solid @borderColor;
 }
 
 // STORIES

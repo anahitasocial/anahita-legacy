@@ -71,7 +71,7 @@
 	    else 
 	    {
 	        //find ore create a voteup	        
-	        $voteup = $this->voteups->findOrCreate(array('voter'=>$voter, 'votee'=>$this));	        
+	        $voteup = $this->voteups->findOrAddNew(array('voter'=>$voter, 'votee'=>$this));	        
 	        
 	        //if the votee is suscribable then subscribe the voter
 	        if ( $this->isSubscribable() ) {
@@ -99,7 +99,7 @@
 	    else 
 	    {
 	        //find ore create a voteup	        
-	        $votedown = $this->votedowns->findOrCreate(array('voter'=>$voter, 'votee'=>$this));
+	        $votedown = $this->votedowns->findOrAddNew(array('voter'=>$voter, 'votee'=>$this));
 	    }
 	}
 

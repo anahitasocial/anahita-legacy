@@ -81,7 +81,7 @@ class ComActorsControllerBehaviorAdministrable extends KControllerBehaviorAbstra
 	 */
 	protected function _actionGetcandidates(KCommandContext $context)
 	{		
-		if ( $this->format != 'html' )
+		if ( $context->request->getFormat() != 'html' )
 		{
 			$data = $context->data;
 			$canditates = $this->getItem()->getAdminCanditates();
@@ -90,7 +90,8 @@ class ComActorsControllerBehaviorAdministrable extends KControllerBehaviorAbstra
 		    foreach($canditates as $key => $person) {
 				$people[$key] = array('id'=>$person->id, 'value'=>$person->name);
 			}
-            return $this->getView()->set($people)->display();            
+			$this->getView()->set($people);
+			return $people;
 		}
 	}
 		
@@ -106,19 +107,14 @@ class ComActorsControllerBehaviorAdministrable extends KControllerBehaviorAbstra
         $entity = $this->getItem();
         			
 		$this->getToolbar('actorbar')->setActor($entity);
+		
 		$this->getToolbar('actorbar')->setTitle(sprintf(JText::_('COM-ACTORS-PROFILE-HEADER-EDIT'), $entity->name));
+				
+		$dispatcher = $this->getService('anahita:event.dispatcher');
 		
-		
-		$this->apps = $this->getService('repos:apps.app')->getQuery()
-			->actor($entity)
-			->access(ComAppsDomainEntityApp::ACCESS_OPTIONAL)
-			->fetchSet();
+		$entity->components->registerEventDispatcher($dispatcher);				
         
-        $dispatcher = $this->getService('anahita:event.dispatcher');
-        
-        $this->apps->registerEventDispatcher($dispatcher);
-        
-        $dispatcher->addEventListener('onSettingDisplay', $this->_mixer);                       
+        $dispatcher->addEventListener('onSettingDisplay', $this->_mixer);
 	}
     
 	/**
@@ -130,11 +126,9 @@ class ComActorsControllerBehaviorAdministrable extends KControllerBehaviorAbstra
 	 */
 	protected function _actionAddapp(KCommandContext $context)
 	{
-		$data 	   = $context->data;
-		$app	   = $this->getService('repos:apps.app')->fetch(array('component'=>$data->app));
-		if ( $app && $app->authorize('install', array('actor'=>$this->getItem()))) {
-		    $app->addToProfile($this->getItem());
-		}
+		$data 	    = $context->data;
+		$this->getItem()->components->insert($data->app);
+		$this->commit();
 	}
 	
 	/**
@@ -146,11 +140,9 @@ class ComActorsControllerBehaviorAdministrable extends KControllerBehaviorAbstra
 	 */
 	protected function _actionRemoveapp(KCommandContext $context)
 	{
-		$data 	   = $context->data;
-		$app	   = $this->getService('repos:apps.app')->fetch(array('component'=>$data->app));
-		if ( $app ) {
-			$app->removeFromProfile($this->getItem());
-		}		
+		$data 	    = $context->data;		
+		$this->getItem()->components->extract($data->app);
+		$this->commit();
 	} 
     
     /**
@@ -192,10 +184,9 @@ class ComActorsControllerBehaviorAdministrable extends KControllerBehaviorAbstra
     {
         $data = $context->data;
         
-        if ( $this->getItem() ) 
-        {            
+        if ( $this->getItem() ) {            
             $this->getState()->requester = $this->getItem()->requesters->fetch($data->requester);   
-        }              
+        }
     } 
     
     /**

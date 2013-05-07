@@ -31,15 +31,15 @@
         <?php endif; ?>
 	</div>
 </div>
-<?php foreach($apps_resources as $app_name => $resources) : ?>
+<?php foreach($components as $component) : ?>
 	<input type="hidden" name="action"  value="setprivacy" />
-	<fieldset>
-		<legend><?= $app_name ?></legend>
-		<?php foreach($resources as $label => $operation) : ?>
+	<fieldset>		
+		<legend><?= $component->name ?></legend>
+		<?php foreach($component->permissions as $permission) : ?>
 			<div class="control-group">
-				<label class="control-label" ><?= $label ?></label>
+				<label class="control-label" ><?= $permission->label ?></label>
 				<div class="controls">
-					<?= @helper('ui.privacy',array('entity'=>$item, 'name'=>$operation,'auto_submit'=>false))?>
+					<?= @helper('ui.privacy',array('entity'=>$item, 'name'=>$permission->name,'auto_submit'=>false))?>
 				</div>
 			</div>
 		<?php endforeach;?>

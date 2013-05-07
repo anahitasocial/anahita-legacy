@@ -3,23 +3,23 @@
 <h3><?= @text('COM-ACTORS-PROFILE-EDIT-APPS') ?></h3>
 
 <div class="an-entities">
-	<?php foreach($enablable_apps as $app ) : ?>
-	<div class="an-entity" scroll-handle="<?=$app->id?>">
+	<?php foreach($enablable_apps as $component ) : ?>
+	<div class="an-entity" scroll-handle="<?=$component->id?>">
 		<h4 class="entity-title">
-			<?= $app->getName() ?>
+			<?= $component->getProfileName() ?>
 		</h4>
-		<div class="entity-description"><?= $app->getDescription() ?></div>
-		<?php if ( count($app->getFeatures()) ) : ?>
+		<div class="entity-description"><?= $component->getProfileDescription() ?></div>
+		<?php if ( false && count($component->getFeatures()) ) : ?>
 		<div class="entity-meta">
 		    <form>	
 			    <div class="control-label">
-			    	<label class="control-label" for="<?= $app->getName() ?>"><?= @text('COM-ACTORS-APP-PROFILE-FEATURES') ?></label>
+			    	<label class="control-label" for="<?= $component->getProfileName() ?>"><?= @text('COM-ACTORS-APP-PROFILE-FEATURES') ?></label>
 			    	<div class="controls">		    			        
-    			    <?php foreach($app->getFeatures() as $feature) : ?>
+    			    <?php foreach($component->getProfileFeatures() as $feature) : ?>
     			        <label class="checkbox">
-    			        <?php $enabled = !$app->authorize('install', array('actor'=>$item)) ?>
+    			        <?php $enabled = false && !$component->authorize('install', array('actor'=>$item)) ?>
     			            <input type="checkbox" disabled <?= $enabled ? 'checked' : ''?>/>
-    			            <?= translate(array(strtoupper('COM-'.$app->getName().'-FEATURE-'.$feature),strtoupper('COM-ACTORS-APP-PROFILE-FEATURE-'.$feature))) ?>
+    			            <?= translate(array(strtoupper('COM-'.$component->getName().'-FEATURE-'.$feature),strtoupper('COM-ACTORS-APP-PROFILE-FEATURE-'.$feature))) ?>
     			        </label>
     			    <?php endforeach; ?>		
     			    </div>	
@@ -29,12 +29,12 @@
 		<?php endif;?>
 		
 		<div class="entity-actions">
-		<?php if ( $app->authorize('install', array('actor'=>$item)) ) : ?>
-		<a class="btn btn-primary" data-trigger="Submit" href="<?=@route($item->getURL().'&action=addapp&app='.$app->component)?>">
+		<?php if ( !$component->enabledForActor($item) ) : ?>
+		<a class="btn btn-primary" data-trigger="Submit" href="<?=@route($item->getURL().'&action=addapp&app='.$component->component)?>">
 			<?= @text('COM-ACTORS-APP-ACTION-INSTALL') ?>
 		</a>						
 		<?php else : ?>
-		<a class="btn" data-trigger="Submit" href="<?=@route($item->getURL().'&action=removeapp&app='.$app->component)?>">
+		<a class="btn" data-trigger="Submit" href="<?=@route($item->getURL().'&action=removeapp&app='.$component->component)?>">
 			<?= @text('COM-ACTORS-APP-ACTION-UNINSTALL') ?>
 		</a>
 		<?php endif;?>	

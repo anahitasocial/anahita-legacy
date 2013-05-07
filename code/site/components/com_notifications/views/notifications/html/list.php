@@ -16,7 +16,7 @@ $dates = @helper('notifications.group', $notifications);
 	        <?= $data['title']?>
         	</div>
         	<div class="entity-meta">
-                <?= $notification->createdOn->format('%l:%M %p')?>
+                <?= $notification->creationTime->format('%l:%M %p')?>
         	</div>
         </div>
     </div>

@@ -58,7 +58,7 @@ class ComBaseControllerToolbarComment extends ComBaseControllerToolbarDefault
 		{
 			$this->addCommand('deletecomment', JText::_('LIB-AN-ACTION-DELETE'))
 			    ->getCommand('deletecomment')
-			    ->href($comment->getURL().'&action=delete')
+			    ->href($comment->getURL().'&_action=deletecomment')
 				->setAttribute('data-trigger','Remove');
 		}
 	}	

@@ -36,7 +36,7 @@ class ComBaseTemplateHelperUi extends KTemplateHelperAbstract
 	{
 		parent::__construct($config);		
 		
-		$this->_template->addPath(KConfig::unbox($config->paths), true);
+		$this->_template->addSearchPath(KConfig::unbox($config->paths), true);
 	}
 		
     /**
@@ -72,6 +72,23 @@ class ComBaseTemplateHelperUi extends KTemplateHelperAbstract
 	}
 	
 	/**
+	 * Render the message in the flash
+	 * 
+	 * @param array $config
+	 * 
+	 * @return string
+	 */
+	public function flash($config = array())
+	{
+	    $data = $this->_template->getData();
+	    if ( isset($data['flash']) && $data['flash']->message )
+	    {
+	        $message = array_merge((array)$data['flash']->getMessage(true), $config);
+	        return $this->message(JText::_($message['message']), $message);
+	    }
+	}
+	
+	/**
 	 * Renders a message
 	 * 
 	 * @param string 	$message 
@@ -82,13 +99,19 @@ class ComBaseTemplateHelperUi extends KTemplateHelperAbstract
 		$config = new KConfig($config);
 		
 		$config->append(array(
-			'type'	=> 'info',
-			'block' => true
+			'type'	    => 'info',
+			'block'     => true  ,
+		    'closable'  => false
 		));
 		
 		$alertblock = ($config->block) ? 'alert-block' : '';
 		
-		return "<div class=\"alert alert-{$config->type} $alertblock\"><p>$message</p></div>";
+		$close_handler = '';
+		if ( $config->closable ) {
+		    $close_handler =  "<a class=\"close\" data-trigger=\"nix\" data-nix-options=\"'target':'!div.alert'\">&times;</a>";
+		}
+		
+		return "<div class=\"alert alert-{$config->type} $alertblock\">$close_handler<p>$message</p></div>";
 	}
 	
 	/**
@@ -180,10 +203,6 @@ class ComBaseTemplateHelperUi extends KTemplateHelperAbstract
             $command->label = '<i class="'.$icon.'"></i>&nbsp;'.$command->label;
             unset($attributes['icon']);
         }
-        
-		if ( isset($attributes['href']) ){
-		    $attributes['href'] = LibBaseHelperUrl::getRoute($attributes['href']);
-		}
 				
 		$html = $this->getService('com:base.template.helper.html');
 		
@@ -414,7 +433,8 @@ class ComBaseTemplateHelperUi extends KTemplateHelperAbstract
                     ));                    
 	        }
             
-            foreach($options as $key => $value) {
+            foreach($options as $key => $value) 
+            {
                 if ( $actor->authorize('setprivacyvalue', array('value'=>$key)) === false ) {
                     unset($options[$key]);   
                 }
@@ -422,12 +442,6 @@ class ComBaseTemplateHelperUi extends KTemplateHelperAbstract
             
             $config->options = $options;
             
-	        if ( false && !$actor->authorize('administration') ) 
-            {
-                $options = KConfig::unbox($config->options);
-                array_pop($options);
-                $config->options = $options;
-            }
             
 	        if ( $config->entity ) 
             {
@@ -458,13 +472,13 @@ class ComBaseTemplateHelperUi extends KTemplateHelperAbstract
 
 	
 	/**
-	 * Renders a searchbox
+	 * Renders a filterbox
 	 *
 	 * @param  array $config Configuration
 	 * 
 	 * @returns	void
 	 */
-	public function searchbox($path, $config = array())
+	public function filterbox($path, $config = array())
 	{
 	    if ( is_array($path) ) {
 	        $path = $this->_template->getView()->getRoute($path);
@@ -484,7 +498,7 @@ class ComBaseTemplateHelperUi extends KTemplateHelperAbstract
 	            'update_element' 		=> false
 	    ));
 	
-	    return $this->_render('searchbox',  $config);
+	    return $this->_render('filterbox',  $config);
 	}
 		
 	/**
@@ -523,14 +537,8 @@ class ComBaseTemplateHelperUi extends KTemplateHelperAbstract
 	{
 		$data['helper'] = $this;
 		$file   = '_ui_'.$ui.'.php';		
-		$path   = $this->_template->findPath($file);
-		
-		if ( $path ) 
-		{
-			$data = KConfig::unbox($data);
-			$file = $path.'/'.$file;
-			return (string) $this->_template->loadTemplate('_ui_'.$ui, $data);
-		}	
+		$data = KConfig::unbox($data);
+		return (string) $this->_template->loadTemplate('_ui_'.$ui, $data);
 	}
 }
 ?>

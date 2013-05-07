@@ -36,8 +36,7 @@ class ComNotificationsControllerNotification extends ComBaseControllerService
      */ 
     public function __construct(KConfig $config)
     {
-        parent::__construct($config);
-        
+        parent::__construct($config);        
     }
         
    /**
@@ -51,7 +50,7 @@ class ComNotificationsControllerNotification extends ComBaseControllerService
 	protected function _initialize(KConfig $config)
 	{
 		$config->append(array(			
-			'behaviors'	=> array('ownable'),
+			'behaviors'	=> array('ownable', 'serviceable'=>array('except'=>array('add','edit'))),
             'request'   => array('oid'=>'viewer')
 		));
 	
@@ -89,10 +88,14 @@ class ComNotificationsControllerNotification extends ComBaseControllerService
                 
 		$context->query = $this->actor->getNotifications()->getQuery();
         
-        $set = parent::_actionBrowse($context)->order('createdOn','DESC');
+        $set = parent::_actionBrowse($context)->order('creationTime','DESC');
           
-        if ( $this->layout != 'popover' ) {
+        if ( $this->getRequest()->get('layout') != 'popover' ) {
             $set->limit(0);
+        }
+        
+        if ( $this->new ) {
+        	$set->id( $this->actor->newNotificationIds->toArray() );
         }
         
         //only zero the notifications if the viewer is the same as the 
@@ -124,11 +127,11 @@ class ComNotificationsControllerNotification extends ComBaseControllerService
     /**
      * Checks if this controller can be executed by the viewer
      * 
-     * @param KCommandContext $context The CommandChain Context
-     *
+     * @param string $action The action being executed
+     * 
      * @return boolean
      */
-    public function canExecute(KCommandContext $context)
+    public function canExecute($action)
     {       
         if ( !$this->actor )
             return false;
@@ -143,6 +146,6 @@ class ComNotificationsControllerNotification extends ComBaseControllerService
         if ( $this->actor->authorize('administration') === false )
             return false;
             
-        return $this->__call('canExecute', array($context));    
+        return parent::canExecute($action);    
     }
 }

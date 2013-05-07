@@ -18,7 +18,7 @@
         </form>  
         <?php endif; ?>
         <?php 
-            $setting = @service('repos:notifications.setting')->findOrCreate(array(
+            $setting = @service('repos:notifications.setting')->findOrAddNew(array(
                 'person' => $viewer,
                 'actor'  => $item
             ))->reset();      

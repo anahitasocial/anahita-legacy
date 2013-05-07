@@ -1,53 +1,70 @@
 <?php
-/**
-* @version		$Id$
- * @category	Anahita
- * @copyright	Copyright (C) 2008 - 2010 rmdStudio Inc. and Peerglobe Technology Inc. All rights reserved.
- * @license		GNU GPLv3 <http://www.gnu.org/licenses/gpl-3.0.html>
- * @link     	http://www.anahitapolis.com
+
+/** 
+ * LICENSE: ##LICENSE##
+ * 
+ * @category   Anahita
+ * @package    Com_People
+ * @author     Arash Sanieyan <ash@anahitapolis.com>
+ * @author     Rastin Mehr <rastin@anahitapolis.com>
+ * @copyright  2008 - 2010 rmdStudio Inc./Peerglobe Technology Inc
+ * @license    GNU GPLv3 <http://www.gnu.org/licenses/gpl-3.0.html>
+ * @version    SVN: $Id: resource.php 11985 2012-01-12 10:53:20Z asanieyan $
+ * @link       http://www.anahitapolis.com
  */
 
-function PeopleBuildRoute( &$query ) {
-	
-	$segments = array();
-	
-	if ( isset($query['view']) ) {
-		$segments[] = $query['view'];
-		unset($query['view']);
-	} 
-
-	if ( isset($query['id']) && !is_array($query['id']) ) {
-		$segments[] = $query['id'];
-		unset($query['id']);
-	}
-	
-	if ( isset($query['get']) ) {
-		$segments[] = $query['get'];
-		unset($query['get']);
-	}
-	
-	if ( isset($query['type']) ) {
-		$segments[] = $query['type'];
-		unset($query['type']);
-	}
-	
-	return $segments;
-}
-
-function PeopleParseRoute( $segments ) {
-	
-	$vars = array();
-	
-	$vars['view']   = array_shift($segments);
-	
-	if ( count($segments) )
-		$vars['id'] = array_shift($segments);
-		
-	if ( count($segments) )
-		$vars['get'] = array_shift($segments);
-		
-	if ( count($segments) )
-		$vars['type'] = array_shift($segments);
-				
-	return $vars;
+class ComPeopleRouter extends ComActorsRouterDefault
+{
+    /**
+     * Build the route
+     *
+     * @param   array   An array of URL arguments
+     * @return  array   The URL arguments to use to assemble the subsequent URL.
+     */
+    public function build(&$query)
+    {
+    	if ( isset($query['uniqueAlias']) ) 
+    	{
+    		$query['id'] = $query['uniqueAlias'];
+    		unset($query['uniqueAlias']);    		
+    	}
+    	return parent::build($query);        
+    }
+        
+    /**
+     * Parse the segments of a URL.
+     *
+     * @param   array   The segments of the URL to parse.
+     * 
+     * @return  array   The URL attributes to be used by the application.
+     */    
+    public function parse(&$segments)
+    {
+    	$query = array();
+    	
+    	if ( count($segments) && !is_numeric($segments[0]) && 
+    			!in_array(KInflector::singularize($segments[0]), array('person','session','token'))) 
+    	{
+    		$query['username'] = $segments[0];
+    		//@TODO the parent::parse wants a numeric ID in order
+    		//to parse correctly. For now lets hack it
+    		$segments[0] = 10;
+    		$query['view'] = 'person';
+    		$query = array_merge(parent::parse($segments), $query);
+    		unset($query['id']);
+    	}
+    	
+    	else 
+    	{
+    	    $path  = implode('/', $segments);
+    	    if ( preg_match('/tokens\/.*/',$path) ) 
+    	    {
+    	        $query['view'] = 'token';
+    	        $query['id']   = array_pop($segments);
+    	    }
+    		else $query = parent::parse($segments);
+    	}
+   	
+    	return $query;
+    }
 }

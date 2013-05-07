@@ -67,44 +67,38 @@ class ComActorsViewSettingsHtml extends ComBaseViewHtml
 	 */
 	protected function _layoutPermissions()
 	{
-		$apps_resources = new KConfig();
-        $apps     = AnHelperArray::indexBy($this->apps,'id');
-        function __sort_apps__($app1, $app2)
-        {
-            return $app1->getDelegate()->getPriority() > $app2->getDelegate()->getPriority();    
-        }
-        usort($apps, "__sort_apps__");
-		$this->apps = $apps;
-		foreach($this->apps as $app) 
+		$components = array();
+		foreach($this->_state->getItem()->components as $component) 
 		{
-            $assignment  = $app->getAssignment($this->_state->getItem());
-		    
-		    //if the app assignment is set to always or has been
-		    //enabled then show the permission tab
-		    if ( $assignment == ComAppsDomainEntityApp::ACCESS_GLOBAL || $app->enabled($this->_state->getItem()))
-		    {
-    			$resources = KConfig::unbox($app->getDelegate()->getResources());
-    			
-    			if ( !empty($resources) ) 
-    			{
-    				foreach($resources as $name => $operations ) 
-    				{
-    					foreach($operations as $operation) 
-    					{
-    						//COM-<Name>-PERMISSION-<Resource>-<Operation>
-    						$label  = strtoupper('COM-'.$app->getName().'-PERMISSION'.'-'.$name.'-'.$operation);
-                            $apps_resources->append(array(
-                                $app->getName() => array(
-                                    translate($label) => $app->component.':'.$name.':'.$operation
-                                )
-                            ));					
-    					}
-    				}
-    			}
-		    }
+			$permissions = array();
+						
+			if ( !$component->isAssignable() ) {
+				continue;
+			}
+			
+			if ( !count($component->getPermissions()) ) continue;
+			
+			foreach($component->getPermissions() as $identifier => $actions ) 
+			{
+				if ( strpos($identifier,'.') === false ) {
+					$name = $identifier;
+					$identifier = clone $component->getIdentifier();
+					$identifier->path = array('domain','entity');
+					$identifier->name = $name;
+				}
+				$identifier = $this->getIdentifier($identifier);
+				foreach($actions as $action) {
+					$label  = JText::_(strtoupper('COM-'.$identifier->package.'-PERMISSION'.'-'.$identifier->name.'-'.$action));
+					$name 	= 'com_'.$identifier->package.':'.$identifier->name.':'.$action;
+					$permissions[] = new KConfig(array('label'=>$label, 'name'=>$name));
+				}
+			}
+			
+			$component->permissions = $permissions;
+			$components[] = $component;
 		}
 		
-		$this->apps_resources = $apps_resources;
+		$this->components = $components;
 	}
 		
 	/**
@@ -130,35 +124,28 @@ class ComActorsViewSettingsHtml extends ComBaseViewHtml
             'label' => JText::_('COM-ACTORS-PROFILE-EDIT-TAB-PERMISSIONS'),            
 		));
         
-        if ( $this->_state->getItem()->isFollowable() && $this->_state->getItem()->followRequesterIds->count() > 0 )
+        if ( $this->_state->getItem()->isFollowable() 
+        		&& $this->_state->getItem()->followRequesterIds->count() > 0 )
         {
                     
             $tabs->insert('requests', array(
                 'label' => JText::_('COM-ACTORS-PROFILE-EDIT-TAB-REQUESTS').'<span class="pull-right badge badge-important">'.$this->_state->getItem()->followRequesterIds->count().'</span>',
             ));            
         }
-        
 	
 		if ( $this->_state->getItem()->isAdministrable() ) {
 		    $tabs->insert('admins', array(
 		        'label' 	=> JText::_('COM-ACTORS-PROFILE-EDIT-TAB-ADMINS'),
 		    ));
 		}
-
+				
+		//lets get a list of components that this actor can enable
 		
-		//addable/removable apps
-		$enablable_apps = array();
-		
-		foreach($this->_state->apps as $app)
-		{
-		    $assignment  = $app->getAssignment($this->_state->getItem());
-		    
-		    if ( $assignment == ComAppsDomainEntityApp::ACCESS_OPTIONAL ) {
-		        $enablable_apps[] = $app;
-		    }
-		}
-		
-		$this->enablable_apps = $enablable_apps;
+		$this->enablable_apps = 
+			$this->getService('com://site/actors.domain.entityset.component', array(
+				'actor' 		=> $this->_state->getItem(),
+				'can_enable'   => true
+			));
 				
 		if ( count($this->enablable_apps) )
     		$tabs->insert('apps', array(

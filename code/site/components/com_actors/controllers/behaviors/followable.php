@@ -46,7 +46,8 @@ class ComActorsControllerBehaviorFollowable extends KControllerBehaviorAbstract
                   
         $config->mixer->registerActionAlias('follow',  'addfollower');
         
-        $config->mixer->registerActionAlias('unfollow','deletefollower');           
+        $config->mixer->registerActionAlias('unfollow','deletefollower');
+                   
     }
     
     /**
@@ -54,13 +55,14 @@ class ComActorsControllerBehaviorFollowable extends KControllerBehaviorAbstract
      * 
      * @param KCommandContext $context Context Parameter
      * 
-     * @return AnDomainEntityAbstract The actor
+     * @return void
      */
     protected function _actionAddrequester(KCommandContext $context)
-    {
+    {        
+        $this->getResponse()->status  = KHttpResponse::RESET_CONTENT;
         $this->getItem()->addRequester($this->actor);
         $this->createNotification(array('subject'=>$this->actor,'target'=>$this->getItem(),'name'=>'actor_request'));
-        return $this->getItem();
+        return $this->getItem();        
     }
     
     /**
@@ -68,23 +70,28 @@ class ComActorsControllerBehaviorFollowable extends KControllerBehaviorAbstract
      * 
      * @param KCommandContext $context Context Parameter
      * 
-     * @return AnDomainEntityAbstract The actor
+     * @return void
      */
     protected function _actionDeleterequester(KCommandContext $context)
     {
-        $this->getItem()->removeRequester($this->actor);
-        return $this->getItem();
+        $this->getResponse()->status = KHttpResponse::RESET_CONTENT;
+        
+        $this->getItem()->removeRequester($this->actor); 
+               
     }    
             
 	/**
-	 * Add a set of actors to the owners list of followers. 
+	 * Add $data->actor to the current actor resource. status is set to 
+     * KHttpResponse::RESET_CONTENT;
 	 * 
 	 * @param KCommandContext $context Context Parameter
 	 * 
-	 * @return AnDomainEntityAbstract The actor
+	 * @return void 
 	 */
 	protected function _actionAddfollower(KCommandContext $context)
-	{					
+	{
+        $this->getResponse()->status = KHttpResponse::RESET_CONTENT;
+        
 		if ( !$this->getItem()->leading( $this->actor ) )
 		{
 		    $this->getItem()->addFollower( $this->actor );
@@ -99,8 +106,8 @@ class ComActorsControllerBehaviorFollowable extends KControllerBehaviorAbstract
 		    //if the entity is not an adiminstrable actor (person)
 		    $this->createNotification(array('subject'=>$this->actor, 'target'=>$this->getItem(),'name'=>'actor_follow'));
 		}
-			
-		return $this->getItem();
+        
+        return $this->getItem();
 	}
 		
 	/**
@@ -108,25 +115,26 @@ class ComActorsControllerBehaviorFollowable extends KControllerBehaviorAbstract
 	 * 
 	 * @param KCommandContext $context Context Parameter
 	 * 
-	 * @return AnDomainEntityAbstract The actor
+	 * @return void
 	 */
 	protected function _actionDeletefollower(KCommandContext $context)
 	{
+        $this->getResponse()->status = KHttpResponse::RESET_CONTENT;
 		$this->getItem()->removeFollower( $this->actor );
-		return $this->getItem();
+        return $this->getItem();
 	}
-    
     
     /**
      * The viewers blocks the actor
      *
      * @param KCommandContext $context Context parameter
      *
-     * @return AnDomainEntityAbstract
+     * @return void
      */
     protected function _actionAddblocked(KCommandContext $context)
     {
-        $this->getItem()->addBlocked($this->actor);        
+        $this->getResponse()->status = KHttpResponse::RESET_CONTENT;
+        $this->getItem()->addBlocked($this->actor);
         return $this->getItem();
     }
     
@@ -135,11 +143,12 @@ class ComActorsControllerBehaviorFollowable extends KControllerBehaviorAbstract
      *
      * @param KCommandContext $context Context parameter
      * 
-     * @return AnDomainEntityAbstract
+     * @return void
      */
     protected function _actionDeleteblocked($context)
     {
-        $this->getItem()->removeBlocked($this->actor);        
+        $this->getResponse()->status = KHttpResponse::RESET_CONTENT;
+        $this->getItem()->removeBlocked($this->actor);    
         return $this->getItem();
     }        
     
