@@ -57,7 +57,7 @@ class ComStoriesTemplateHelperParser extends KTemplateHelperAbstract
 
 		JFactory::getLanguage()->load('com_stories');
 		
-		$this->_template->addPath(KConfig::unbox($config->paths), true);
+		$this->_template->addSearchPath(KConfig::unbox($config->paths), true);
 		
 	}
 	
@@ -76,7 +76,7 @@ class ComStoriesTemplateHelperParser extends KTemplateHelperAbstract
 			'filters'   => array('alias','shorttag'),
 		    'alias'     => array(
                     '@escape('           => 'htmlspecialchars(',
-		            '@route('            => 'LibBaseHelperUrl::getRoute(',
+		            '@route('            => 'JRoute::_(',
 		            '@name(' 		 	 => '$this->renderHelper(\'com://site/stories.template.helper.story.actorName\',',
 		            '@possessive(' 		 => '$this->renderHelper(\'com://site/stories.template.helper.story.possessiveNoune\',$story,',
 		            '@link(' 			 => '$this->renderHelper(\'com://site/stories.template.helper.story.link\','
@@ -119,9 +119,9 @@ class ComStoriesTemplateHelperParser extends KTemplateHelperAbstract
             'type'      => $story->getIdentifier()->name
         );
         
-        $path = JPATH_ROOT.'/components/'.$story->component.'/templates/stories/'.$story->name.'.php';          
-        
-        $data = $this->_parseData( $this->_render($story, $path, $data) );
+        $path   = JPATH_ROOT.'/components/'.$story->component.'/templates/stories/'.$story->name.'.php';          
+        $output = $this->_render($story, $path, $data);
+        $data = $this->_parseData($output);
         
         $data['commands'] = $commands;
         

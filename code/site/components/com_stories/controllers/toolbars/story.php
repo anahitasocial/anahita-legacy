@@ -36,23 +36,22 @@ class ComStoriesControllerToolbarStory extends ComBaseControllerToolbarDefault
     {
         $story = $this->getController()->getItem();
                 
-        if ( $story->authorize('vote') )
+        if ( $story->authorize('vote') ) {
+            $this->getController()->setItem($story->object);            
+            $this->addCommand('vote');            
+            $this->getController()->setItem($story);
+        }
+        
+        if ( $story->authorize('add.comment') ) 
         {
-            $entity = $story->hasObject() ? $story->object : $story;             
-        
-            if ( !is_array($entity) )
-                $this->addCommand('vote');
-        }
-        
-        $commentable = $story->authorize('add.comment');
-        
-        if ( $commentable !== false ) {
-            if ( $story->hasObject() && is_array($story->object) )
-                $commentable = false;
-        }
-        
-        if( $commentable ) {
-            $this->addCommand('comment');
+            $this->getController()->setItem($story->object);
+            
+            $this->addCommand('comment')
+                 ->getCommand('comment')
+                 ->storyid($story->id)
+                ;
+            
+            $this->getController()->setItem($story);
         }
         
         if ( $story->numOfComments > 10 ) {
@@ -92,8 +91,8 @@ class ComStoriesControllerToolbarStory extends ComBaseControllerToolbarDefault
         $command->append(array('label'=>JText::_('LIB-AN-ACTION-COMMENT')))
             ->href($entity->getURL())
             ->class('comment')
-            ->storyid($entity->id);     
-    }   
+            ;
+    }
      
     /**
      * Delete Command for a story
@@ -105,10 +104,12 @@ class ComStoriesControllerToolbarStory extends ComBaseControllerToolbarDefault
     protected function _commandDelete($command)
     {
         $entity = $this->getController()->getItem();
-    
+        $link   = 'option=com_stories&view=story';
+        foreach($entity->getIds() as $id) {
+            $link .= '&id[]='.$id;
+        }
         $command->append(array('label'=>JText::_('LIB-AN-ACTION-DELETE')))
-        ->href($entity->getStoryURL(true).'&action=delete')
+        ->href($link.'&action=delete')
         ->setAttribute('data-trigger','Remove');
     }
-        
 }

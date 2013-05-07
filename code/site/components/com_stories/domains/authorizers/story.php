@@ -63,21 +63,21 @@ class ComStoriesDomainAuthorizerStory extends LibBaseDomainAuthorizerDefault
 	 * @return boolean
 	 */
 	protected function _authorizeAddComment($context)
-	{
+	{        
 		if ( isset($this->_entity->object) ) 
 		{
 			if ( is_array($this->_entity->object) )	
 				return false;
 
-			if ( !$this->_entity->object->isAuthorizer() ) return false;
+			if ( !$this->_entity->object->isAuthorizer() ) 
+                return false;
 			
 			return $this->_entity->object->authorize('add.comment');
-		}
-		
-		if ( in_array($this->_entity->name, self::$black_list) )
-			return false;
-		
-        return parent::_authorizeAddComment($context);
+		} 
+        
+        else {
+            return false;   
+        }
 	}	
 	
 	/**
@@ -88,20 +88,21 @@ class ComStoriesDomainAuthorizerStory extends LibBaseDomainAuthorizerDefault
 	 * @return boolean
 	 */
 	protected function _authorizeVote($context)
-	{
+	{       
 		if ( isset($this->_entity->object) ) {
-			if ( is_array($this->_entity->object) )	
+			
+            if ( is_array($this->_entity->object) )	
 				return false;
 			
-			if ( !$this->_entity->object->isAuthorizer() ) return false;
+			if ( !$this->_entity->object->isAuthorizer() ) 
+                return false;
 						
 			return $this->_entity->object->authorize('vote');
 		}
-		
-		if ( in_array($this->_entity->name, self::$black_list) )
-			return false;
-			
-		return !$this->_viewer->guest();
+        
+        else {
+            return false;   
+        }
 	}
 	
 	/**
@@ -112,18 +113,23 @@ class ComStoriesDomainAuthorizerStory extends LibBaseDomainAuthorizerDefault
 	 * @return boolean
 	 */
 	protected function _authorizeDeleteComment($context)
-	{
+	{        
 		$comment = $context->comment;
+        
 		//guest can't delete
 		if ( $this->_viewer->guest() )
 			return false;
 
-		//if story has an object forwar authorization to the object	
-		if ( !empty($story->object) )
-			return $story->object->authorize('delete.comment');
-		
-		if ( $this->_viewer->admin() || $this->_viewer->eql($comment->author) || $this->_entity->owner->authorize('administration') )
-			return true;
+        
+        if ( isset($this->_entity->object) ) {
+            if ( is_array($this->_entity->object) ) 
+                return false;
+
+            if ( !$this->_entity->object->isAuthorizer() ) 
+                return false;
+            
+            return $this->_entity->object->authorize('delete.comment');
+        } 
 						
 		return false;
 	}

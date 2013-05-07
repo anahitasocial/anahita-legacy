@@ -69,15 +69,7 @@ class ComStoriesViewStoryHtml extends ComBaseViewHtml
                     break;
 		    }
 		}
-		elseif ( empty($story->object) && $story->numOfComments > 0 ) 
-		{
-			$comments = $story->comments->limit(10);
-			$comments->order('creationTime', 'DESC');
-			$tmp = $comments->getRepository()->fetch($comments->getQuery(), AnDomain::FETCH_ENTITY_LIST);
-			$comments->reset();
-			$comments = array_reverse($tmp);
-		}
-
+		
  		$data['commands']  = $this->getTemplate()->renderHelper('toolbar.commands', 'list');
 		$data['comments']  = $comments;
 		

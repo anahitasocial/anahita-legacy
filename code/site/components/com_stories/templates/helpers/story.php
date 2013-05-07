@@ -97,6 +97,6 @@ class ComStoriesTemplateHelperStory extends KTemplateHelperAbstract
 			return implode(', ', $links);
 		}
 		
-		return '<a href="'.LibBaseHelperUrl::getRoute($node->getURL()).$query.'">'.$node->getName().'</a>';	
+		return '<a href="'.JRoute::_($node->getURL()).$query.'">'.$node->getName().'</a>';	
 	}	
 }

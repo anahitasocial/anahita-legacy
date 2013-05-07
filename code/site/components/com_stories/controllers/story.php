@@ -14,9 +14,6 @@
  * @link       http://www.anahitapolis.com
  */
 
-//set a max limit for the story
-define('STORY_MAX_LIMIT', 5000);
-
 /**
  * Story Controller
  * 
@@ -29,19 +26,22 @@ define('STORY_MAX_LIMIT', 5000);
  * @link       http://www.anahitapolis.com
  */
 class ComStoriesControllerStory extends ComBaseControllerService
-{
-	/**
-	 * Constructor.
-	 *
-	 * @param 	object 	An optional KConfig object with configuration options
-	 */
-	public function __construct(KConfig $config)
-	{
-		parent::__construct($config);
-		
-		$this->getCommentController()->registerCallback('after.add', array($this, 'createStoryCommentNotification'));		
-	}
-		
+{	
+    /** 
+     * Constructor.
+     *
+     * @param KConfig $config An optional KConfig object with configuration options.
+     * 
+     * @return void
+     */ 
+    public function __construct(KConfig $config)
+    {
+        parent::__construct($config);
+        
+        $this->_state->insert('name');
+    }
+        	
+    
     /**
      * Initializes the options for the object
      *
@@ -54,104 +54,30 @@ class ComStoriesControllerStory extends ComBaseControllerService
 	{
         $config->append(array(
             'behaviors' => array(
-                'ownable' => array('default'=>get_viewer()),
-                'votable'
+                'serviceable'  => array('except'=>array('edit')),
+                'ownable'      => array('default'=>get_viewer())
             )
         ));
         
 		parent::_initialize($config);
-		
-		//reset the commentable behavior
-		AnHelperArray::unsetValues($config->behaviors, 'commentable');
-		$config->behaviors->append(array('commentable'=>array('publish_comment'=>false)));
-		
-		$config->behaviors->append(array('publisher'));
 	}
-				
+    
 	/**
-	 * Post a story
+	 * Creates a new story. This is an internal method and can not be
+	 * called from outside. 
 	 * 
-	 * @param  KCommandContext $context
-	 * @return string;
+	 * Check 
+	 * ComStoriesControllerPermissionStory::canAdd
+	 * 
+	 * (non-PHPdoc)
+	 * @see ComBaseControllerService::_actionAdd()
 	 */
-	protected function _actionPost($context)
+	protected function _actionAdd(KCommandContext $context)
 	{
-		$data 	 = $context->data;
-		$actor   = $this->actor;
-		$viewer	 = get_viewer();
-		
-		if ( $data->private_message && is_person($actor) && !$actor->eql($viewer) ) {
-			$name = 'private_message';
-		} else
-			$name = 'story_add';
-			
-		$component = $actor->component ;
-		
-		if ( !preg_match('/^(?!\s*$).+/', $data->body) ) {
-			return false;	
-		}
-		
-		$story = $this->setItem($this->createStory(array(
-		    'component' => $component,
-			'name'		=> $name,
-			'subject'	=> get_viewer(),
-			'target'	=> $actor,
-			'owner'		=> $actor,
-			'body'		=> $data['body']
-		)))->getItem();
-          
-        if ( !$story->sanitizeData('body', array('length'=>STORY_MAX_LIMIT))
-                    ->validateData('body', 'required') ) 
-        
-           return false;
-                
-		if ( $name == 'private_message' ) {
-			$this->getItem()->setAccess(array($actor->id, $viewer->id));
-		}    				
-
-		if ( $this->commit($context) === false ) {
-		    return false;
-		}
-				
-		$this->actor = $actor;
-		$output      = $this->setView('story')->layout('list')->display();
-			
-		$helper = clone $this->getView()->getTemplate()->getHelper('parser');
-		
-		$data   = array(
-			'story' 	=> $story,
-			'actor' 	=> $actor,
-			'viewer'	=> $viewer,
-			'channels'	=> $data->channels,
-			'data'		=> $helper->parse($story) 
-		);
-		
-		if ( $name != 'private_message' )
-		    dispatch_plugin('connect.onPostStory', $data);
-        
-
-	    $subscribers = array();
-        
-	    if ( $actor->isSubscribable() ) {
-	        $subscribers   = $actor->subscriberIds->toArray();
-            $subscribers[] = $actor;
-	    }
-	    else 
-            $subscribers = array($actor);
-            
-	    $notifcation = $this->createNotification(array(
-	        'component' => $component,   
-	        'name'      => $name,
-	        'target'    => $actor,
-	        'object'         => $story,
-	        'subscribers'    => $subscribers
-	    ))
-        ->setType('post', array('new_post'=>true))
-	    ;
-
-		return $output;
+	    $data = $context->data;
+        return $this->getRepository()->create($data->toArray());
 	}
-		
+	
     /**
      * Browse action
      * 
@@ -160,7 +86,7 @@ class ComStoriesControllerStory extends ComBaseControllerService
      * @return void
      */
 	protected function _actionBrowse($context)
-	{		
+	{				   
 		$query 	  = $this->getRepository()->getQuery()			
 					->limit( $this->start == 0 ?  20 : 20, $this->start );
 
@@ -174,26 +100,24 @@ class ComStoriesControllerStory extends ComBaseControllerService
 		else {
 			$query->owner($this->actor);
 		}
-	
-		$apps 		  =	 $this->getService('repos:apps.app')->fetchSet();
-		
-        $summary_keys =  new KConfig();
-		
-        if ( count($apps ) ) 
-        {
-    		foreach($apps as $app) 
-            {
-    			$context = new KCommandContext();
-    			$app->getDelegate()->setStoryOptions($context);
-    			$summary_keys->append(array(
-    				$app->component => pick($context->summarize, array())
-    			));
-    		}
+
+        $query->aggregateKeys($this->getService('com://site/stories.domain.aggregations'));
+        
+        $query->order('creationTime','desc');
+        
+        if ( $this->component ) {
+            $query->clause()->component( (array)KConfig::unbox($this->component) );
         }
-		
-		$keys = KConfig::unbox($summary_keys);
-		        
-        return $this->setList($query->summerize($keys)->toEntitySet())
+        
+        if ( $this->name ) {
+            $query->clause()->name( (array)KConfig::unbox($this->name) );
+        }    
+        
+        if ( $this->subject ) {    
+            $query->clause()->where('subject.id','IN', (array)KConfig::unbox($this->subject));   
+        }        
+
+        return $this->setList($query->toEntitySet())
                     ->getList();
 	}
 	
@@ -204,31 +128,8 @@ class ComStoriesControllerStory extends ComBaseControllerService
 	 */
 	protected function _actionDelete($context)
 	{
+	    $context->response->status = KHttpResponse::NO_CONTENT;
         $this->getItem()->delete();
-        $this->setRedirect($this->getItem()->owner->getURL());
-	}
-	
-	/**
-	 * Creates a notifiction after a comment
-	 * 
-	 * @return void
-	 */
-	public function createStoryCommentNotification(KCommandContext $context)
-	{
-		$entity = $context->caller->getItem();
-        
-		$owners = array($entity->parent->target->id);
-		
-		if ( $entity->parent->isSubscribable() ) {
-		    $owners[] = $entity->parent->subscriberIds->toArray();
-		}
-		
-		$notification = $this->createNotification(array(
-			'name'		      => 'story_comment',
-		    'subscribers'     => $owners,			
-			'comment'	      => $entity			
-		));
-		
-		$notification->save();
+        $context->response->setRedirect(JRoute::_($this->getItem()->owner->getURL()));
 	}
 }
