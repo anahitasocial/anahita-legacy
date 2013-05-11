@@ -58,6 +58,6 @@ jimport( 'joomla.utilities.utility' );
 jimport( 'joomla.language.language');
 jimport( 'joomla.utilities.string' );
 // Anahita
-jimport( 'anahita.anahita');
+require_once( JPATH_LIBRARIES.'/anahita/anahita.php');
 
 ?>
