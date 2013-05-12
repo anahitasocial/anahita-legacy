@@ -376,11 +376,13 @@ class JInstallationHelper
         
         $story   = KService::get('repos://site/stories')->getEntity()
                 ->setData(array(
-                    'name'     => 'node_add',
-                    'object'   => $note,
-                    'target'   => $person,
-                    'owner'    => $person,
-                    'subject'  => $person                      
+                    'component' => 'com_notes',
+                    'name'      => 'note_comment',
+                    'object'    => $note,
+                    'comment'   => $comment,
+                    'target'    => $person,
+                    'owner'     => $person,
+                    'subject'   => $person                      
                 ));
         
         $entities = array();
