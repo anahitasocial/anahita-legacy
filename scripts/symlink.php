@@ -8,12 +8,6 @@ function anahita_symlinker($src, $root)
         $src.DS.'vendors/mc/rt_missioncontrol_j15' => $root.DS.'administrator/templates/rt_missioncontrol_j15',            
     );
     
-//    $paths = get_entries($src.DS.'vendors/joomla',array(
-//        'skips'     => array('CHANGELOG.php','CREDITS.php','index2.php','INSTALL.php','LICENSE.php','LICENSES.php','COPYRIGHT.php'),
-//        'files_only'=> true
-//    ));
-    
-    
     $paths = get_paths($src.DS.'vendors/joomla',$root);
    
     $paths = array_merge($paths, get_paths($src.DS.'vendors/nooku',$root));
