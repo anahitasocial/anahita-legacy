@@ -288,8 +288,6 @@ class JInstallationHelper
 		
 		$adminLogin = $vars['adminLogin'];
 		$adminName  = $vars['adminName'];
-		
-		$vars['adminLogin'] = 'admin';
 				
 		// create the admin user
 		$installdate 	= date('Y-m-d H:i:s');
@@ -331,30 +329,63 @@ class JInstallationHelper
 		}
 		
 		//Anahita Installation
-			
-		$now     = gmdate('Y-m-d H:i:s');
-		$email   = $db->Quote($adminEmail);
-        $queries = array();
-
-        $queries[] = "INSERT INTO `#__anahita_nodes` VALUES
-        (1, 'ComActorsDomainEntityActor,ComPeopleDomainEntityPerson,com:people.domain.entity.person', 'com_people', 'admin', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '[]', NULL, NULL, NULL, NULL, NULL, '$now', NULL, '$now', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, '', '', '', '', NULL, NULL, NULL, NULL, '', '', '', 0, 0, '', '', NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 62, 'admin', 'Super Administrator', $email, '$now', 'admin', '', NULL, 0, '', 'public', '[]'),
-        (2, 'ComAppsDomainEntityApp,com:apps.domain.entity.app', 'com_stories', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-        (3, 'ComMediumDomainEntityMedium,ComStoriesDomainEntityStory,com:stories.domain.entity.story', 'com_people', 'story_add', 'story_add', 'Hello World', NULL, NULL, 'com:people.domain.entity.person', 1, 1, 1, 4, 1, '$now', NULL, NULL, NULL, '[]', NULL, NULL, NULL, NULL, NULL, '$now', 1, '$now', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, '1', NULL, NULL, NULL, 0, 0, '', '', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'public', '[]'),
-        (4, 'ComBaseDomainEntityComment,com:stories.domain.entity.comment', 'com_people', NULL, NULL, 'Hello Universe', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 'com:stories.domain.entity.story', NULL, NULL, '$now', 1, '$now', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);";
-        
-        $queries[] = "INSERT INTO `#__anahita_edges` (`id`, `type`, `node_a_id`, `node_a_type`, `node_b_id`, `node_b_type`, `meta`, `created_on`, `created_by`, `modified_on`, `modified_by`, `ordering`, `start_date`, `end_date`) VALUES
-        (1, 'ComBaseDomainEntitySubscription,com:base.domain.entity.subscription', 1, 'com:people.domain.entity.person', 3, 'com:stories.domain.entity.story', NULL, '$now', 1, '$now', 1, NULL, NULL, NULL);";
-        
-        foreach($queries as $query)
-        {
-            $db->setQuery($query);
-            if (!$db->query())
-            {
-                echo $db->getErrorMsg();
-                return;
-            }
-        }
 		
+        require_once( JPATH_LIBRARIES.'/anahita/anahita.php');        
+        
+        //instantiate anahita and nooku
+        Anahita::getInstance(array(
+            'cache_prefix'  => uniqid(),
+            'cache_enabled' => false
+        ));
+        
+        KServiceIdentifier::setApplication('site' , JPATH_SITE);
+        KServiceIdentifier::setApplication('admin', JPATH_ADMINISTRATOR);
+        
+        KLoader::addAdapter(new AnLoaderAdapterComponent(array('basepath'=>JPATH_BASE)));
+        KServiceIdentifier::addLocator( KService::get('anahita:service.locator.component') );
+
+        KLoader::addAdapter(new KLoaderAdapterPlugin(array('basepath' => JPATH_ROOT)));
+        KServiceIdentifier::addLocator(KService::get('koowa:service.locator.plugin'));
+        KService::setAlias('anahita:domain.space',          'com:base.domain.space');
+        KService::set('koowa:database.adapter.mysqli', KService::get('koowa:database.adapter.mysqli', array('connection'=>$db->_resource)));
+        KService::set('anahita:domain.store.database', KService::get('anahita:domain.store.database', array('adapter'=>KService::get('koowa:database.adapter.mysqli'))));
+        
+        $person = KService::get('repos://site/people')
+            ->getEntity()
+            ->setData(array(
+                'name'     => $adminName,
+                'userId'   => 62,
+                'username' => $adminLogin,
+                'userType' => 'Super Administrator',
+                'email'    => $adminEmail
+            ));
+            
+        $note = KService::get('repos://site/notes')
+            ->getEntity()
+            ->setData(array(
+                'author' => $person,
+                'owner'  => $person,
+                'body'   => 'Welcome to Anahita!'
+            ));
+            
+        $comment = $note->addComment(array(
+            'author'    => $person ,
+            'body'      => 'The best Social Platform there is',
+            'component' => 'com_notes'
+        ));
+        
+        $story   = KService::get('repos://site/stories')->getEntity()
+                ->setData(array(
+                    'name'     => 'node_add',
+                    'object'   => $note,
+                    'target'   => $person,
+                    'owner'    => $person,
+                    'subject'  => $person                      
+                ));
+        
+        $entities = array();
+        $comment->save($entities);
+        
 		return true;
 	}
 
