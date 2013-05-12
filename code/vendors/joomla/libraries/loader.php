@@ -42,7 +42,7 @@ class JLoader
 		if (!isset($paths[$keyPath]))
 		{
 			if ( ! $base ) {
-				$base =  dirname( __FILE__ );
+				$base =  JPATH_LIBRARIES;
 			}
 
 			$parts = explode( '.', $filePath );
