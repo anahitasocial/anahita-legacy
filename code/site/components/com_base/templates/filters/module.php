@@ -37,6 +37,7 @@ class ComBaseTemplateFilterModule extends KTemplateFilterAbstract implements KTe
      */
     protected function _initialize(KConfig $config)
     {
+        jimport('joomla.application.module.helper');
         $config->append(array(
                 'priority' => KCommand::PRIORITY_LOW,
         ));
