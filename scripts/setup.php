@@ -14,7 +14,7 @@ if ( empty($target) ) {exit(0);}
 $src    = realpath(dirname(__FILE__).'/../code');
 
 if  ( !file_exists($target) ) {
-    Installer\ln("Creating folder $target");    
+    IO\write("Creating folder $target");    
     mkdir($target,0755);
 }
 
@@ -78,11 +78,11 @@ if ( $value )
     include_once (JPATH_LIBRARIES . '/joomla/import.php');
     include_once (JPATH_BASE."/installation/installer/helper.php");
     $database['name'] = IO\read('Enter Database Name: ', array('key'=>'db_name'));
-    $database['host'] = IO\read('Enter Database Host: ', array('key'=>'db_host','default'=>'localhost')); 
+    $database['host'] = IO\read('Enter Database Host: ', array('key'=>'db_host','default'=>'127.0.0.1')); 
     $database['port'] = IO\read('Enter Database Port: ', array('key'=>'db_port','default'=>3306));  
     $database['user'] = IO\read('Enter Database User: ', array('key'=>'db_user'));
     $database['password'] = IO\read('Enter Database Password: ', array('key'=>'db_password'));
-    $database['prefix']   = IO\read('Enter Database Prefix: ', array('key'=>'db_prefix','default'=>'jos_')).'_';
+    $database['prefix']   = IO\read('Enter Database Prefix: ', array('key'=>'db_prefix','default'=>'jos')).'_';
     IO\write('connecting to database...');
     IO\write($database);
     $errors		 = array();
