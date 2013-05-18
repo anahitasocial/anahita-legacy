@@ -2,6 +2,17 @@
 
 namespace IO;
 
+if ( !function_exists('readline') )
+{
+    function readline($text)
+    {
+        print $text;
+        $f=popen("read; echo \$REPLY","r");
+        $input=fgets($f,100);
+        pclose($f);
+        return $input;       
+    }
+}
 function write($text) 
 {
 	if ( is_array($text) ) 
@@ -44,7 +55,7 @@ function read($text, $options = array())
     while(true) 
     {
         $break = true;
-        $value = \readline($text);
+        $value = readline($text);
         $value = $value ? $value : $default;
         if ( $required && empty($value) ) {
             write('No value entered. Please enter a value ');
