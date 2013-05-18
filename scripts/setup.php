@@ -101,40 +101,51 @@ if ( $value )
         IO\write(str_repeat('*', 80));
         exit(1);
     }
-    if ( $db->select($database['name']) ) {
-        IO\write('dropping existing database...');
-        JInstallationHelper::deleteDatabase($db, $database['name'], $database['prefix'], $errors);
-    }
-    IO\write('creating new database...');
-    JInstallationHelper::createDatabase($db, $database['name'],true);    
-    $db->select($database['name']);
-    
-    $sql_files = array(JPATH_ROOT."/installation/sql/mysql/schema.sql",JPATH_ROOT."/installation/sql/mysql/install.sql");
-    IO\write('populating database...');
-    array_walk($sql_files, function($file) use($db) {
-        JInstallationHelper::populateDatabase(&$db, $file, $errors);
-    });
-    $admin_name = IO\read('Enter admin name: ', array('key'=>'admin_name','required'=>true));    
-    $admin_passwd = IO\read('Enter admin password: ', array('key'=>'admin_password','required'=>true));
-    $admin_email  = IO\read('Enter admin email: ', array('key'=>'admin_email','required'=>true));
-    date_default_timezone_set('GMT');
-    $vars = array(
-        'DBhostname' => $database['host'],
-        'DBuserName' => $database['user'],
-        'DBpassword' => $database['password'],
-        'DBname' 	 => $database['name'],
-        'DBPrefix'   => $database['prefix'],
-        'adminName'  => $admin_name,
-        'adminEmail' => $admin_email,
-        'adminPassword' => $admin_passwd
-    );   
-    if ( !JInstallationHelper::createAdminUser($vars) )
+    $db_exists = $db->select($database['name']);
+    if ( $db_exists )
     {
-        IO\write(str_repeat('*', 80));
-        IO\write("Counldn't create an admin user. Make sure you have entered a correct email");
-        IO\write(str_repeat('*', 80));
-        exit(1);
-    }     
+        $drop_db = IO\read('Database exists. Drop database ?', array('key'=>'drop_db','boolean'=>true,'default'=>'n'));
+        if ( $drop_db )
+        {
+            IO\write('dropping existing database...');
+            JInstallationHelper::deleteDatabase($db, $database['name'], $database['prefix'], $errors);
+            $db_exists = false;
+        }
+    }
+    if ( !$db_exists ) 
+    {
+        IO\write('creating new database...');
+        JInstallationHelper::createDatabase($db, $database['name'],true);
+        $db->select($database['name']);
+        
+        $sql_files = array(JPATH_ROOT."/installation/sql/mysql/schema.sql",JPATH_ROOT."/installation/sql/mysql/install.sql");
+        IO\write('populating database...');
+        array_walk($sql_files, function($file) use($db) {
+            JInstallationHelper::populateDatabase(&$db, $file, $errors);
+        });
+        $admin_name = IO\read('Enter admin name: ', array('key'=>'admin_name','required'=>true));
+        $admin_passwd = IO\read('Enter admin password: ', array('key'=>'admin_password','required'=>true));
+        $admin_email  = IO\read('Enter admin email: ', array('key'=>'admin_email','required'=>true));
+        date_default_timezone_set('GMT');
+        $vars = array(
+                'DBhostname' => $database['host'],
+                'DBuserName' => $database['user'],
+                'DBpassword' => $database['password'],
+                'DBname' 	 => $database['name'],
+                'DBPrefix'   => $database['prefix'],
+                'adminName'  => $admin_name,
+                'adminEmail' => $admin_email,
+                'adminPassword' => $admin_passwd
+        );
+        if ( !JInstallationHelper::createAdminUser($vars) )
+        {
+            IO\write(str_repeat('*', 80));
+            IO\write("Counldn't create an admin user. Make sure you have entered a correct email");
+            IO\write(str_repeat('*', 80));
+            exit(1);
+        }        
+    }
+    jimport('joomla.user.helper');
     write_config(array(
         'site'          => JPATH_ROOT,
         'db_host'       => $database['host'],
@@ -146,11 +157,15 @@ if ( $value )
     ));
     exec("rm -rf ".JPATH_ROOT."/installation");
     IO\write(str_repeat('*', 80));
-    IO\write("Congradulation you're done. Try logging with the following credentials");
-    IO\write(array(
+    IO\write("Congradulation you're done.");
+    if ( !$db_exists )
+    {
+        IO\write("Please login-in with the following credentials");
+        IO\write(array(
         'username' => 'admin',
         'password' => $admin_passwd
-    ));   
+        ));
+    }
 }
 
 function write_config($config)
