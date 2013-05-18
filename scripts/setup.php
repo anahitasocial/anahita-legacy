@@ -136,6 +136,7 @@ if ( $value )
         exit(1);
     }     
     write_config(array(
+        'site'          => JPATH_ROOT,
         'db_host'       => $database['host'],
         'db_username'   => $database['user'],
         'db_password'   => $database['password'],
@@ -185,8 +186,8 @@ class JConfig {
 	/* Server Settings */
 	var \$secret = '$secret'; 		//Change this to something more secure
 	var \$gzip = '0';
-	var \$error_reporting = '633';
-	var \$helpurl = 'http://help.joomla.org';
+	var \$error_reporting = '0';
+	var \$helpurl = '';
 	var \$xmlrpc_server = '1';
 	var \$ftp_host = '';
 	var \$ftp_port = '';
@@ -194,8 +195,8 @@ class JConfig {
 	var \$ftp_pass = '';
 	var \$ftp_root = '';
 	var \$ftp_enable = '';
-	var \$tmp_path	= '/tmp';
-	var \$log_path	= '/var/logs';
+	var \$tmp_path	= '$site/tmp';
+	var \$log_path	= '$site/logs';
 	var \$offset = '0';
 	var \$live_site = ''; 					// Optional, Full url to Joomla install.
 	var \$force_ssl = 0;		//Force areas of the site to be SSL ONLY.  0 = None, 1 = Administrator, 2 = Both Site and Administrator
