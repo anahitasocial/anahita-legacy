@@ -131,7 +131,7 @@ class ComBaseControllerToolbarDefault extends ComBaseControllerToolbarAbstract
         $command->append(array('label' =>$label));
         
         $command
-            ->href($entity->getURL()."&$action_key=$action_value")
+            ->href(JRoute::_($entity->getURL()."&$action_key=$action_value"))
             ->class('vote-action '.$action_value.' btn btn-mini')
             ->setAttribute('data-trigger','VoteLink')
             ->setAttribute('data-votelink-toggle', $btn_2_id)
