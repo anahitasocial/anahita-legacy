@@ -54,6 +54,8 @@ class LibBaseControllerResource extends LibBaseControllerAbstract
         if($config->dispatch_events) {
             $this->mixin(new KMixinToolbar($config->append(array('mixer' => $this))));
         }
+        
+        JFactory::getLanguage()->load($this->getIdentifier()->package);
     }
         
     
@@ -110,9 +112,7 @@ class LibBaseControllerResource extends LibBaseControllerAbstract
             if ( is_string($result) || $result === false ) {
                 $context->response->setContent($result.' ');
             }
-        }
-        
-        JFactory::getLanguage()->load($this->getIdentifier()->package);
+        }                
         
         $view = $this->getView();
         
