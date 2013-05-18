@@ -85,10 +85,10 @@ class ComBaseDomainBehaviorCommentable extends AnDomainBehaviorAbstract
 	{
 		$entity = $config->entity;
 		//set the last commentor to the author
-		if ( get_viewer() )
+		if ( $this->getService()->has('com:people.viewer') )
 			$config->append(array(
 				'data'=>array(
-					'lastCommenter'		=> get_viewer()
+					'lastCommenter'		=> $this->getService('com:people.viewer')
 				)
 			));
 	}

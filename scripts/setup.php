@@ -9,7 +9,14 @@ parse_str($query, $_GET);
 function getopts($key, $default = null) {
     return isset($_GET[$key]) ? $_GET[$key] : $default;
 }
-
+if ( strpos($target,'/') !== 0 ) 
+{
+    $parts = explode('/', './'.$target);
+    $parts = array_filter($parts);
+    array_pop($parts);
+    $parts  = implode('/', $parts);
+    $target = realpath($parts).'/'.$target;
+}
 if ( empty($target) ) {exit(0);}
 $src    = realpath(dirname(__FILE__).'/../code');
 

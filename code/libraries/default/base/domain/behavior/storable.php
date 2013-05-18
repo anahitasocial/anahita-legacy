@@ -60,7 +60,7 @@ class LibBaseDomainBehaviorStorable extends AnDomainBehaviorAbstract
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-             'storage' => 	$this->getService('plg:storage.default')
+             'storage' => $this->getService('plg:storage.default')
         ));
         
         parent::_initialize($config);

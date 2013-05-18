@@ -349,7 +349,7 @@ class JInstallationHelper
         KService::setAlias('anahita:domain.space',          'com:base.domain.space');
         KService::set('koowa:database.adapter.mysqli', KService::get('koowa:database.adapter.mysqli', array('connection'=>$db->_resource)));
         KService::set('anahita:domain.store.database', KService::get('anahita:domain.store.database', array('adapter'=>KService::get('koowa:database.adapter.mysqli'))));
-        
+        KService::set('plg:storage.default', new KObject());
         $person = KService::get('repos://site/people')
             ->getEntity()
             ->setData(array(
