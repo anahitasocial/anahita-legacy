@@ -44,7 +44,7 @@ function read($text, $options = array())
     while(true) 
     {
         $break = true;
-        $value = readline($text);
+        $value = \readline($text);
         $value = $value ? $value : $default;
         if ( $required && empty($value) ) {
             write('No value entered. Please enter a value ');
