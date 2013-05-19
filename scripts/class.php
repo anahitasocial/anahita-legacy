@@ -133,10 +133,10 @@ class Mapper
         $deadlinks = explode("\n", trim(`find -L {$this->_target_root} -type l -lname '*'`));
         if ( count($deadlinks) )
         {
-            IO\write('Deleting dead link :');
+            \IO\write('Deleting dead link :');
             foreach($deadlinks as $link) 
             {
-                IO\write('-'.$link);
+                \IO\write(' '.$link);
                 @unlink($link);
             }
         }        
