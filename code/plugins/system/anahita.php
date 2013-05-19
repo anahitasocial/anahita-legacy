@@ -129,7 +129,9 @@ class PlgSystemAnahita extends JPlugin
             ini_set('safeex.url_include_proto_whitelist', $whitelist);
         }
 
-        if ( !JFactory::getApplication()->getCfg('caching') ) 
+        if ( !JFactory::getApplication()->getCfg('caching') 
+                || KRequest::get('get.clearapc', 'cmd')
+                ) 
         {
             //clear apc cache for module and components
             //@NOTE If apc is shared across multiple services
