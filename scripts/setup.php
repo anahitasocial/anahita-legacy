@@ -122,7 +122,7 @@ if ( $value )
         $sql_files = array(JPATH_ROOT."/installation/sql/mysql/schema.sql",JPATH_ROOT."/installation/sql/mysql/install.sql");
         IO\write('populating database...');
         array_walk($sql_files, function($file) use($db) {
-            JInstallationHelper::populateDatabase(&$db, $file, $errors);
+            JInstallationHelper::populateDatabase($db, $file, $errors);
         });
         $admin_name = IO\read('Enter admin name: ', array('key'=>'admin_name','required'=>true));
         $admin_passwd = IO\read('Enter admin password: ', array('key'=>'admin_password','required'=>true));
