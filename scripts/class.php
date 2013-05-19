@@ -131,9 +131,15 @@ class Mapper
             $map->symlink();
         }
         $deadlinks = explode("\n", trim(`find -L {$this->_target_root} -type l -lname '*'`));
-        foreach($deadlinks as $link) {
-            @unlink($link);
-        }
+        if ( count($deadlinks) )
+        {
+            IO\write('Deleting dead link :');
+            foreach($deadlinks as $link) 
+            {
+                IO\write('-'.$link);
+                @unlink($link);
+            }
+        }        
     }
 }
 
