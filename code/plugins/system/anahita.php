@@ -140,6 +140,8 @@ class PlgSystemAnahita extends JPlugin
             clean_apc_with_prefix('cache_plg');
             clean_apc_with_prefix('cache_system');
             clean_apc_with_prefix('cache__system');
+            $jconfig = new JConfig();
+            clean_apc_with_prefix(md5($jconfig->secret).'-cache-');
         }
         
 		KService::get('plg:storage.default');
