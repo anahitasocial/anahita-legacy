@@ -53,6 +53,9 @@ class ComComponentsControllerComponent extends ComBaseControllerService
     */
     protected function _initialize(KConfig $config)
     {
+        $config->append(array(
+             'behaviors' => array('serviceable'=>array('read_only'=>true))     
+        ));
         parent::_initialize($config);
     }
 
@@ -100,6 +103,26 @@ class ComComponentsControllerComponent extends ComBaseControllerService
         $component = $this->getService('repos://site/components')->find($this->_request->get('id'));        
     	$this->setItem($component);    	
     	$this->actor_identifiers = $this->getService('com://admin/components.domain.set.actoridentifier');
+    }
+    
+    /**
+     * Can't delete the component
+     * 
+     * @return boolean
+     */
+    public function canDelete()
+    {
+        return false;    
+    }
+    
+    /**
+     * Can't add a new component
+     * 
+     * @return boolean
+     */
+    public function canAdd()
+    {
+        return false;
     }
 }
 
