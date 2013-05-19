@@ -127,9 +127,12 @@ class Mapper
     
     public function symlink()
     {
-        foreach($this->_maps as $map) 
-        {            
+        foreach($this->_maps as $map) {            
             $map->symlink();
+        }
+        $deadlinks = explode("\n", trim(`find -L {$this->_target_root} -type l -lname '*'`));
+        foreach($deadlinks as $link) {
+            @unlink($link);
         }
     }
 }

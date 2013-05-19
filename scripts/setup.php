@@ -31,10 +31,11 @@ $mapper->addMap('vendors/mc/rt_missioncontrol_j15','administrator/templates/rt_m
 $patterns = array(
     '#^(site|administrator)/(components|modules|templates|media)/([^/]+)/.+#' => '\1/\2/\3',
     '#^(components|modules|templates|libraries|media)/([^/]+)/.+#' => '\1/\2',
+    '#^(cli)/.+#'    => 'cli',
     '#^plugins/([^/]+)/([^/]+)/.+#' => 'plugins/\1/\2',
     '#^(administrator/)?(images)/.+#' => '\1\2',    
     '#^(site|administrator)/includes/.+#' => '\1/includes',                            
-    '#^(vendors|migration)/.+#'    => '',
+    '#^(vendors|migration)/.+#'    => '',            
 );
 
 if ( file_exists($target.'/configuration.php') ) 
