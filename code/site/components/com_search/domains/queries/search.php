@@ -59,7 +59,7 @@ class ComSearchDomainQuerySearch extends AnDomainQueryDefault
 	protected function _initialize(KConfig $config)
 	{
 		$config->append(array(
-			'repository' => 'repos://site/base.node'
+			'repository' => 'repos://site/search.node'
 		));
 	
 		parent::_initialize($config);
