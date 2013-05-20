@@ -2,7 +2,7 @@
 
 <h3><?= @text('COM-PEOPLE-PROFILE-EDIT-ACCOUNT-INFORMATION') ?></h3>
 <?php $user = $item->getJUserObject() ?>
-<form data-behavior="FormValidator" action="<?= @route('format=json&view=person&id='.$item->id) ?>" method="post" name="userform" id="userform" autocomplete="off">
+<form data-behavior="FormValidator" action="<?= @route('view=person&id='.$item->id) ?>" method="post" name="userform" id="userform" autocomplete="off">
 
 		<div class="control-group">
 		<label class="control-label"  for="username">
@@ -71,7 +71,7 @@
 	</div>
 	        
 	<div class="form-actions">
-		<button data-trigger="Request" type="submit" class="btn" ><?php print @text('LIB-AN-ACTION-SAVE'); ?></button>
+		<button type="submit" class="btn" ><?php print @text('LIB-AN-ACTION-SAVE'); ?></button>
 	</div>
     
 </form>

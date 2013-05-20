@@ -168,7 +168,7 @@ class ComPeopleDomainEntityPerson extends ComActorsDomainEntityActor
      */
     public function __set($key, $value)
     {
-        if ( $key == 'password' ) {
+        if ( $key == 'password' && !empty($value) ) {
            $this->setPassword($value);
         }
         

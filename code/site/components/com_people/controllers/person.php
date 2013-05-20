@@ -211,7 +211,7 @@ class ComPeopleControllerPerson extends ComActorsControllerDefault
         $person = parent::_actionEdit($context);
               
         //manually set the password to make sure there's a password
-        if ( $data->password ) {
+        if ( !empty($data->password) ) {
             $person->setPassword($data->password);
         }
                 
@@ -233,7 +233,7 @@ class ComPeopleControllerPerson extends ComActorsControllerDefault
             $user->set('email', $person->email);               
         }
         
-        if ( $data->password ) {
+        if ( !empty($data->password) ) {
             $user->set('password', $person->getPassword(true));
         }
         if ( @$data->params->timezone ) {            
