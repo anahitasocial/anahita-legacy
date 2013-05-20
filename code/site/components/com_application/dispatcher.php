@@ -160,7 +160,7 @@ class ComApplicationDispatcher extends LibApplicationDispatcher
         
         //check if the error is code is valid
         if ( $code < 400 || $code >= 600 ) {
-            $code = 500;
+            $code = KHttpResponse::INTERNAL_SERVER_ERROR;
         }
                 
         $context->response->status = $code; 
