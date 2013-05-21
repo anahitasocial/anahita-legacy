@@ -289,26 +289,5 @@ class AnDomainDecoratorOnetomany extends AnObjectDecorator
     {
         $conditions[$this->_property] = $this->_root;
         $this->getRepository()->destroy($conditions);
-    }
-
-    /**
-     * Return an entity of the aggregated type and set the initial
-     * property
-     *
-     * @param  array $data
-     * @param  array $config Extra configuation for instantiating the object
-     * @return AnDomainEntityAbstract
-     * @deprecated since 3.0
-     */
-    public function create($data = array(), $config = array())
-    {
-    	deprecated('use addNew');
-    	$config = new KConfig($config);
-    	$config->append(array(
-    			'data' => $data
-    	));
-    	$entity = $this->getRepository()->getEntity($config);
-    	$this->insert($entity);
-    	return $entity;
     }        
 }
