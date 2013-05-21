@@ -211,7 +211,7 @@ class AnDomainRelationshipOnetomany extends AnDomainRelationshipProperty
 	/**
 	 * Instantiate an aggregated entity set from a root object
 	 * 
-	 * @return AnDomainEntitysetOnetomany
+	 * @return AnDomainDecoratorManytomany
 	 */
 	public function getSet($root)
 	{
