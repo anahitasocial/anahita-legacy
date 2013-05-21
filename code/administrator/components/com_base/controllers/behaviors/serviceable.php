@@ -110,7 +110,7 @@ class ComBaseControllerBehaviorServiceable extends LibBaseControllerBehaviorServ
     protected function _actionEdit($context)
     {
         $entity = parent::_actionEdit($context);
-         
+        $data   = $context->data;    
         if ( $entity->isDictionariable() && $data->meta )
         {
             foreach($data->meta as $key => $value) {
