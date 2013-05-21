@@ -197,6 +197,11 @@ class ComApplicationDispatcher extends LibApplicationDispatcher
     protected function _actionException($context)
     {
         $error = $context->data;
+        if ( $context->response->getHeader('Location') ) 
+        {
+            $context->response->send();
+            exit(0);
+        }
         JError::customErrorPage($error);
         exit(0);
     }    
