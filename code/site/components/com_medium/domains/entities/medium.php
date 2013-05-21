@@ -40,7 +40,7 @@ class ComMediumDomainEntityMedium extends ComBaseDomainEntityNode
 	protected function _initialize(KConfig $config)
 	{
 		$config->append(array(
-            'inheritable' => array('abstract'=>__CLASS__),		       
+            'inheritance' => array('abstract'=>__CLASS__),		       
 		    'relationships'  => array(
 		          'author' => array('parent'=>'com:people.domain.entity.person', 'child_column'=>'created_by', 'required'=>true),      
             ),

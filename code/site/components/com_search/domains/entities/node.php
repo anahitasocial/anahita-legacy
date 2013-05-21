@@ -38,7 +38,7 @@ class ComSearchDomainEntityNode extends ComBaseDomainEntityNode
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-            'inheritable'         => array('ignore'=>__CLASS__),            
+            'inheritance'         => array('ignore'=>__CLASS__),            
             'behaviors'           => array('privatable')        
         ));
         

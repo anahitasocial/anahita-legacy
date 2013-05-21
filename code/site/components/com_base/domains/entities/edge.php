@@ -40,7 +40,7 @@ class ComBaseDomainEntityEdge extends AnDomainEntityDefault
     protected function _initialize(KConfig $config)
     {
 		$config->append(array(
-		    'inheritable'         => array(
+		    'inheritance'         => array(
                 'abstract'        => __CLASS__,
 		        'column'          => 'type',
 		        'ignore'          => array(),

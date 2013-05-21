@@ -129,10 +129,6 @@ abstract class AnDomainDescriptionAbstract
 			foreach($config->aliases as $alias => $property)
 				$this->setAlias($property, $alias);
 		
-		if ( $config->inheritable === true ) {
-		    $config->inheritable = new KConfig(array('column'=>'type'));
-		}
-		
 		$this->_entity_identifier   = $config->entity_identifier;
 		$this->_repository          = $config->repository;
 		
@@ -140,16 +136,16 @@ abstract class AnDomainDescriptionAbstract
 		    throw new AnDomainDescriptionException("repository [AnDomainRepositoryAbstract] option is required");
 		}		
 		
-		if ( $config->inheritable ) 
+		if ( $config->inheritance ) 
 		{
-		    $this->_inheritance_column  = $config->inheritable->column;
+		    $this->_inheritance_column  = $config->inheritance->column;
 
 		    //an object can only be abstract if it's
 		    //supports single table inheritance		    
-		    $this->_is_abstract = $config->inheritable->abstract == $this->_entity_identifier->classname;
-		    if ( $config->inheritable->ignore ) 
+		    $this->_is_abstract = $config->inheritance->abstract == $this->_entity_identifier->classname;
+		    if ( $config->inheritance->ignore ) 
 		    {
-		        $ignore = (array)$config->inheritable['ignore'];
+		        $ignore = (array)$config->inheritance['ignore'];
 		        foreach($ignore as $class) {
 		            $this->_class_alias[$class] = '';
 		        }
