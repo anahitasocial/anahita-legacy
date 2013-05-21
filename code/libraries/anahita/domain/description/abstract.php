@@ -30,11 +30,11 @@
 abstract class AnDomainDescriptionAbstract 
 {
     /**
-     * The abstract identifier
+     * Return whether the entity is abstract or not
      * 
-     * @var string
+     * @var boolean
      */
-    protected $_abstract_identifier;
+    protected $_is_abstract = false;
     
 	/**
 	 * Property Description
@@ -98,7 +98,7 @@ abstract class AnDomainDescriptionAbstract
 	 * 
 	 * @var array
 	 */
-	protected $_class_alias;
+	protected $_class_alias = array();
 	
 	/**
 	 * Repository
@@ -129,28 +129,38 @@ abstract class AnDomainDescriptionAbstract
 			foreach($config->aliases as $alias => $property)
 				$this->setAlias($property, $alias);
 		
+		if ( $config->inheritable === true ) {
+		    $config->inheritable = new KConfig(array('column'=>'type'));
+		}
+		
 		$this->_entity_identifier   = $config->entity_identifier;
-		$this->_repository   = $config->repository;
-		$this->_inheritance_column  = $config->inheritance_column;
-		$this->_class_alias         = $config->class_alias;
+		$this->_repository          = $config->repository;
 		
 		if ( !$this->_repository ) {
 		    throw new AnDomainDescriptionException("repository [AnDomainRepositoryAbstract] option is required");
-		}
+		}		
 		
-		if ( is_string($config->inheritance_column) ) {
-		    $config->inheritance_column = $this->_repository->getResources()->getColumn($config->inheritance_column);		   
-		}
+		if ( $config->inheritable ) 
+		{
+		    $this->_inheritance_column  = $config->inheritable->column;
 
-		$this->_inheritance_column      = $config->inheritance_column;		
-				
-		$this->_entity_identifier       = $this->_repository->getIdentifier($config->entity_identifier);
-		
-		//an object can only be abstract if it's 
-		//supports single table inheritance
-		if ( $this->_inheritance_column ) {
-		    $this->_abstract_identifier = $config->abstract_identifier;
+		    //an object can only be abstract if it's
+		    //supports single table inheritance		    
+		    $this->_is_abstract = $config->inheritable->abstract == $this->_entity_identifier->classname;
+		    if ( $config->inheritable->ignore ) 
+		    {
+		        $ignore = (array)$config->inheritable['ignore'];
+		        foreach($ignore as $class) {
+		            $this->_class_alias[$class] = '';
+		        }
+		    }
 		}
+		    
+		if ( is_string($this->_inheritance_column) ) {
+		    $this->_inheritance_column = $this->_repository->getResources()->getColumn($this->_inheritance_column);
+		}		
+				
+		$this->_entity_identifier       = $this->_repository->getIdentifier($config->entity_identifier);		
 
 		if ( !$config->identity_property )
 		{
@@ -481,8 +491,7 @@ abstract class AnDomainDescriptionAbstract
 	        
 	        $identifier = clone $this->getEntityIdentifier();
 	        $identifier->application = null;
-	        $abstract   = (string) $identifier == $this->_abstract_identifier;
-	        $this->_inheritance_column_value = new AnDomainDescriptionInheritance($classes, $abstract ? null : $identifier);	        
+	        $this->_inheritance_column_value = new AnDomainDescriptionInheritance($classes, $this->_is_abstract ? null : $identifier);	        
 	    }
 	    
 	    return $this->_inheritance_column_value;
