@@ -63,7 +63,7 @@ class LibBaseDomainBehaviorDefaultable extends AnDomainBehaviorAbstract
 	protected function _initialize(KConfig $config)
 	{
 		$config->append(array(
-		    'scope'      => array(),
+		    'scope'      => $config->mixer->getQuery(),
 			'attributes' => array(
 				'isDefault'=>array(
 					'default' => false
