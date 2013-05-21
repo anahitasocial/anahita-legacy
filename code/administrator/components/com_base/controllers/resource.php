@@ -62,6 +62,18 @@ class ComBaseControllerResource extends LibBaseControllerResource
 	}	
 
 	/**
+	 * Enqueus a message
+	 * 
+	 * @param string $message
+	 * @param string $type
+	 */
+	public function setMessage($message, $type = 'message')
+	{	    
+	    $session =& JFactory::getSession();
+	    $session->set('application.queue', array(array('message'=>$message, 'type'=>$type)));
+	}
+	
+	/**
 	 * Cancel action
 	 *
 	 * This function will unlock the row(s) and set the redirect to the referrer
