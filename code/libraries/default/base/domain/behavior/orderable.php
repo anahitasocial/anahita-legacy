@@ -27,6 +27,27 @@
  */
 class LibBaseDomainBehaviorOrderable extends AnDomainBehaviorAbstract
 {
+    /**
+     * A property whose value can be used as scope
+     * 
+     * @var array
+     */
+    protected $_scopes;
+    
+    /** 
+     * Constructor.
+     *
+     * @param KConfig $config An optional KConfig object with configuration options.
+     * 
+     * @return void
+     */ 
+    public function __construct(KConfig $config)
+    {
+        parent::__construct($config);
+        
+        $this->_scopes = $config['scopes'];
+    }
+    
 	/**
 	 * Initializes the default configuration for the object
 	 *
@@ -39,7 +60,8 @@ class LibBaseDomainBehaviorOrderable extends AnDomainBehaviorAbstract
 	protected function _initialize(KConfig $config)
 	{
 		$config->append(array(
-			'attributes' => array(
+		    'scopes'      => array(),
+			'attributes'  => array(
 				'ordering'=>array('default'=>0)
 			),
 			'aliases' => array(
@@ -61,7 +83,7 @@ class LibBaseDomainBehaviorOrderable extends AnDomainBehaviorAbstract
 		if ( $this->getModifiedData()->ordering ) {
 			
 			$store    = $this->getRepository()->getStore();
-			$query	  = $this->getRepository()->getQuery();
+			$query	  = $this->getScopedQuery($context->entity);
 			$change   = $this->getModifiedData()->ordering;
 		
 			if( $change->new - $change->old < 0 ) 
@@ -89,7 +111,7 @@ class LibBaseDomainBehaviorOrderable extends AnDomainBehaviorAbstract
 	public function reorder()
 	{
 		$store    = $this->getRepository()->getStore();
-		$query 	  = $this->getRepository()->getQuery();
+		$query 	  = $this->getScopedQuery($this->_mixer);
 		$store->execute('SET @order = 0');
 		$query->update('@col(ordering) = (@order := @order + 1)')->order('ordering', 'ASC');
 		$store->execute($query);
@@ -103,7 +125,8 @@ class LibBaseDomainBehaviorOrderable extends AnDomainBehaviorAbstract
 	 */
 	protected function _beforeEntityInsert(KCommandContext $context)
 	{
-		$max = $this->getRepository()->getQuery()->fetchValue('MAX(@col(ordering))');
+		$max = $this->getScopedQuery($context->entity)
+		        ->fetchValue('MAX(@col(ordering))');
 		$this->ordering = $max + 1;
 	}
 	
@@ -128,7 +151,29 @@ class LibBaseDomainBehaviorOrderable extends AnDomainBehaviorAbstract
 	protected function _afterEntityDelete(KCommandContext $context)
 	{
 		$this->reorder();
-	}	
+	}
+
+	/**
+	 * Return the query after applying the scope
+	 * 
+	 * @param AnDomainEntityAbstract $entity The  entity 
+	 * 
+	 * @return AnDomainQuery
+	 */
+	public function getScopedQuery($entity)
+	{
+	    $query = $this->getRepository()->getQuery();
+	    
+	    foreach($this->_scopes as $key => $value)
+	    {
+	        if ( is_numeric($key) ) {
+	             $key   = $value;
+	             $value = $entity->$key;   
+	        }
+	        $query->where($key,'=',$value);
+	    }
+	    return $query;	    
+	}
 }
 
 ?>

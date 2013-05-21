@@ -31,24 +31,24 @@ class LibBaseDomainBehaviorDefaultable extends AnDomainBehaviorAbstract
 {
 
     /**
-     * An array of key/value conditions from which to set a scope
+     * A property whose value can be used as scope
      * 
      * @var array
      */
-    protected $_scope;
+    protected $_scopes;
     
-    /**
+    /** 
      * Constructor.
      *
      * @param KConfig $config An optional KConfig object with configuration options.
-     *
+     * 
      * @return void
-     */
+     */ 
     public function __construct(KConfig $config)
     {
         parent::__construct($config);
         
-        $this->_scope = KConfig::unbox($config->scope);
+        $this->_scopes = $config['scopes'];
     }
         
 	/**
@@ -63,8 +63,8 @@ class LibBaseDomainBehaviorDefaultable extends AnDomainBehaviorAbstract
 	protected function _initialize(KConfig $config)
 	{
 		$config->append(array(
-		    'scope'      => $config->mixer->getQuery(),
-			'attributes' => array(
+		    'scopes'      => array(),
+			'attributes'  => array(
 				'isDefault'=>array(
 					'default' => false
 				))
@@ -85,7 +85,8 @@ class LibBaseDomainBehaviorDefaultable extends AnDomainBehaviorAbstract
 	    //true then, set the previous default entity to false
 	    if ( $this->_mixer->isDefault === true )
 	    {
-		    $this->getRepository()->update(array('isDefault'=>false), $this->getScope());
+	        $query = $this->getScopedQuery($context->entity);
+		    $this->getRepository()->update(array('isDefault'=>false), $query);
 	    }
 	}
 	
@@ -101,26 +102,37 @@ class LibBaseDomainBehaviorDefaultable extends AnDomainBehaviorAbstract
 	    if ( $this->_mixer->getModifiedData()->isDefault )
 	    {
 	        $is_default = $this->_mixer->isDefault === true;
+	        $query	    = $this->getScopedQuery($context->entity);
 	        //if it's true, then reset all existing to false
-	        if ( $is_default ) 
-	        {
-	            $this->getRepository()->update(array('isDefault'=>false), $this->getScope());
+	        if ( $is_default ) {
+	            $this->getRepository()->update(array('isDefault'=>false), $query);
 	        }
-	        else 
-	        {
-	             $query = $this->getRepository()->getQuery()->id($this->id,'<>')->limit(1);
+	        else {
+	             $query->id($this->id,'<>')->limit(1);
 	             $this->getRepository()->update(array('isDefault'=>true), $query);
 	        }
 	    }
 	}
 	
 	/**
-     * Return a scope of within which to set a default value
-     * 
-     * @return array
+	 * Return the query after applying the scope
+	 *
+	 * @param AnDomainEntityAbstract $entity The  entity
+	 *
+	 * @return AnDomainQuery
 	 */
-	public function getScope()
+	public function getScopedQuery($entity)
 	{
-	    return $this->_scope;
+	    $query = $this->getRepository()->getQuery();
+	     
+	    foreach($this->_scopes as $key => $value)
+	    {
+	        if ( is_numeric($key) ) {
+	            $key   = $value;
+	            $value = $entity->$key;
+	        }
+	        $query->where($key,'=',$value);
+	    }
+	    return $query;
 	}
 }
