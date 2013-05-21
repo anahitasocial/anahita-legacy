@@ -197,15 +197,19 @@ Element.implement(
     			return;
     		}
 			
-    		var submit = function() {
-				request(el,api);
+    		var sendRequest = function() {
+				request(el, api);
 			}
     		if ( el != form ) {
-    			el.addEvent('click', submit);
+    			el.addEvent('click', sendRequest);
     		}
-    		form.addEvent('keyup', function(e) {
+    		
+    		form.addEvent('submit', function(e){
+    			e.stop();
+    		});
+    		form.addEvent('keyup', function(e) {    			
     			if ( e.key == 'enter' ) {
-    				submit();
+    				sendRequest();
     			}
     		});    		
     	}
