@@ -39,8 +39,8 @@ class ComBaseDomainEntityComment extends ComBaseDomainEntityNode
     protected function _initialize(KConfig $config)
     {
 		$config->append(array(	
-		    'abstract_identifier' => 'com:base.domain.entity.comment',									
-			'attributes' => array(
+		    'inheritable' => array('abstract'=>__CLASS__),		    									
+			'attributes'  => array(
 				'body'			=> array('required'=>true)
 			),
 			'behaviors'		=> array(       

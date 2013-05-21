@@ -52,8 +52,11 @@ class ComBaseDomainEntityNode extends AnDomainEntityDefault
 	protected function _initialize(KConfig $config)
 	{
 		$config->append(array(
-		    'abstract_identifier' => 'com:base.domain.entity.node', //node is an abstract entity, can not be stored in database
-		    'inheritance_column'  => 'type',
+		    'inheritable'         => array(
+                'abstract'        => __CLASS__,
+		        'column'          => 'type',
+		        'ignore'          => array(),
+            ),
 			'resources'	    => array(array('alias'=>$this->getIdentifier()->name, 'name'=>'anahita_nodes')),
 		    'identity_property' => 'id',
 			'attributes'    => array(

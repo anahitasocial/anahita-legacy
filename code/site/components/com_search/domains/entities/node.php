@@ -38,8 +38,7 @@ class ComSearchDomainEntityNode extends ComBaseDomainEntityNode
     protected function _initialize(KConfig $config)
     {
         $config->append(array(
-            'abstract_identifier' => 'com:search.domain.entity.node', //node is an abstract entity, can not be stored in database,
-            'class_alias'         => array('ComSearchDomainEntityNode'=>''),
+            'inheritable'         => array('ignore'=>__CLASS__),            
             'behaviors'           => array('privatable')        
         ));
         

@@ -40,8 +40,11 @@ class ComBaseDomainEntityEdge extends AnDomainEntityDefault
     protected function _initialize(KConfig $config)
     {
 		$config->append(array(
-		    'abstract_identifier' => 'com:base.domain.entity.edge', //edge is an abstract entity, can not be stored in database
-		    'inheritance_column'  => 'type',
+		    'inheritable'         => array(
+                'abstract'        => __CLASS__,
+		        'column'          => 'type',
+		        'ignore'          => array(),
+            ),
 			'resources'           => array(
 				array('name'=>'anahita_edges', 'alias'=>$this->getIdentifier()->name)
 			),

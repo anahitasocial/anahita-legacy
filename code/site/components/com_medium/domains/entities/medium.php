@@ -40,7 +40,7 @@ class ComMediumDomainEntityMedium extends ComBaseDomainEntityNode
 	protected function _initialize(KConfig $config)
 	{
 		$config->append(array(
-		    'abstract_identifier' => 'com:medium.domain.entity.medium', //medium is an abstract entity, can not be stored in database		        
+            'inheritable' => array('abstract'=>__CLASS__),		       
 		    'relationships'  => array(
 		          'author' => array('parent'=>'com:people.domain.entity.person', 'child_column'=>'created_by', 'required'=>true),      
             ),

@@ -46,7 +46,7 @@ class ComActorsDomainEntityActor extends ComBaseDomainEntityNode
 	protected function _initialize(KConfig $config)
 	{		
 		$config->append(array(
-	        'abstract_identifier' => 'com:actors.domain.entity.actor', //actor is an abstract entity, can not be stored in database
+		    'inheritable' => array('abstract'=>__CLASS__),
 	        'attributes' => to_hash(array(
                 'name'		=> array('required'=>AnDomain::VALUE_NOT_EMPTY, 'format'=>'string','read'=>'public'),
                 'body'      => array('format'=>'string'),
