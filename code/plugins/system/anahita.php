@@ -116,7 +116,14 @@ class PlgSystemAnahita extends JPlugin
             //Checking if the whitelist is ok
             if(!@ini_get('suhosin.executor.include.whitelist') || strpos(@ini_get('suhosin.executor.include.whitelist'), 'tmpl://') === false)
             {
-                JFactory::getApplication()->redirect(JURI::base().'templates/system/error_suhosin.html');
+                $url  =  KService::get('application')->getRouter()->getBaseUrl();
+                $url .= '/templates/system/error_suhosin.html';
+                KService::get('application.dispatcher')
+                    ->getResponse()->setRedirect($url)
+                ;
+                KService::get('application.dispatcher')
+                    ->getResponse()
+                    ->send();
                 return;
             }
         }
@@ -130,7 +137,7 @@ class PlgSystemAnahita extends JPlugin
         }
 
         if ( !JFactory::getApplication()->getCfg('caching') 
-                || KRequest::get('get.clearapc', 'cmd')
+                || (JFactory::getUser()->usertype == 'Super Administrator' && KRequest::get('get.clearapc', 'cmd'))
                 ) 
         {
             //clear apc cache for module and components
