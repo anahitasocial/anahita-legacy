@@ -15,7 +15,7 @@
 <form action="<?=@route('view=searches')?>" class="well">
 	<fieldset>
 		<legend><?= @text('COM-SEARCH-PROMPT') ?></legend>
-		<input type="text" name="q" class="input-block-level">
+		<input type="text" name="term" class="input-block-level">
 		
 		<label class="checkbox">
 			<input type="checkbox" name="search_comments" value="1" >

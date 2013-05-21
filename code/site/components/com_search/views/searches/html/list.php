@@ -39,5 +39,5 @@
 </div>
 
 <?php if(isset($keywords)): ?>
-<?= @pagination($items, array('url'=>@route('layout=list&q='.$q))) ?>
+<?= @pagination($items, array('url'=>@route('layout=list&term='.$term))) ?>
 <?php endif; ?>

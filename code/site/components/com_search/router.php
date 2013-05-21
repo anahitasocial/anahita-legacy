@@ -66,7 +66,7 @@ class ComSearchRouter extends ComBaseRouterDefault
         	$vars['oid'] = str_replace('@','',array_shift($segments));
         }
                      
-        $vars['q'] = array_pop($segments);
+        $vars['term'] = array_pop($segments);
             
         return $vars;
     }    

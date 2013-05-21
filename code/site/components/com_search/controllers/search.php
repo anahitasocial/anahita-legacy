@@ -77,7 +77,7 @@ class ComSearchControllerSearch extends ComBaseControllerResource
 			'search_comments' => false
     	));
     	    	
-        $this->_state->insert('q')
+        $this->_state->insert('term')
         	->insert('scope')
         	->insert('search_comments')
         	->insert('search_leaders')
@@ -86,7 +86,7 @@ class ComSearchControllerSearch extends ComBaseControllerResource
         
     	JFactory::getLanguage()->load('com_actors');
 		
-    	$this->keywords 		= array_filter(explode(' ',urldecode($this->q)));
+    	$this->keywords 		= array_filter(explode(' ',urldecode($this->term)));
     	$this->scopes			= $this->getService('com://site/search.domain.entityset.scope');
 		$this->current_scope	= $this->scopes->find($this->scope);
 		
@@ -96,7 +96,7 @@ class ComSearchControllerSearch extends ComBaseControllerResource
 				
     	$query = $this->getService('com://site/search.domain.query.search')
     				->ownerContext($this->actor)
-    				->searchTerm(urldecode($this->q))
+    				->searchTerm(urldecode($this->term))
     				->searchComments($this->search_comments)
     				->scope($this->current_scope)
     				->limit($this->limit, $this->start);
