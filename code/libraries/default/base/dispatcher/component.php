@@ -25,7 +25,7 @@
  * @license    GNU GPLv3 <http://www.gnu.org/licenses/gpl-3.0.html>
  * @link       http://www.anahitapolis.com
  */
-class LibBaseDispatcherComponent extends LibBaseDispatcherAbstract
+class LibBaseDispatcherComponent extends LibBaseDispatcherAbstract implements KServiceInstantiatable
 {
     /**
      * Force creation of a singleton
