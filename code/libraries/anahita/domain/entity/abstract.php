@@ -451,11 +451,12 @@ abstract class AnDomainEntityAbstract extends KObject implements ArrayAccess, Se
 		{
             $current = $this->get($name);
             
-            if ( $current instanceof AnDomainEntitysetOnetomany )
+            if ( $current instanceof AnDomainDecoratorOnetomany )
             {
                 $values = KConfig::unbox($value);                
                 //can be an KObjectArray or KObjectSet object
-                if ( $values instanceof KObject && $values instanceof Iterator )
+                if ( $values instanceof KObject && 
+                        $values instanceof Iterator )
                 {
                     $current->delete();
                     foreach($values as $value)  {
@@ -1180,9 +1181,10 @@ abstract class AnDomainEntityAbstract extends KObject implements ArrayAccess, Se
                     }
                 }
                 //copy the one to many
-                elseif( $deep && $property->isOneToMany() && !$property->isManyToMany() )
+                elseif( $deep && $property->isOneToMany() 
+                        && !$property->isManyToMany() )
                 {
-                    $copy->set($name, $this->get($name)->cloneEntity());
+                    $copy->set($name, $this->get($name)->cloneEntity($deep));
                 }
             }
         }
