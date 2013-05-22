@@ -94,7 +94,7 @@ class ComSearchControllerSearch extends ComBaseControllerResource
 			$this->current_scope = current($this->scopes->getIterator());
 		}	
 				
-    	$query = $this->getService('com://site/search.domain.query.search')
+    	$query = $this->getService('com://site/search.domain.query.node')
     				->ownerContext($this->actor)
     				->searchTerm(urldecode($this->term))
     				->searchComments($this->search_comments)
