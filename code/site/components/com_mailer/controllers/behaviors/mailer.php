@@ -222,7 +222,7 @@ class ComMailerControllerBehaviorMailer extends KControllerBehaviorAbstract
 		//also what if the mailer is not HTML ??
 		if ( !empty($emails) )
 		{
-		    $output = nl2br($output);
+		    //$output = nl2br($output);
 		    //Supposed to fix the random exclamation points
 		    $output = wordwrap($output,900,"\n");
 		    $mailer = JFactory::getMailer();		    
