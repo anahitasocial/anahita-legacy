@@ -225,7 +225,7 @@ class LibBaseTemplateHelperText extends KTemplateHelperAbstract implements KServ
 		$words = KConfig::unbox($words);
 		settype($words, 'array');
 		foreach($words as $word)
-			$text = KHelperString::str_ireplace($word, '<span class="label label-info">'.$word.'</span>', $text);
+			$text = KHelperString::str_ireplace($word, '<span class="an-text-highlight">'.$word.'</span>', $text);
 
 		return $text;
 	}
