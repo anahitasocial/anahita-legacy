@@ -170,7 +170,11 @@ class ComApplicationDispatcher extends LibApplicationDispatcher
             'theme'     => $this->_application->getTemplate()
         );
 
-        if ( $context->request->isAjax() ) {
+        //if ajax or the format is not html
+        //then return the exception in json format
+        if ( $context->request->isAjax()
+             || $context->request->getFormat() != 'html'
+                 ) {
             $context->request->setFormat('json');
         }
         
