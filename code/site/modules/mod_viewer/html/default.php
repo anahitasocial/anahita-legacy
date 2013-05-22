@@ -35,7 +35,6 @@
  </ul>
 <script data-inline>
 (function(){
-	return;
     new Request.JSON({
         url       : '<?= @route('option=com_notifications&view=notifications&get=count')?>',
         onSuccess : function(data) {
