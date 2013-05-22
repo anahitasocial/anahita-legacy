@@ -4,7 +4,7 @@
 
 <ul class="menu nav" data-behavior="BS.Dropdown">
      <li>     
-        <a data-popover-tipclass="notifications-popover" data-behavior="RemotePopover" data-bs-popover-trigger="click" data-bs-popover-location="bottom" data-remotepopover-url="<?=@route('option=com_notifications&view=notifications&layout=popover')?>" href="#" data-trigger="">
+        <a href="#" data-popover-tipclass="notifications-popover" data-behavior="RemotePopover" data-bs-popover-animate=false data-bs-popover-content-element="D" data-bs-popover-trigger="click" data-bs-popover-location="bottom" data-remotepopover-url="<?=@route('option=com_notifications&view=notifications&layout=popover')?>" >
             <span id="new-notifications-counter" class="badge <?= ($num_notifications) ? 'badge-important' : '' ?>"><?= $num_notifications ?></span>           
          </a>
      </li>
