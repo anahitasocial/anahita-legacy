@@ -46,7 +46,7 @@ class ComActorsDomainEntityActor extends ComBaseDomainEntityNode
 	protected function _initialize(KConfig $config)
 	{		
 		$config->append(array(
-		    'inheritance' => array('abstract'=>__CLASS__),
+		    'inheritance' => array('abstract'=>$this->getIdentifier()->classname == __CLASS__),
 	        'attributes' => to_hash(array(
                 'name'		=> array('required'=>AnDomain::VALUE_NOT_EMPTY, 'format'=>'string','read'=>'public'),
                 'body'      => array('format'=>'string'),

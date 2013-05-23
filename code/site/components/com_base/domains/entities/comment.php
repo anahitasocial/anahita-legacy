@@ -39,7 +39,7 @@ class ComBaseDomainEntityComment extends ComBaseDomainEntityNode
     protected function _initialize(KConfig $config)
     {
 		$config->append(array(	
-		    'inheritance' => array('abstract'=>__CLASS__),		    									
+		    'inheritance' => array('abstract'=>$this->getIdentifier()->package == 'base'),
 			'attributes'  => array(
 				'body'			=> array('required'=>true)
 			),

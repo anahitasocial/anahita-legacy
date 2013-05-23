@@ -41,7 +41,7 @@ class ComBaseDomainEntityEdge extends AnDomainEntityDefault
     {
 		$config->append(array(
 		    'inheritance'         => array(
-                'abstract'        => __CLASS__,
+                'abstract'        => $this->getIdentifier()->classname === __CLASS__,
 		        'column'          => 'type',
 		        'ignore'          => array(),
             ),
