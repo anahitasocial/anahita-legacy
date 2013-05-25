@@ -10,7 +10,7 @@ if ( !function_exists('readline') )
         $f=popen("read; echo \$REPLY","r");
         $input=fgets($f,100);
         pclose($f);
-        return $input;       
+        return trim($input);       
     }
 }
 function write($text) 

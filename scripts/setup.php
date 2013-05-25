@@ -11,11 +11,7 @@ function getopts($key, $default = null) {
 }
 if ( strpos($target,'/') !== 0 ) 
 {
-    $parts = explode('/', './'.$target);
-    $parts = array_filter($parts);
-    array_pop($parts);
-    $parts  = implode('/', $parts);
-    $target = realpath($parts).'/'.$target;
+    $target = $_SERVER['PWD'].'/'.$target;    
 }
 if ( empty($target) ) {exit(0);}
 $src    = realpath(dirname(__FILE__).'/../code');
@@ -35,7 +31,8 @@ $patterns = array(
     '#^plugins/([^/]+)/([^/]+)/.+#' => 'plugins/\1/\2',
     '#^(administrator/)?(images)/.+#' => '\1\2',    
     '#^(site|administrator)/includes/.+#' => '\1/includes',                            
-    '#^(vendors|migration)/.+#'    => '',            
+    '#^(vendors|migration)/.+#'    => '',
+    '#^configuration\.php-dist#'   => '',            
 );
 
 if ( file_exists($target.'/configuration.php') ) 
@@ -62,6 +59,11 @@ if ( file_exists($target.'/configuration.php') )
     IO\write('done');
     exit(0);
 }
+
+@mkdir($target.'/tmp',   0755);
+@mkdir($target.'/cache', 0755);
+@mkdir($target.'/log',   0755);
+@mkdir($target.'/administrator/cache',   0755);
 
 IO\write('configuration file doesn\'t exists');
 
