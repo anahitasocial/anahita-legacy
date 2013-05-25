@@ -64,6 +64,9 @@ class LibBaseDispatcherComponent extends LibBaseDispatcherAbstract implements KS
         if ($config->request->has('view')) {
             $this->_controller = $config->request->get('view');
         }
+        
+        $this->registerCallback('before.post',   array($this, 'authenticateRequest'));
+        $this->registerCallback('before.delete', array($this, 'authenticateRequest'));        
     }
         
     /**
@@ -169,7 +172,24 @@ class LibBaseDispatcherComponent extends LibBaseDispatcherAbstract implements KS
     
         return $result;
     }
+
+    /**
+     * Authenticate a request
+     * 
+     * @param KCommandContext $context
+     * 
+     * @return void
+     */
+    public function authenticateRequest(KCommandContext $context)
+    {
+        $request = $context->request;
         
+        //Check referrer
+        if(!$request->getReferrer()) {
+            throw new LibBaseControllerExceptionForbidden('Invalid Request Referrer');
+        }
+    }
+    
     /**
      * Renders a controller view
      *
@@ -197,7 +217,7 @@ class LibBaseDispatcherComponent extends LibBaseDispatcherAbstract implements KS
          
         return $context->result;
     }
-    
+        
     /**
      * Renders a legacy component 
      * 

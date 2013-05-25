@@ -142,7 +142,7 @@ abstract class AnDomainDescriptionAbstract
 
 		    //an object can only be abstract if it's
 		    //supports single table inheritance		    
-		    $this->_is_abstract = $config->inheritance->abstract == $this->_entity_identifier->classname;
+		    $this->_is_abstract = $config->inheritance->abstract;
 		    if ( $config->inheritance->ignore ) 
 		    {
 		        $ignore = (array)$config->inheritance['ignore'];
@@ -227,7 +227,7 @@ abstract class AnDomainDescriptionAbstract
 	 */
 	public function isAbstract()
 	{
-	    return is_null($this->getInheritanceColumnValue()->getIdentifier());
+	    return $this->_is_abstract;
 	}
     
     /**

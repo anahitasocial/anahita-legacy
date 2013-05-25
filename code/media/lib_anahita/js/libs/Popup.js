@@ -1,5 +1,8 @@
 (function(){
-	Class.refactor(Bootstrap.Popup, {	
+	Class.refactor(Bootstrap.Popup, {
+		options : {
+			animate: false			
+		},
 		_animationEnd: function(){
 			if (Browser.Features.getCSSTransition()) this.element.removeEventListener(Browser.Features.getCSSTransition(), this.bound.animationEnd);
 			this.animating = false;

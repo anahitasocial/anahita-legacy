@@ -71,7 +71,7 @@ class ComPeopleDispatcher extends ComBaseDispatcherDefault
 	                $url = JRoute::_($this->getController()->getItem()->getURL().'&get=settings&edit=account&reset_password=1');
 	                $this->getController()->getResponse()->location = $url;
 	            }
-	            $this->getController()->getResponse()->sendHeaders();
+	            $this->getController()->getResponse()->send();
 	            exit(0);
 	        }
 	    }

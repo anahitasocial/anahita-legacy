@@ -74,7 +74,7 @@ class ComStoriesControllerToolbarStory extends ComBaseControllerToolbarDefault
         $entity = $this->getController()->getItem();
         $label = sprintf( JText::_('COM-STORIES-VIEW-ALL-COMMENTS'), $entity->getNumOfComments());
         $command->append(array('label'=>$label));
-        $command->href($entity->getURL());
+        $command->href(JRoute::_($entity->getURL()));
     }
      
     /**
@@ -89,7 +89,7 @@ class ComStoriesControllerToolbarStory extends ComBaseControllerToolbarDefault
         $entity = $this->getController()->getItem();
         
         $command->append(array('label'=>JText::_('LIB-AN-ACTION-COMMENT')))
-            ->href($entity->getURL())
+            ->href(JRoute::_($entity->getURL()))
             ->class('comment')
             ;
     }
@@ -109,7 +109,7 @@ class ComStoriesControllerToolbarStory extends ComBaseControllerToolbarDefault
             $link .= '&id[]='.$id;
         }
         $command->append(array('label'=>JText::_('LIB-AN-ACTION-DELETE')))
-        ->href($link.'&action=delete')
+        ->href(JRoute::_($link.'&_action=delete'))
         ->setAttribute('data-trigger','Remove');
     }
 }

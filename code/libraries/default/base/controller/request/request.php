@@ -134,6 +134,20 @@
      }     
      
      /**
+      * Returns the HTTP referrer.
+      *
+      * 'referer' a commonly used misspelling word for 'referrer'
+      * @see     http://en.wikipedia.org/wiki/HTTP_referrer
+      *
+      * @param   boolean     Only allow internal url's
+      * @return  KHttpUrl    A KHttpUrl object
+      */
+     public function getReferrer($isInternal = true)
+     {
+         return KRequest::referrer($isInternal);    
+     }
+     
+     /**
       * Return if the request is ajax
       * 
       * @return boolean
