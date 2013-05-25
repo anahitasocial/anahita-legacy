@@ -118,7 +118,10 @@ class ComInstallerAdapterComponent extends ComInstallerAdapterAbstract
         
         if ( $site_menu ) 
         {
-            $component->link = 'option='.$this->_name;
+            $component->setData(array(
+                'link'      => 'option='.$this->_name,
+                'adminMenuLink' => 'option='.$this->_name                
+            ));
         }        
         elseif ( $admin_menu ) 
         {         
