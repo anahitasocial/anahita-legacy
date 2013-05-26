@@ -30,7 +30,7 @@ class ComPeopleFilterPassword extends KFilterRaw
     /**
      * Password min length 
      */
-    public static $MIN_LENGTH = 6;
+    public static $MIN_LENGTH = 8;
     
     /**
      * Sanitize a value

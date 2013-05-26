@@ -40,6 +40,6 @@ class ComPeopleTemplateHelperPassword extends KTemplateHelperAbstract
         if ( $required ) {
             $validators .= 'required  minLength:'.$min;
         }
-        return '<input data-validators="'.$validators.' validate-passwod" type="password" id="password" name="password" />';
+        return '<input data-validators="'.$validators.' validate-passwod" type="password" id="password" value="" name="password" />';
     }
 }
