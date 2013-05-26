@@ -62,16 +62,35 @@ Class.refactor(Form.Validator.Inline, {
 		validate: function(event) 
 		{
 			var result = this.previous(event);
-			if ( result && event && event.target ) 
+			var remoteValidators = this.element.get('remoteValidators');			
+			//if all validations passed and there are remote validators
+			//pending
+			if ( result 
+					&& remoteValidators.isPending()
+					&& event ) 
 			{
-				if ( !event.target.get('remoteValidators').isSuccess() )
+				event.preventDefault();
+				if ( !this.validationSuccess ) 
 				{
-					event.preventDefault();
-					event.target.addEvent('validationSuccessful', function(){
-						event.target.submit();
-					});	
+					this.validationSuccess  = function() {
+						this.element.submit();
+					}.bind(this);
+					this.validationComplete = function() {						
+						this.element.removeEvent('validationSuccessful', this.validationSuccess);
+					}.bind(this);
 				}
+				this.validationComplete();				
+				this.element.addEvent('validationSuccessful', this.validationSuccess);
+				this.element.addEvent('validationComplete', this.validationComplete);
+				return result;
 			}
+			
+			result = result && remoteValidators.isSuccess();
+			
+			if ( result ) {
+				this.element.fireEvent('validationSuccessful');
+			}
+			
 			return result;
 		}
 	});

@@ -19445,7 +19445,8 @@ Element.implement(
     		}
     		
     		form.addEvent('submit', function(e){
-    			e.stop();
+    			if ( !e.mock )
+    				e.stop();
     		});
     		form.addEvent('keyup', function(e) {    			
     			if ( e.key == 'enter' ) {
@@ -19528,16 +19529,35 @@ Class.refactor(Form.Validator.Inline, {
 		validate: function(event) 
 		{
 			var result = this.previous(event);
-			if ( result && event && event.target ) 
+			var remoteValidators = this.element.get('remoteValidators');			
+			//if all validations passed and there are remote validators
+			//pending
+			if ( result 
+					&& remoteValidators.isPending()
+					&& event ) 
 			{
-				if ( !event.target.get('remoteValidators').isSuccess() )
+				event.preventDefault();
+				if ( !this.validationSuccess ) 
 				{
-					event.preventDefault();
-					event.target.addEvent('validationSuccessful', function(){
-						event.target.submit();
-					});	
+					this.validationSuccess  = function() {
+						this.element.submit();
+					}.bind(this);
+					this.validationComplete = function() {						
+						this.element.removeEvent('validationSuccessful', this.validationSuccess);
+					}.bind(this);
 				}
+				this.validationComplete();				
+				this.element.addEvent('validationSuccessful', this.validationSuccess);
+				this.element.addEvent('validationComplete', this.validationComplete);
+				return result;
 			}
+			
+			result = result && remoteValidators.isSuccess();
+			
+			if ( result ) {
+				this.element.fireEvent('validationSuccessful');
+			}
+			
 			return result;
 		}
 	});
@@ -20634,18 +20654,37 @@ Behavior.addGlobalFilter('Alert', {
 });
 
 (function() {
+	function submitter()
+	{
+		var form 	  = this;
+		var validator = form.retrieve('validator');
+		if ( validator )
+		{
+			event = {
+				_stop : false,
+				preventDefault : function() {
+					event._stop = true; 
+				}
+			}
+			if ( validator.validate(event) && 
+					!event._stop ) 
+			{
+				form.submit();
+			}
+		} else {
+			form.submit();			
+		}
+	}
+	
 	Behavior.addGlobalFilter('Submit', {
     	setup : function(el, api)
     	{
     		var form = document.getElement(api.get('form') || el);
     		
-    		if ( !form ) 
-    			return;
-			
-    		var submit = function() {
-				form.spin();
-				form.submit();			
-			}
+    		if ( !form ) { 
+    			throw 'No form specified for the Submit Behaviort for element' + el
+    		}
+			var submit = submitter.bind(form);    		
     		if ( el != form ) {
     			el.addEvent('click', submit);
     		}
@@ -20664,11 +20703,8 @@ Behavior.addGlobalFilter('Alert', {
 			}
 			if ( api.get('form') || el.form ) 
 			{
-				var form = api.get('form') ? document.getElement(api.get('form')) : el.form;
-				var submit = function() {
-					form.spin();
-					form.submit();			
-				}
+				var form   = api.get('form') ? document.getElement(api.get('form')) : el.form;
+				var submit = submitter.bind(form);
 			} else {
 				var url    = api.get('url') || el.get('href');
 				var data   = JSON.decode(el.get('data-data')) || el.get('href').toURI().getData();

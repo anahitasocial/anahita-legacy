@@ -1,16 +1,35 @@
 (function() {
+	function submitter()
+	{
+		var form 	  = this;
+		var validator = form.retrieve('validator');
+		if ( validator )
+		{
+			event = {
+				_stop : false,
+				preventDefault : function() {
+					event._stop = true; 
+				}
+			}
+			if ( validator.validate(event) && 
+					!event._stop ) 
+			{
+				form.submit();
+			}
+		} else {
+			form.submit();			
+		}
+	}
+	
 	Behavior.addGlobalFilter('Submit', {
     	setup : function(el, api)
     	{
     		var form = document.getElement(api.get('form') || el);
     		
-    		if ( !form ) 
-    			return;
-			
-    		var submit = function() {
-				form.spin();
-				form.submit();			
-			}
+    		if ( !form ) { 
+    			throw 'No form specified for the Submit Behaviort for element' + el
+    		}
+			var submit = submitter.bind(form);    		
     		if ( el != form ) {
     			el.addEvent('click', submit);
     		}
@@ -29,11 +48,8 @@
 			}
 			if ( api.get('form') || el.form ) 
 			{
-				var form = api.get('form') ? document.getElement(api.get('form')) : el.form;
-				var submit = function() {
-					form.spin();
-					form.submit();			
-				}
+				var form   = api.get('form') ? document.getElement(api.get('form')) : el.form;
+				var submit = submitter.bind(form);
 			} else {
 				var url    = api.get('url') || el.get('href');
 				var data   = JSON.decode(el.get('data-data')) || el.get('href').toURI().getData();

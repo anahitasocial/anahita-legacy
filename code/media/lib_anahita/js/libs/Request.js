@@ -205,7 +205,8 @@ Element.implement(
     		}
     		
     		form.addEvent('submit', function(e){
-    			e.stop();
+    			if ( !e.mock )
+    				e.stop();
     		});
     		form.addEvent('keyup', function(e) {    			
     			if ( e.key == 'enter' ) {
