@@ -94,4 +94,31 @@ class ComActorsViewActorHtml extends ComBaseViewHtml
             'composers' => $context->composers            
         ));
 	}
+	
+	/**
+     * Default Badge
+     *
+     * @return
+     */
+	protected function ____layoutBadge()
+	{
+    	$this->commands = $context->commands;
+    	
+    	$viewer        = $this->viewer;
+    	$actor         = $this->actor;
+    	
+        if ( $viewer->following( $actor ) ) 
+        {
+            $commands->insert('follow', array('label'=>JTEXT::_('MOD-ACTOR-ACTION-UNFOLLOW')))
+                ->href($actor->getURL().'&action=unfollow')
+                ->class('btn')->dataTrigger('Submit');
+    	} 
+    	elseif ( $actor->authorize('follower') || $viewer->guest() ) 
+    	{
+    	    $commands->insert('follow',array('label'=>JTEXT::_('MOD-ACTOR-ACTION-FOLLOW')))
+    	    ->href($actor->getURL().'&action=follow')
+    	    ->class('btn btn-primary')
+    	    ->dataTrigger('Submit');
+    	}
+	}
 }

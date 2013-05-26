@@ -30,8 +30,11 @@ class ComNotificationsRouterApplication extends ComApplicationRouter
     }
 }
 
-$ids = (array)KRequest::get('get.id', 'int', array());
-KService::get('com://site/notifications.controller.processor', array('base_url'=>$base_url))
-    ->id($ids)->process();
+$controller = KService::get('com://site/notifications.controller.processor', array('base_url'=>$base_url));
+$ids        = (array)KRequest::get('get.id', 'int', array());
+if ( !empty($ids) ) {
+    $controller->id($ids);
+}
+$controller->process();
 exit(0);
 ?>
