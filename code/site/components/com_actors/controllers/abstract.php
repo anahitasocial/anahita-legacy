@@ -95,9 +95,8 @@ abstract class ComActorsControllerAbstract extends ComBaseControllerService
         }  
         
         $key      = KInflector::pluralize($this->getIdentifier()->name);        
-        $entities =  $query->limit( $this->limit, $this->start )
-                        ->toEntitySet();
-            
+        $entities = $query->limit( $this->limit, $this->start )->toEntitySet();
+        
         if ( $this->isOwnable() && $this->actor ) 
         {
             $this->_state->append(array(
