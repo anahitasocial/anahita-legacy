@@ -9,7 +9,7 @@
 	    <div class="controls">
 	    	<div class="input-prepend">
 	    		<span class="add-on"><i class="icon-user"></i></span>
-	    		<input data-validators="required" type="text" id="name" name="name" value="d<?=uniqid()?>" maxlength="25" />
+	    		<input data-validators="required" type="text" id="name" name="name" value="" maxlength="25" />
 	    	</div>
 	    </div>
 	</div>
@@ -21,7 +21,7 @@
 	    <div class="controls">
 	    	<div class="input-prepend">
 	    		<span class="add-on"><i class="icon-user"></i></span>
-	    		<input data-validators="required validate-remote url:'<?=@route('view=person', false)?>'" type="text" id="username" name="username" value="d<?=uniqid()?>" maxlength="25" />
+	    		<input data-validators="required validate-remote url:'<?=@route('view=person', false)?>'" type="text" id="username" name="username" value="" maxlength="25" />
 	    	</div>
 	    </div>
 	</div>
@@ -33,7 +33,7 @@
 	    <div class="controls">
 	    	<div class="input-prepend">
 	    		<span class="add-on"><i class="icon-envelope"></i></span>
-	    		<input data-validators="required validate-email validate-remote url:'<?=@route('view=person', false)?>'" type="text" id="email" name="email" value="ash@peerglobe.com" maxlength="100" />
+	    		<input data-validators="required validate-email validate-remote url:'<?=@route('view=person', false)?>'" type="text" id="email" name="email" value="" maxlength="100" />
 	    	</div>
 	    </div>
 	</div>

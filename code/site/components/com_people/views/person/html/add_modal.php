@@ -9,7 +9,7 @@
 	    <div class="controls">
 	    	<div class="input-prepend">
 	    		<span class="add-on"><i class="icon-user"></i></span>
-	    		<input data-validators="required" type="text" id="name" name="name" value="d<?=uniqid()?>" maxlength="25" />
+	    		<input data-validators="required" type="text" id="name" name="name" value="" maxlength="25" />
 	    	</div>
 	    </div>
 	</div>
@@ -21,7 +21,7 @@
 	    <div class="controls">
 	    	<div class="input-prepend">
 	    		<span class="add-on"><i class="icon-user"></i></span>
-	    		<input data-validators="required validate-remote url:'<?=@route('view=person', false)?>'" type="text" id="username" name="username" value="d<?=uniqid()?>" maxlength="25" />
+	    		<input data-validators="required validate-remote url:'<?=@route('view=person', false)?>'" type="text" id="username" name="username" value="" maxlength="25" />
 	    	</div>
 	    </div>
 	</div>
@@ -33,7 +33,7 @@
 	    <div class="controls">
 	    	<div class="input-prepend">
 	    		<span class="add-on"><i class="icon-envelope"></i></span>
-	    		<input data-validators="required validate-email validate-remote url:'<?=@route('view=person', false)?>'" type="text" id="email" name="email" value="d<?=uniqid()?>@example.com" maxlength="100" />
+	    		<input data-validators="required validate-email validate-remote url:'<?=@route('view=person', false)?>'" type="text" id="email" name="email" value="" maxlength="100" />
 	    	</div>
 	    </div>
 	</div>
@@ -58,5 +58,5 @@
 </form>
 
 <popup:footer>
-    <button data-behavior="Request" data-request-form="#registration-form" data-request-redirect="true" class="btn btn-large btn-primary"><?= @text('COM-PEOPLE-ACTION-REGISTER') ?></button>
+    <button data-behavior="Submit" data-submit-form="#registration-form" data-request-redirect="true" class="btn btn-large btn-primary"><?= @text('COM-PEOPLE-ACTION-REGISTER') ?></button>
 </popup:footer>
