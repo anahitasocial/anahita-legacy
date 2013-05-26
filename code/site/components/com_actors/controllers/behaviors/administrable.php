@@ -87,8 +87,8 @@ class ComActorsControllerBehaviorAdministrable extends KControllerBehaviorAbstra
 			$canditates = $this->getItem()->getAdminCanditates();
 			$canditates->keyword($this->value)->limit(10);
 			$people = array();
-		    foreach($canditates as $key => $person) {
-				$people[$key] = array('id'=>$person->id, 'value'=>$person->name);
+		    foreach($canditates as $person) {
+				$people[] = array('id'=>$person->id, 'value'=>$person->name);
 			}
 			$this->getView()->set($people);
 			return $people;
