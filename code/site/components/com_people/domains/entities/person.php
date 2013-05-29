@@ -198,11 +198,19 @@ class ComPeopleDomainEntityPerson extends ComActorsDomainEntityActor
     /**
      * Return a person URL
      * 
+     * @param boolean $use_username A flag whether to use the username in the URL or not 
+     * 
      * @return string
      */
-    public function getURL()
+    public function getURL($use_username = true)
     {
-    	return 'option=com_people&view=person&id='.$this->id.'&uniqueAlias='.$this->username;
+        $url = 'option=com_people&view=person&id='.$this->id;
+        
+        if ( $use_username ){
+            $url .= '&uniqueAlias='.$this->username;
+        }
+        
+    	return $url;
     }
     
     /**

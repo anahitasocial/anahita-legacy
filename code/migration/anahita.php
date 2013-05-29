@@ -544,3 +544,27 @@ function anahita_25()
     dbexec("update jos_anahita_nodes set access = 'custom' where access not in ('public','registered','special','followers','leaders','mutuals','admins') and (type like 'ComMediumDomainEntityMedium%' or type like 'ComActorsDomainEntityActor%') and access <> ''")
     */
 }
+
+function anahita_26()
+{
+	//header
+	dbexec("UPDATE jos_modules SET `position` = REPLACE(`position`, 'header', '1') WHERE `position` LIKE 'header%' ");
+	
+	//showcase
+	dbexec("UPDATE jos_modules SET `position` = REPLACE(`position`, 'showcase', '1') WHERE `position` LIKE 'showcase%' ");
+	
+	//utility
+	dbexec("UPDATE jos_modules SET `position` = REPLACE(`position`, 'utility', '1') WHERE `position` LIKE 'utility%' ");
+	
+	//maintop
+	dbexec("UPDATE jos_modules SET `position` = REPLACE(`position`, 'maintop', '4') WHERE `position` LIKE 'maintop%' ");
+	
+	//mainbottom
+	dbexec("UPDATE jos_modules SET `position` = REPLACE(`position`, 'mainbottom', '4') WHERE `position` LIKE 'mainbottom%' ");
+	
+	//bottom
+	dbexec("UPDATE jos_modules SET `position` = REPLACE(`position`, 'bottom', '5') WHERE `position` LIKE 'bottom%' ");
+	
+	//footer
+	dbexec("UPDATE jos_modules SET `position` = REPLACE(`position`, 'footer', '5') WHERE `position` LIKE 'footer%' ");	
+}

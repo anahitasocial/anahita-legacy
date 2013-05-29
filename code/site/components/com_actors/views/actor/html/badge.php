@@ -28,7 +28,7 @@
 			</div>
 		</div>
 		
-		<?php $followers = $item->followers->limit(15) ?>
+		<?php $followers = $item->followers->where('filename', '!=', '')->limit(15) ?>
 		
 		<div class="media-grid">
 			<?php foreach($followers as $item) : ?>

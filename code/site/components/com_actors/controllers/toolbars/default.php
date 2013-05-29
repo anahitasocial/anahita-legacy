@@ -142,7 +142,7 @@ class ComActorsControllerToolbarDefault extends ComBaseControllerToolbarDefault
         {
             $this->addCommand('edit', array('label'=>JText::_('COM-ACTORS-PROFILE-EDIT'), 'entity'=>$actor))
                   ->getCommand('edit')
-                  ->href($actor->getURL().'&get=settings');
+                  ->href($actor->getURL(false).'&get=settings');
         }
     }
     

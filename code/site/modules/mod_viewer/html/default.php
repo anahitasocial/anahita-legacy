@@ -28,7 +28,7 @@
             
              <li class="divider"></li> 
                  
-             <li><a href="<?=@route(get_viewer()->getURL().'&get=settings')?>"><?=@text('MOD-VIEWER-MENU-EDIT-PROFILE')?></a></li>                     
+             <li><a href="<?=@route(get_viewer()->getURL(false).'&get=settings')?>"><?=@text('MOD-VIEWER-MENU-EDIT-PROFILE')?></a></li>                     
              <li><a data-trigger="Submit" href="<?=@route('option=com_people&view=session&action=delete&return='.$return)?>"><?=@text('MOD-VIEWER-MENU-LOGOUT')?></a></li>
          </ul>
      </li>
