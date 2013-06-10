@@ -10,6 +10,7 @@
 //@depends libs/Alert.js
 //@depends libs/Submit.js
 //@depends libs/Request.Message.js
+//@depends libs/Comment.js
  
 
 
@@ -703,17 +704,6 @@ Class.refactor(Bootstrap.Dropdown, {
             }
         }
     }
-});
-
-Delegator.register(['click'],'Comment', {
-	handler  : function(event, el, api) {
-		event.stop();
-		var textarea = el.form.getElement('textarea');
-		if ( textarea.setContentFromEditor )
-			textarea.setContentFromEditor();
-		if ( Form.Validator.getValidator('required').test(el.form.getElement('textarea')) )
-			window.delegator.trigger('Request',el,'click');
-	}
 });
 
 Delegator.register(['click'],'Checkbox', {

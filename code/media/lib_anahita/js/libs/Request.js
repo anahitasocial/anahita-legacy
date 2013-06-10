@@ -95,9 +95,12 @@ Request.from = function(element, options) {
 	{
 		var validator = options.form.retrieve('validator');
 		var send 	  = request.send.bind(request);
-		options.form.addEvent('validationSuccessful', function(){
-			send();
-		});
+		if ( options.form.get('remoteValidators').isPending() )
+		{
+			options.form.addEvent('validationSuccessful', function(){
+				send();
+			});
+		}		
 		Object.append(request, {
 			send : function() {
 				if  ( !validator.validate() ) {
@@ -172,7 +175,7 @@ Element.implement(
 		
 		var request = el.ajaxRequest(options),
 		uri		    = new URI();
-		options.onTrigger.apply(el, [request, event]);
+		options.onTrigger.apply(el, [request]);
 		request.addEvent('success', function() {			
 			if ( autoFollow ) 
 			{

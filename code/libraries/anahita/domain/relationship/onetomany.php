@@ -225,7 +225,7 @@ class AnDomainRelationshipOnetomany extends AnDomainRelationshipProperty
 			'property'	 => $this->_child_key		
 		);
         
-        $set = KService::get('anahita:domain.decorator.onetomany', $options);        
+        $set = KService::get('anahita:domain.entityset.decorator.onetomany', $options);        
 		return $set;				
 	}
 }

@@ -20,7 +20,7 @@
 		
 		<div class="entity-meta">
 			<?=@date($comment->creationTime) ?> 
-			<a href="<?= @route($comment->parent->getURL().'#permalink='.$comment->id) ?>">#</a>
+			<a href="<?= @route($comment->parent->getURL()).'#permalink='.$comment->id ?>">#</a>
 			<div id="vote-count-wrapper-<?= $comment->id ?>">
 				<?= @helper('ui.voters', $comment); ?>
 			</div>

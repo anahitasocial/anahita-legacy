@@ -71,22 +71,16 @@ class AnDomainQueryHelper
     	{
     		 $result    = strpos($column, ' ') !== false ? null : AnDomainQueryHelper::parseColumn($query, $column);
     		 $cols		= $result['columns'];
-    		 if ( empty($cols) ) {
-    		     $cols = array($column);    
+    		 if ( !isset($result['property']) )
+    		 	 $array[$key] = $column;
+    		 elseif ( !is_array($cols) )
+    		 	 $array[$key] = $cols;
+    		 else {
+    		     $key = 10000;
+    		     foreach($cols as $col) {
+    		         $array[$key++] = $col;
+    		     }
     		 }
-    		 elseif ( !is_array($cols) ) {
-    		     $cols = array($cols);
-    		 }
-    		 foreach($cols as $col)
-    		     $array[] = $col;
-    		     		 
-//     		 if ( !isset($result['property']) )
-//     		 	 $array[$key] = $column;
-//     		 elseif ( !is_array($cols) )
-//     		 	 $array[$key] = $cols;
-//     		 else {
-
-//     		 }
     	}
     	return $array;
     }

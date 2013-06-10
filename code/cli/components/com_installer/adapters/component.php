@@ -92,7 +92,7 @@ class ComInstallerAdapterComponent extends ComInstallerAdapterAbstract
         if ( isset($this->_xml->libraries) )        
             $this->_copyLibs($this->_xml->libraries, JPATH_SITE.'/libraries');
 
-        $components = KService::get('repos:components.component', array('resources'=>'components'));
+        $components = KService::get('repos:component.component', array('resources'=>'components'));
         
         //find or create a component
         $component  = $components->findOrAddNew(array('option'=>$this->_name,'parent'=>0), array('data'=>array('params'=>'')));

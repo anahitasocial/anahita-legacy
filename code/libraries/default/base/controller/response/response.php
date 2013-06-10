@@ -275,6 +275,18 @@
      }
      
      /**
+      * Removes a header
+      * 
+      * @param string $name The header name
+      * 
+      * @return void
+      */
+     public function removeHeader($name)
+     {
+         unset($this->_headers[$name]);
+     }
+     
+     /**
       * Return the value for a header
       * 
       * @param string $name Header name

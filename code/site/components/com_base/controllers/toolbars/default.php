@@ -129,10 +129,13 @@ class ComBaseControllerToolbarDefault extends ComBaseControllerToolbarAbstract
         $label          = $voted ? JText::_('LIB-AN-ACTION-UNVOTE') : JText::_('LIB-AN-ACTION-VOTE');
         $command->setName($action_value);        
         $command->append(array('label' =>$label));
-        
+        $class          = 'btn btn-mini';
+        if ( $voted ) {
+            $class .= ' btn-inverse';
+        }
         $command
             ->href(JRoute::_($entity->getURL()."&$action_key=$action_value"))
-            ->class('vote-action '.$action_value.' btn btn-mini')
+            ->class('vote-action '.$action_value.' '.$class)
             ->setAttribute('data-trigger','VoteLink')
             ->setAttribute('data-votelink-toggle', $btn_2_id)
             ->setAttribute('data-votelink-object', $entity->id)
@@ -147,11 +150,15 @@ class ComBaseControllerToolbarDefault extends ComBaseControllerToolbarAbstract
         $action_value   = !$voted ? 'unvote' : 'vote';
         $label          = !$voted ? JText::_('LIB-AN-ACTION-UNVOTE') : JText::_('LIB-AN-ACTION-VOTE');
         
+        $class          = 'btn btn-mini';
+        if ( !$voted ) {
+            $class .= ' btn-inverse';
+        }        
         $command = ComBaseControllerToolbarCommand::getInstance($action_value, array('label'=>$label));
         $this->addCommand($command);        
         $command
-            ->href($entity->getURL()."&$action_key=$action_value")
-            ->class('vote-action '.$action_value.' btn btn-mini')
+            ->href(JRoute::_($entity->getURL()."&$action_key=$action_value"))
+            ->class('vote-action '.$action_value.' '.$class)
             ->setAttribute('data-trigger','VoteLink')
             ->setAttribute('data-votelink-toggle', $btn_1_id)
             ->setAttribute('data-votelink-object', $entity->id)

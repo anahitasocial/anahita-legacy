@@ -43,7 +43,7 @@ class LibApplicationTemplateFilterHtml extends KTemplateFilterAbstract implement
             $text = str_replace('<html', '<html lang="'.JFactory::getLanguage()->getTag().'"', $text);
 
             //render the head
-            $text = str_replace('<head>', $this->_renderHead().'<head>', $text);
+            $text = str_replace('<head>', '<head>'.$this->_renderHead(), $text);
 
             //render the styles
             $text = str_replace('</head>',$this->_renderStyles().'</head>', $text);
@@ -79,9 +79,12 @@ class LibApplicationTemplateFilterHtml extends KTemplateFilterAbstract implement
         $html .= '<meta name="description" content="'.$document->getDescription().'" />';
         $html .= '<meta name="generator" content="'.$document->getGenerator().'" />';
         
-        foreach($document->_custom as $custom) {
-            $html .= $custom;
-        }
+        if ( isset($document->_custom) )
+        {
+            foreach($document->_custom as $custom) {
+                $html .= $custom;
+            }            
+        }        
         
         $html .= '<title>'.$document->getTitle().'</title>';
         

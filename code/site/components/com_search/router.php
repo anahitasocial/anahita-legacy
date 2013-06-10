@@ -65,8 +65,10 @@ class ComSearchRouter extends ComBaseRouterDefault
         if ( preg_match('/@\w+/', current($segments)) ) {
         	$vars['oid'] = str_replace('@','',array_shift($segments));
         }
-                     
-        $vars['term'] = array_pop($segments);
+
+        if ( count($segments) ) {
+            $vars['term'] = array_pop($segments);
+        }
             
         return $vars;
     }    

@@ -162,6 +162,7 @@ class LibBaseDispatcherComponent extends LibBaseDispatcherAbstract implements KS
      */
     protected function _actionDelete(KCommandContext $context)
     {
+        //this wil not affect the json calls
         $redirect = KRequest::get('server.HTTP_REFERER', 'url');
     
         $this->getController()

@@ -45,7 +45,9 @@ class ComStoriesControllerBehaviorPublisher extends KControllerBehaviorAbstract
             'component' => 'com_'.$this->_mixer->getIdentifier()->package,                
         ));
         
-        $story = $this->getService('com://site/stories.controller.story')->add($config->toArray());
+        $story = $this->getService('repos://site/stories')
+                    ->create($config->toArray());
+        //$story = $this->getService('com://site/stories.controller.story')->add($config->toArray());
         
         return $story;
     }

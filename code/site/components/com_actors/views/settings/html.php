@@ -164,7 +164,7 @@ class ComActorsViewSettingsHtml extends ComBaseViewHtml
 		
 
                 			
-		$url        = $this->_state->getItem()->getURL().'&get=settings&edit=';		
+		$url        = $this->_state->getItem()->getURL(false).'&get=settings&edit=';		
 		$active_tab = $tabs['profile'];;
 		foreach($tabs as $tab) 
 		{

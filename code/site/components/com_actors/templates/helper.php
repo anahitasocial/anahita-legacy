@@ -60,8 +60,7 @@ class ComActorsTemplateHelper extends KTemplateHelperAbstract implements KServic
 	 */
 	public function getActorURL($actor)
 	{
-		return $this->getService('application')
-			->getRouter()->build($actor->getURL());
+		return JRoute::_($actor->getURL());
 	}
 	
 	/**
@@ -78,7 +77,7 @@ class ComActorsTemplateHelper extends KTemplateHelperAbstract implements KServic
 			return $actor->getPortraitURL($size);
 		}
 				
-		$this->getService('com://site/base.template.asset')->getURL('lib_anahita/images/avatar/'.$size.'_default.gif');		
+		return $this->getService('com://site/base.template.asset')->getURL('lib_anahita/images/avatar/'.$size.'_default.gif');		
 	}
 	
 	/**

@@ -547,6 +547,7 @@ function anahita_25()
 
 function anahita_26()
 {
+    dbexec('update jos_anahita_nodes as n inner join jos_users as u on u.id = n.person_userid set n.person_username = u.username where u.username <> n.person_username');
 	//header
 	dbexec("UPDATE jos_modules SET `position` = REPLACE(`position`, 'header', '1') WHERE `position` LIKE 'header%' ");
 	

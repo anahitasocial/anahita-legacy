@@ -112,7 +112,8 @@ class LibBaseDispatcherApplication extends LibBaseDispatcherAbstract implements 
     {
         if(!($component instanceof LibBaseDispatcherAbstract))
         {
-            if(is_string($component) && strpos($component, '.') === false )
+            if(is_string($component) && 
+                    strpos($component, '.') === false )
             {
                 $identifier             = clone $this->getIdentifier();
                 $identifier->package    = $component;

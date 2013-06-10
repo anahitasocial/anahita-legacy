@@ -50,7 +50,8 @@ class PlgSystemAnahita extends JPlugin
         jimport('joomla.utilities.simplecrypt');
                 
         if ( KRequest::has('server.PHP_AUTH_USER')
-             && KRequest::has('server.PHP_AUTH_PW')   
+             && KRequest::has('server.PHP_AUTH_PW')
+             && KRequest::format() == 'json'
                 )
         {
             $data['username'] = KRequest::get('server.PHP_AUTH_USER', 'raw');

@@ -36,7 +36,9 @@ class LibBaseTemplateFilterAlias extends KTemplateFilterAlias
 	{
 		parent::__construct($config);
 
-		$this->_alias_read = array_merge($this->_alias_read, array(			
+		$this->_alias_read = array_merge($this->_alias_read, array(
+		    '@title('       => 'JFactory::getDocument()->setTitle(',
+		    '@description(' => 'JFactory::getDocument()->setDescription(',			
 			'@controller(' 	=> '$this->renderHelper(\'controller.getController\',',
 			'@view('	   	=> '$this->renderHelper(\'controller.getView\',',
 			'@previous('   	=> '$this->getHelper(\'previous\')->load(',

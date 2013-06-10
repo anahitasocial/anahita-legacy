@@ -36,14 +36,18 @@ class ComBaseDispatcherDefault extends LibBaseDispatcherComponent
 	{
 		parent::__construct($config);
 		
-		if ( $config->auto_asset_import  ) {
-			$this->registerCallback('after.get', array($this, 'importAsset'));
-		}
-		
+		//if request is html and not ajax
+		//set page title
+		//import assets
+		//
 		if ( $config->request->getFormat() == 'html' &&
 		     !$config->request->isAjax()
-		        ) {
-		    set_exception_handler(array($this, 'exception'));
+		        ) 
+		{
+		    $this->registerCallback('after.get', array($this, 'includeMedia'));
+		    $this->registerCallback('after.get', array($this, 'setPageTitle'));
+		    		    
+		    set_exception_handler(array($this, 'exception'));		    
 		}
 	}
 	
@@ -57,13 +61,7 @@ class ComBaseDispatcherDefault extends LibBaseDispatcherComponent
 	 * @return void
 	 */
 	protected function _initialize(KConfig $config)
-	{
-	    $config->append(array(
-	        'auto_asset_import' => true
-	    ));
-	    
-	    $config->auto_asset_import = $config->auto_asset_import && (KRequest::method() == 'GET' && KRequest::type() == 'HTTP');
-	
+	{	
 	    parent::_initialize($config);
         
         if ( $config->request->view ) {
@@ -72,13 +70,13 @@ class ComBaseDispatcherDefault extends LibBaseDispatcherComponent
 	}	  
 	
   	/**
-  	 * Import component assets automatically 
+  	 * Include Media automatically 
   	 * 
   	 * This method automatically imports the js/css assets of the app
   	 * 
      * @return mixed
      */
-	public function importAsset()
+	public function includeMedia()
 	{
 	    $asset = $this->getService('com://site/base.template.asset');
 	    
@@ -110,9 +108,11 @@ class ComBaseDispatcherDefault extends LibBaseDispatcherComponent
     /**
      * Sets the page title/description
      * 
+     * KCommandContext $context Command Context
+     * 
      * @return void
      */
-    protected function _setPageTitle()
+    public function setPageTitle(KCommandContext $context)
     {
         $view     = $this->getController()->getView();
         $document = JFactory::getDocument();

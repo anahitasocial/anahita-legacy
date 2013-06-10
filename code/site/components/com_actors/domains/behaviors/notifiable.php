@@ -201,7 +201,7 @@ class ComActorsDomainBehaviorNotifiable extends AnDomainBehaviorAbstract
         {
             $read_notifications =  array_diff($actor->notificationIds->toArray(),$actor->newNotificationIds->toArray());
             $date  = $this->getService('anahita:domain.attribute.date')->modify('-5 days');
-            $query = $this->getService('repos://site/notifications.notification')->getQuery()->id($read_notifications)->createdOn($date,'<');        
+            $query = $this->getService('repos://site/notifications.notification')->getQuery()->id($read_notifications)->creationTime($date,'<');        
             $notifications = $query->fetchSet();
             foreach($notifications as $notification)
             {

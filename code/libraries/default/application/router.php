@@ -227,7 +227,7 @@ class LibApplicationRouter extends KObject
         $uri->query = $query;
         
         //only add index.php is it's rewrite SEF
-        if ( !$this->_enable_rewrite ) {
+        if ( !$this->_enable_rewrite || empty($parts) ) {
             array_unshift($parts,'index.php');
         }
         array_unshift($parts, $this->_base_url->path);        

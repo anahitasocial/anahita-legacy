@@ -1,7 +1,3 @@
-<ul class="menu nav" data-behavior="BS.Dropdown">
-     <li class="dropdown">
-        <a data-trigger="BS.showPopup" data-bs-showpopup-url="<?= @route('option=people&view=session&layout=modal')?>" href="<?= @route('option=people&view=session&layout=modal')?>" class="dropdown-toggle">
-            Login                                               
-        </a>
-     </li>
- </ul>
+<a class="btn btn-primary" data-trigger="BS.showPopup" data-bs-showpopup-url="<?= @route('option=people&view=session&layout=modal')?>" href="<?= @route('option=people&view=session&layout=modal')?>" >
+    <?= @text('MOD-VIEWER-LOGIN') ?>                                               
+</a>

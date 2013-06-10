@@ -67,7 +67,7 @@ class ComPeopleControllerSession extends ComBaseControllerResource
     protected function _initialize(KConfig $config)
     {       
         $config->append(array(
-            'redirect_to_after_login'  => 'option=com_dashboard&view=dashboard',
+            'redirect_to_after_login'  => '',
             'redirect_to_after_logout' => '',   
             //by default the format is json
             'request'   => array('format'=>'json')            
